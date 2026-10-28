@@ -115,9 +115,8 @@ const EndorSearch = {
         const searchInput = document.querySelector('#nav-search-input');
         if (!searchContainer || !searchInput) return;
 
-        /* Determine URL prefix (module pages are nested deeper) */
-        const inModule = /\/modules\//.test(window.location.pathname);
-        const prefix = inModule ? '../../' : '';
+        /* Link depth for this page; layout.js (loaded first) computes it. */
+        const prefix = (window.EndorPaths && window.EndorPaths.prefix) || '';
 
         /* Create results dropdown */
         const dropdown = document.createElement('div');

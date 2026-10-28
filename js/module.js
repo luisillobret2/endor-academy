@@ -406,8 +406,12 @@ function showCertificateModal(trackName, moduleCount, certDate) {
 }
 
 function getBasePath() {
+    if (window.EndorPaths && typeof window.EndorPaths.prefix === 'string') {
+        return window.EndorPaths.prefix;
+    }
     const path = window.location.pathname;
     if (path.includes('/modules/')) return '../../';
+    if (path.includes('/labs/')) return '../';
     return '';
 }
 

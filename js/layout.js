@@ -7,11 +7,34 @@
    ============================================ */
 
 (function () {
+    /* Pages live at the site root, in labs/, or in modules/<track>/, so links
+       and assets need the right number of "../" segments. Derive it from this
+       script's own src, which works under any deploy subpath, and fall back to
+       pathname depth if currentScript is unavailable. */
+    function resolvePrefix() {
+        const el = document.currentScript;
+        const src = el && el.getAttribute ? el.getAttribute('src') : null;
+        if (src) {
+            const m = src.split(/[?#]/)[0].match(/^(.*?)js\/layout\.js$/);
+            if (m) return m[1];
+        }
+        const path = window.location.pathname;
+        if (/\/modules\//.test(path)) return '../../';
+        if (/\/labs\//.test(path)) return '../';
+        return '';
+    }
+
+    const prefix = resolvePrefix();
     const inModule = /\/modules\//.test(window.location.pathname);
-    const prefix = inModule ? '../../' : '';
+    const inLab = /\/labs\//.test(window.location.pathname);
     const currentPage = (window.location.pathname.split('/').pop() || 'index.html');
-    // Module pages belong to the Learning Paths section.
-    const activePage = inModule ? 'learning-paths.html' : currentPage;
+    // Module pages belong to the Learning Paths section; lab pages to Labs.
+    const activePage = inModule ? 'learning-paths.html' : (inLab ? 'labs.html' : currentPage);
+
+    /* Other scripts (auth buttons, search results, certificate links) need the
+       same depth. layout.js is loaded first on every page, so expose it once
+       here instead of each file re-deriving it and drifting. */
+    window.EndorPaths = { prefix: prefix, resolvePrefix: resolvePrefix };
 
     const navItems = [
         { href: 'index.html', label: 'Home' },

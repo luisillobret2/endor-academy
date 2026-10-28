@@ -206,8 +206,8 @@ function initMobileMenu() {
 
         /* Inject mobile search bar at top of mobile menu if not present */
         if (isOpen && !nav.querySelector('.mobile-search')) {
-            const inModule = /\/modules\//.test(window.location.pathname);
-            const prefix = inModule ? '../../' : '';
+            /* Link depth for this page; layout.js (loaded first) computes it. */
+            const prefix = (window.EndorPaths && window.EndorPaths.prefix) || '';
             const searchLi = document.createElement('li');
             searchLi.className = 'mobile-search-li';
             searchLi.style.listStyle = 'none';
