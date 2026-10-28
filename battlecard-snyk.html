@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="img/endor-logo.png">
+    <link rel="apple-touch-icon" href="img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <!-- seo -->
+    <meta name="description" content="Competitive battlecard: how Endor Labs compares to Snyk. Feature matrix, win themes, and proof points.">
+    <link rel="canonical" href="https://luisillobret2.github.io/endor-academy/battlecard-snyk.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Endor Academy">
+    <meta property="og:title" content="Battlecard: Endor Labs vs. Snyk - Endor Academy">
+    <meta property="og:description" content="Competitive battlecard: how Endor Labs compares to Snyk. Feature matrix, win themes, and proof points.">
+    <meta property="og:url" content="https://luisillobret2.github.io/endor-academy/battlecard-snyk.html">
+    <meta property="og:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Battlecard: Endor Labs vs. Snyk - Endor Academy">
+    <meta name="twitter:description" content="Competitive battlecard: how Endor Labs compares to Snyk. Feature matrix, win themes, and proof points.">
+    <meta name="twitter:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <title>Battlecard: Endor Labs vs. Snyk - Endor Academy</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/module.css">
+    <link rel="stylesheet" href="css/battlecard.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <section class="hero" style="padding: 36px 0;">
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge badge-orange mb-4">&#9876; Battlecard</span>
+                <h1>Endor Labs vs. <span class="accent">Snyk</span></h1>
+                <p>Snyk wins developer love; Endor Labs wins the backlog &mdash; only vulnerabilities your code actually calls, plus governance for the AI coding era.</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="battlecard-main">
+        <div class="container">
+            <a href="resources.html" class="battlecard-back">&#8592; Back to Resources</a>
+
+            <section class="battlecard-section">
+                <h2>Positioning Summary</h2>
+                <div class="key-concept">
+                    <h4>&#128161; The One-Liner</h4>
+                    <p>Snyk is the most familiar name in developer security, and it earns real developer love with quick onboarding and a broad product line. Respect the experience, then reframe the deal around backlog quality and the AI era: Endor Labs keeps only the vulnerabilities the code actually calls in the backlog (up to 97% SCA noise reduction reported by Zebra Technologies), governs every coding agent with AURI, and blocks malicious packages at install with the Package Firewall. Be candid that Endor Labs SAST is newer and pricing is quote-based &mdash; then win on the outcomes developers feel in week one.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Feature Comparison</h2>
+                <div class="compare-table">
+                    <table>
+                        <thead>
+                            <tr><th class="col-feature">Feature</th><th class="col-endor">Endor Labs</th><th>Snyk</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="col-feature">Platform scope</td><td class="col-endor">One Agentic Application Security Platform: SCA, rule-based SAST, AI SAST, secrets, containers, SBOM and VEX, RSPM, and unified policies.</td><td>Broad developer-first suite: SCA, SAST (via DeepCode), container, and IaC, with a strong brand and developer experience.</td></tr>
+                            <tr><td class="col-feature">Reachability &amp; prioritization</td><td class="col-endor">Function-level call graphs across 40+ languages keep only vulnerabilities the code actually calls in the backlog &mdash; up to 97% SCA noise reduction reported by Zebra Technologies.</td><td>Prioritization leans on risk scoring and severity; shallower than function-level call graphs, and default configurations can be noisy at scale.</td></tr>
+                            <tr><td class="col-feature">Agentic security &amp; agent governance</td><td class="col-endor">Coding Agent Governance (AURI) inventories every coding agent, model, MCP server, and skill; enforces allow, block, or ask-a-human policies with a full audit trail &mdash; plus AI Model Discovery, Agent Kit, and an endorctl MCP server for Cursor, Claude Code, Codex, VS Code, Gemini CLI, Antigravity, and IntelliJ.</td><td>No coding-agent governance layer &mdash; no inventory of agents, models, or MCP servers, and no agent-action policies.</td></tr>
+                            <tr><td class="col-feature">SAST approach</td><td class="col-endor">Rule-based SAST plus AI SAST: security-engineer agents trace dataflow across every repo and PR, catch logic flaws, cut up to 95% of false positives, and surface 2.6x more true positives than frontier AI models.</td><td>SAST via the DeepCode engine; developer-friendly, but noise and tuning effort are commonly cited at scale.</td></tr>
+                            <tr><td class="col-feature">Dependency management &amp; remediation</td><td class="col-endor">Upgrade impact analysis, automated pull requests, and Endor Patches &mdash; backported fixes for Java and Python when no upstream patch exists &mdash; plus Patch Factory and JFrog Artifactory / Sonatype Nexus integration.</td><td>Fix advice and update PRs for vulnerable dependencies; no backported-fix equivalent when no safe upgrade exists.</td></tr>
+                            <tr><td class="col-feature">Malware &amp; package firewall</td><td class="col-endor">Package Firewall blocks malicious packages at install &mdash; typosquatting, dependency confusion, compromised packages &mdash; before they reach developer machines or CI, backed by malware detection.</td><td>Malicious-package alerts based on threat intelligence; no install-time package firewall.</td></tr>
+                            <tr><td class="col-feature">Secrets</td><td class="col-endor">Secrets detection under one policy from laptop to pipeline, enforced pre-commit and in CI.</td><td>Not a core Snyk module; teams typically pair Snyk with a separate secrets tool.</td></tr>
+                            <tr><td class="col-feature">Containers</td><td class="col-endor">Code-to-image reachability call graphs, incremental and registry scanning, base image remediation, and zero cluster footprint.</td><td>Solid container and registry scanning; no code-to-image call-graph reachability.</td></tr>
+                            <tr><td class="col-feature">Pricing model</td><td class="col-endor">Per-seat scan credits, quote-based, with a free developer tier for AURI and MCP tooling; no per-product stacking.</td><td>Per-developer pricing across tiered products; cost scales with headcount and add-ons.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Why Teams Choose Endor Labs</h2>
+                <div class="win-grid">
+                    <div class="win-card"><h4>Only what your code calls</h4><p>Snyk's breadth produces findings; Endor Labs' function-level call graphs across 40+ languages mean only reachable vulnerabilities reach the backlog. Zebra Technologies reported up to 97% SCA noise reduction.</p></div>
+                    <div class="win-card"><h4>Governance for the AI coding era</h4><p>Coding Agent Governance (AURI) inventories every coding agent, model, MCP server, and skill, and enforces allow/block/ask-a-human policies with a full audit trail. Snyk has no equivalent layer.</p></div>
+                    <div class="win-card"><h4>AI SAST developers actually trust</h4><p>Security-engineer agents trace dataflow across every repo and PR, catch logic flaws like an endpoint shipped without authentication, and cut up to 95% of false positives.</p></div>
+                    <div class="win-card"><h4>Prevention, not just alerts</h4><p>The Package Firewall blocks malicious packages at install &mdash; typosquatting, dependency confusion, compromised packages &mdash; before they reach developer machines or CI.</p></div>
+                    <div class="win-card"><h4>Fixes even when upstream is silent</h4><p>Endor Patches backport fixes for Java and Python when no upstream patch exists, alongside upgrade impact analysis and automated PRs.</p></div>
+                    <div class="win-card"><h4>Meets developers where they work</h4><p>endorctl CLI, native CI/CD across GitHub Actions, Jenkins, GitLab, Azure DevOps, Bitbucket, CircleCI, Google Cloud Build, and Buildkite, keyless OIDC auth, and an MCP server for the IDEs and coding agents developers already use.</p></div>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Watch Out</h2>
+                <div class="key-concept">
+                    <h4>&#9888;&#65039; Where Snyk is Genuinely Strong</h4>
+                    <p>Snyk's developer experience, quick onboarding, and brand are genuine strengths &mdash; in many orgs Snyk is already installed and loved, and its product line keeps expanding. Don't attack the developer experience; you will lose that argument.</p>
+                    <p>Acknowledge it, then pivot: &ldquo;Snyk is a great on-ramp &mdash; the question is what your team does at scale, when the backlog, not the tooling, is the bottleneck.&rdquo; Contrast on outcomes: reachable findings only, coding agent governance, and prevention at install. Be candid that Endor Labs SAST launched in Aug 2025 and pricing is quote-based &mdash; credibility wins more deals than bravado.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Endor Labs Proof Points</h2>
+                <div class="proof-grid">
+                    <div class="proof-stat"><div class="num">97%</div><div class="lbl">SCA noise reduction reported by Zebra Technologies</div></div>
+                    <div class="proof-stat"><div class="num">70%</div><div class="lbl">Faster vulnerability MTTR reported by Egnyte</div></div>
+                    <div class="proof-stat"><div class="num">95%</div><div class="lbl">Of false positives cut by AI SAST (up to)</div></div>
+                    <div class="proof-stat"><div class="num">2.6x</div><div class="lbl">More true positives than frontier AI models</div></div>
+                    <div class="proof-stat"><div class="num">40+</div><div class="lbl">Languages with function-level reachability</div></div>
+                    <div class="proof-stat"><div class="num">$188M</div><div class="lbl">Raised across seed, Series A, and Series B funding</div></div>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Competitor Background</h2>
+                <div class="key-concept">
+                    <h4>&#128270; At a Glance</h4>
+                    <p>Founded in 2015 and headquartered in London, with a strong US presence. One of the most heavily funded and widely adopted developer-security vendors. Focus: developer-first application security &mdash; SCA, SAST via DeepCode, container, and IaC. A broad enterprise and mid-market customer base, with adoption that often starts inside individual engineering teams.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Objection-Handling Reminder</h2>
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Keep It Classy</h4>
+                    <p>Never disparage Snyk by name in front of a customer. Contrast on outcomes &mdash; noise reduction, time-to-fix, coding agent governance, and total cost of ownership &mdash; and let the buyer draw their own conclusion. When Snyk's strengths come up, acknowledge them and steer to backlog quality: teams don't need more findings, they need fewer, better ones.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Other Battlecards</h2>
+                <div class="flex" style="flex-wrap: wrap; gap: 8px;">
+                    <a href="battlecard-snyk.html" class="btn btn-secondary btn-sm">vs. Snyk</a>
+                    <a href="battlecard-mend.html" class="btn btn-secondary btn-sm">vs. Mend.io</a>
+                    <a href="battlecard-veracode.html" class="btn btn-secondary btn-sm">vs. Veracode</a>
+                    <a href="battlecard-checkmarx.html" class="btn btn-secondary btn-sm">vs. Checkmarx</a>
+                    <a href="battlecard-black-duck.html" class="btn btn-secondary btn-sm">vs. Black Duck</a>
+                    <a href="battlecard-github-advanced-security.html" class="btn btn-secondary btn-sm">vs. GitHub Advanced Security</a>
+                    <a href="battlecard-sonatype.html" class="btn btn-secondary btn-sm">vs. Sonatype</a>
+                </div>
+            </section>
+
+            <p class="battlecard-source">Source: Endor Labs competitive analysis &middot; Competitor public documentation. For partner enablement use.</p>
+        </div>
+    </main>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="js/layout.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/homepage.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/cert-recommendations.js"></script>
+    <script src="js/badges.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive challenge lab: Configure Endor Labs Package Firewall allow and block policies, then watch a typosquatted package get blocked at install time.">
+    <title>Lab: Package Firewall Configuration - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>Package Firewall Configuration</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>Package Firewall <span class="accent">Configuration</span></h1>
+                <span class="lab-type-badge challenge">Challenge</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 40 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; Supply Chain</span>
+                <span>&#128218; 6 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Recognize typosquatting, dependency confusion, and compromised-package attacks</li>
+                <li>Enable the Endor Labs Package Firewall and route installs through it</li>
+                <li>Author allow and block policies for your organization</li>
+                <li>Watch a typosquatted package get blocked at install time</li>
+                <li>Prove that legitimate packages still install cleanly</li>
+                <li>Review the audit trail and wire the firewall into CI</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Meet the Attack</h3>
+            <p><strong>Challenge scenario:</strong> It is 4:45 p.m. on a Friday. Alice on the payments team types <code>pip install reqeusts</code> — one transposed letter. Without a firewall, that package installs, its <code>setup.py</code> runs, and a second-stage payload quietly exfiltrates the AWS credentials in her environment. Your mission: make sure that typo never becomes an incident.</p>
+            <p>The Endor Labs Package Firewall blocks malicious packages <strong>at install time</strong>, covering three supply-chain patterns:</p>
+            <ul>
+                <li><strong>Typosquatting</strong> — packages named to mimic popular ones and catch install typos</li>
+                <li><strong>Dependency confusion</strong> — public packages published under your internal package names</li>
+                <li><strong>Compromised packages</strong> — legitimate packages taken over or updated with malicious code</li>
+            </ul>
+            <p>First, inspect the typosquat's registry metadata — but never install it:</p>
+            <div class="lab-code-block"><span class="comment"># Inspect the typosquat on the public registry (DO NOT install)</span>
+pip index versions reqeusts</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> pip index versions reqeusts
+<span class="term-warn">reqeusts (2.25.1)</span>
+<span class="term-info">Available versions: 2.25.1, 2.24.0</span>
+<span class="term-warn">  Published 2 days ago by user4821 (account age: 5 days)</span>
+<span class="term-info">  Description: "A fork of requests with bug fixes"</span>
+<span class="term-warn">  3 downloads this week — the real "requests" has millions</span></div>
+            <div class="lab-callout warning">
+                <strong>Notice</strong>
+                Never install a suspicious package "just to look" — <code>setup.py</code> executes during installation. Registry metadata only. Everything below is safe because the firewall does the handling.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Reviewed the three supply-chain attack patterns</li>
+                <li><span class="check-icon">&#10003;</span> Inspected (but did not install) the typosquat's metadata</li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Enable the Firewall in Monitor Mode</h3>
+            <p>In the Endor Labs dashboard, open <strong>Policies &rarr; Package policies</strong> and enable the Package Firewall for your organization. Start in <strong>Monitor</strong> mode: every install decision gets logged, but nothing is blocked yet. This lets you tune rules against real traffic before you enforce.</p>
+            <p>Then point your package managers at the firewall's proxy endpoints so installs flow through Endor Labs:</p>
+            <div class="lab-code-block"><span class="comment"># Route installs through the Endor Labs Package Firewall (training values)</span>
+pip config set global.index-url https://proxy.endorlabs.com/acme-financial/pypi/simple
+
+<span class="comment"># npm equivalent</span>
+npm config set registry https://proxy.endorlabs.com/acme-financial/npm/</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> pip config set global.index-url https://proxy.endorlabs.com/acme-financial/pypi/simple
+<span class="term-success">global.index-url set to https://proxy.endorlabs.com/acme-financial/pypi/simple</span>
+
+<span class="term-prompt">$</span> pip install requests
+<span class="term-info">Collecting requests</span>
+<span class="term-info">  Downloading requests-2.31.0 from https://proxy.endorlabs.com/acme-financial/pypi/simple</span>
+<span class="term-info">  [monitor] Package Firewall would have ALLOWED requests 2.31.0 (rule: allow-known-good)</span>
+<span class="term-success">Successfully installed requests-2.31.0</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                Monitor mode shows the decision the firewall <em>would</em> make on every install. The exact proxy URLs and registry setup steps (npm, PyPI, and private registries) live at docs.endorlabs.com.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Enabled the Package Firewall in Monitor mode</li>
+                <li><span class="check-icon">&#10003;</span> Pointed pip and npm at the firewall proxy</li>
+                <li><span class="check-icon">&#10003;</span> Observed a monitor-mode decision in the install output</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Author the Policy Rules</h3>
+            <p>Back in <strong>Policies &rarr; Package policies &rarr; Add rule</strong>, create the ruleset below. Rules evaluate in order and the first match wins. This is the heart of the challenge — a ruleset that blocks the bad, allows the good, and never breaks a build unnecessarily.</p>
+            <div class="lab-code-block"><span class="comment"># Package Firewall ruleset (first match wins)</span>
+1. block-typosquats            name closely mimics a top-500 package
+                               -&gt; BLOCK
+2. block-dependency-confusion  internal namespace acme-* resolved from
+                               a public registry                -&gt; BLOCK
+3. block-malware               malware verdict: malicious (always on) -&gt; BLOCK
+4. allow-known-good            Endor Score security &gt;= 8.0 and activity
+                               score &gt;= 7.0                    -&gt; ALLOW
+5. default                     everything else                  -&gt; ALLOW + log</div>
+            <p>Rationale for each rule:</p>
+            <ul>
+                <li><strong>block-typosquats</strong> — catches <code>reqeusts</code>, <code>requeats</code>, and friends before Alice's typo resolves</li>
+                <li><strong>block-dependency-confusion</strong> — anything named <code>acme-*</code> must come from your private index; public lookups are attacks until proven otherwise</li>
+                <li><strong>block-malware</strong> — Endor Labs malware detection runs on every package automatically; known-malicious code never passes</li>
+                <li><strong>allow-known-good</strong> — packages with strong Endor Scores (activity, popularity, security, code quality) flow freely, so developers never feel the firewall</li>
+                <li><strong>default allow + log</strong> — while policies are new, unknowns are logged, not blocked; tighten this once you trust the ruleset</li>
+            </ul>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Created the typosquat rule</li>
+                <li><span class="check-icon">&#10003;</span> Created the dependency-confusion rule for the <code>acme-*</code> namespace</li>
+                <li><span class="check-icon">&#10003;</span> Left a permissive default with logging while the ruleset is new</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Watch the Typosquat Get Blocked</h3>
+            <p>Flip the firewall from Monitor to <strong>Enforce</strong>. Now replay Alice's Friday typo and watch what happens instead of an incident:</p>
+            <div class="lab-terminal"><span class="term-prompt">$</span> pip install reqeusts
+<span class="term-error">ERROR: Package blocked by Endor Labs Package Firewall</span>
+
+<span class="term-warn">  Package:  reqeusts 2.25.1</span>
+<span class="term-warn">  Reason:   typosquat of popular package "requests" (name similarity 0.92)</span>
+<span class="term-error">  Verdict:  MALICIOUS — setup.py fetches a second-stage payload</span>
+<span class="term-info">  Policy:   block-typosquats (rule tq-01)</span>
+<span class="term-info">  Audit ID: fw-2026-1104-8f3a</span>
+
+<span class="term-info">The package was NOT installed. If you believe this is a false positive,</span>
+<span class="term-info">share audit ID fw-2026-1104-8f3a with #appsec.</span></div>
+            <p>The package never reached the virtual environment, the lockfile, the CI runner, or production. Alice gets a clear error naming the rule, the reason, and a false-positive path — and the correct package still works:</p>
+            <div class="lab-terminal"><span class="term-prompt">$</span> pip install requests
+<span class="term-info">Collecting requests</span>
+<span class="term-success">  [endor firewall] allowed by rule allow-known-good (Endor Score: 9.1)</span>
+<span class="term-success">Successfully installed requests-2.31.0</span></div>
+            <div class="lab-callout tip">
+                <strong>Why this works</strong>
+                The block happens at install time — the earliest possible moment. Blocking after CI, or worse after deployment, means the malicious code already ran.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Switched the firewall to Enforce mode</li>
+                <li><span class="check-icon">&#10003;</span> Observed the typosquat blocked with reason, policy, and audit ID</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the legitimate <code>requests</code> package still installs cleanly</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Dependency Confusion, Blocked</h3>
+            <p>The second attack pattern: an adversary publishes <code>acme-utils</code> to public PyPI, betting that your build resolves the public package whenever the internal one is missing. Your <code>block-dependency-confusion</code> rule makes that bet lose:</p>
+            <div class="lab-terminal"><span class="term-prompt">$</span> pip install acme-utils
+<span class="term-error">ERROR: Package blocked by Endor Labs Package Firewall</span>
+
+<span class="term-warn">  Package:  acme-utils 0.0.1 (public PyPI)</span>
+<span class="term-warn">  Reason:   dependency confusion — "acme-*" is an internal namespace</span>
+<span class="term-info">  Policy:   block-dependency-confusion (rule dc-03)</span>
+<span class="term-info">  Hint:     install from the Acme private index instead</span>
+<span class="term-info">  Audit ID: fw-2026-1104-90b2</span></div>
+            <p>Note the hint: the firewall distinguishes between <em>where the package came from</em> and <em>who owns the name</em>. Internal names must resolve from internal indexes — always.</p>
+            <div class="lab-callout warning">
+                <strong>Notice</strong>
+                Dependency confusion has breached real companies: if any resolver checks the public registry first, the attacker's package — with the same name as yours but malicious content — wins the race. The namespace rule closes the door at install time.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Saw the internal-namespace rule block a public <code>acme-utils</code> package</li>
+                <li><span class="check-icon">&#10003;</span> Noted the remediation hint pointing to the private index</li>
+            </ul>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="lab-step" data-step="6">
+            <div class="lab-step-number">6</div>
+            <h3>Audit Trail and CI</h3>
+            <p>In the dashboard, open the Package Firewall <strong>audit log</strong>. Every allow and block is recorded with the user, machine, package, version, verdict, matched policy, and audit ID. Search for <code>fw-2026-1104-8f3a</code> — you should find Alice's typo attempt (yours, in this lab), the verdict, and the rule that stopped it.</p>
+            <p>Route block alerts to <strong>Settings &rarr; Notifications &rarr; #appsec</strong> so the team sees blocks in real time, then wire the same proxy endpoints into CI so the firewall covers the pipeline too:</p>
+            <div class="lab-code-block"><span class="comment"># CI environment (example: GitHub Actions) — same firewall, same rules</span>
+env:
+  PIP_INDEX_URL: https://proxy.endorlabs.com/acme-financial/pypi/simple
+  NPM_CONFIG_REGISTRY: https://proxy.endorlabs.com/acme-financial/npm/</div>
+            <div class="lab-callout tip">
+                <strong>Challenge wrap-up</strong>
+                One mis-typed package name used to be an incident report. Now it is a one-line block message, an audit entry, and a Slack ping — and Alice installs the right package on her second try. That is the Package Firewall doing your job before it becomes your job.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Located both block events in the audit log by audit ID</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the firewall proxy is configured in CI</li>
+                <li><span class="check-icon">&#10003;</span> Routed block notifications to #appsec</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">What is typosquatting?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Squatting on a dormant maintainer's account</li>
+                <li class="lab-quiz-option" data-correct="true">Publishing a package whose name closely mimics a popular package to catch install typos</li>
+                <li class="lab-quiz-option" data-correct="false">Reusing a GPL library in a commercial product</li>
+                <li class="lab-quiz-option" data-correct="false">Registering a package name and selling it to the highest bidder</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">Why should you enable Monitor mode before Enforce?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Monitor mode blocks more packages</li>
+                <li class="lab-quiz-option" data-correct="false">Enforce mode requires a paid plan</li>
+                <li class="lab-quiz-option" data-correct="true">To observe would-be decisions on real traffic and tune rules without breaking installs</li>
+                <li class="lab-quiz-option" data-correct="false">Monitor mode scans containers faster</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">How does a dependency confusion attack succeed?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">By typo-squatting the most-downloaded packages</li>
+                <li class="lab-quiz-option" data-correct="false">By compromising a maintainer's publishing credentials</li>
+                <li class="lab-quiz-option" data-correct="true">Your resolver fetches an attacker's public package that shares a name with an internal package</li>
+                <li class="lab-quiz-option" data-correct="false">By downgrading a transitive dependency in a lockfile</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">With the firewall enforcing, what happens when a developer runs <code>pip install reqeusts</code>?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">The package installs, then a scan flags it hours later</li>
+                <li class="lab-quiz-option" data-correct="true">The install fails immediately at the firewall — the package never reaches the venv, lockfile, or CI</li>
+                <li class="lab-quiz-option" data-correct="false">The install succeeds but the package is quarantined in the venv</li>
+                <li class="lab-quiz-option" data-correct="false">The developer receives a survey about typing accuracy</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've configured the Endor Labs Package Firewall from zero: monitor, tune, enforce — and watched a typosquatted package die at the install line with a full audit trail behind it.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="mcp-agent-kit-setup.html" class="btn btn-primary">Next Lab: MCP Server &amp; Agent Kit Setup</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 6;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('package-firewall-setup', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

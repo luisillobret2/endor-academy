@@ -1,0 +1,183 @@
+---
+title: Reachability Analysis - Endor Academy
+description: Understand how Endor Labs function-level reachability analysis builds call graphs through direct and transitive dependencies, cuts SCA noise by up to 97%, and focuses teams on exploitable vulnerabilities.
+---
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>Reachability Analysis</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Reachability Analysis</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 250 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Why Alerting on Every CVE Fails Teams</li>
+                    <li>How Endor Labs Builds Call Graphs</li>
+                    <li>Noise Reduction in Practice</li>
+                    <li>Reachability Beyond Libraries: Containers and Pre-Computed Results</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Why Alerting on Every CVE Fails Teams</h2>
+                <p>Traditional SCA works like an inventory system with a loudspeaker: it reports every CVE found anywhere in the dependency tree, whether or not your application can trigger it. A large application carries hundreds of direct and transitive packages, so a single scan can produce hundreds or thousands of findings &mdash; and studies show that most reported CVEs are never actually invoked by the application.</p>
+                <p>Consider what happened when Log4Shell (CVE-2021-44228) surfaced in December 2021. Organizations worldwide had <code>log4j</code> somewhere in their dependency trees, but almost none could answer the one question that mattered: does our code actually invoke the vulnerable JNDI lookup path? Teams spent days reading code and holding emergency meetings to find out. Reachability analysis answers that question automatically, every time.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Severity Without Exposure Is Just a Number</h4>
+                    <p>A vulnerability only matters to your application if there is a path from your code to the vulnerable function. The question is not &ldquo;is this CVE in our tree?&rdquo; but &ldquo;can this be triggered in <em>our</em> application?&rdquo; That is exactly the question Endor Labs reachability analysis answers.</p>
+                </div>
+
+                <p>The cost of alerting on everything is well documented: security teams burn out triaging noise, developers stop trusting security tooling, emergency response gets diluted across non-issues, and the genuinely exploitable findings get buried. Alert fatigue is not an inconvenience &mdash; it is the reason many AppSec programs fail.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>How Endor Labs Builds Call Graphs</h2>
+                <p>Endor Labs performs <strong>function-level reachability analysis</strong> across 40+ languages, including Java, Python, Go, JavaScript/TypeScript, C/C++, PHP, Kotlin, Scala, .NET, Swift/Objective-C, Ruby, and Rust. The engine works through four steps:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Resolve the dependency tree</strong> &mdash; Endor Labs reads your manifests and lockfiles and resolves every direct and transitive dependency, so nothing in the tree is invisible</li>
+                    <li><strong>Construct the call graph</strong> &mdash; the analysis maps function calls starting from your first-party code and follows them through dependency code, layer by layer, across transitive dependencies</li>
+                    <li><strong>Map vulnerable functions</strong> &mdash; each known vulnerability is mapped to the specific functions in the dependency that contain the flaw</li>
+                    <li><strong>Classify each finding</strong> &mdash; a vulnerability is <strong>reachable</strong> only if a real call path exists from your code to the vulnerable function; everything else is classified as unreachable</li>
+                </ol>
+
+                <p>Endor Labs also provides <strong>call graph visualization</strong> in the product: instead of telling a developer &ldquo;this CVE is reachable,&rdquo; the tool shows the exact call path from your code into the vulnerable function. Developers can verify the finding themselves, which is what turns security output into engineering action.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>Meaning</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span style="color: #e74c3c; font-weight: 700;">Reachable</span></td>
+                                <td>Your code calls the vulnerable function through a real call path &mdash; the vulnerability can plausibly be triggered in your application</td>
+                                <td>Prioritize for remediation now</td>
+                            </tr>
+                            <tr>
+                                <td><span style="color: #2ecc71; font-weight: 700;">Unreachable</span></td>
+                                <td>No call path from your code reaches the vulnerable function &mdash; exploiting it would require your application to change first</td>
+                                <td>Kept out of the backlog; handle during normal maintenance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Function-Level, Not Package-Level</h4>
+                    <p>&ldquo;We use that library&rdquo; is not the right question. Most libraries contain large amounts of code your application never calls. Endor Labs tracks usage down to the individual <strong>function</strong> inside the dependency, which is why it can safely exclude critical CVEs in packages you depend on &mdash; when those CVEs live in functions you never invoke.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Noise Reduction in Practice</h2>
+                <p>The operational change is simple and powerful: <strong>only reachable findings enter the backlog</strong>. Instead of starting from every CVE in the tree, teams start from the small set of vulnerabilities their code can actually reach. Zebra Technologies, an Endor Labs customer, reported reducing SCA noise by up to <strong>97%</strong> after adopting reachability.</p>
+
+                <p>Consider a concrete scenario. Your web application uses a popular PDF library &mdash; a direct dependency &mdash; exclusively for generating quarterly reports. A critical CVE is published in the library&rsquo;s image-rendering module, a feature your application never touches.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #e74c3c;">&#9888;&#65039;</div>
+                        <h4>Without Reachability</h4>
+                        <p>The CVE is critical and the package is in the tree, so the team gets a critical alert. An incident review is scheduled, engineers pull apart the dependency tree, and after several hours they conclude the vulnerable code path is never used. The effort was wasted &mdash; and the same cycle repeats with the next CVE.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #2ecc71;">&#10003;</div>
+                        <h4>With Endor Labs Reachability</h4>
+                        <p>Endor Labs maps the call graph and finds no path from your code to the image-rendering function. The finding is classified unreachable and never enters the backlog. The library upgrade happens in the next routine maintenance cycle &mdash; no incident, no interruption.</p>
+                    </div>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Partner Talking Track</h4>
+                    <p>Here is how to frame it with customers: <strong>&ldquo;Your team fixes what&rsquo;s exploitable instead of working through CVEs that were never a risk.&rdquo;</strong> Traditional SCA gives you a list of everything that <em>exists</em>; Endor Labs gives you the list of what <em>matters</em>. That reframing &mdash; from inventory to exploitability &mdash; is the heart of every successful Endor Labs SCA conversation.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners: Stay Honest with Numbers</h4>
+                    <p>Reachability figures &mdash; including the 97% noise reduction &mdash; are vendor- and customer-reported results, and actual results vary by codebase and language mix. Present them as what Zebra Technologies reported, not as a guarantee. The most persuasive proof is always a proof of value on the customer&rsquo;s own repositories.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Reachability Beyond Libraries: Containers and Pre-Computed Results</h2>
+                <p>Reachability is not limited to library dependencies. Endor Labs <strong>container scanning</strong> applies reachability from code to image: for a container image that includes your application, Endor Labs can tell you whether an OS or package vulnerability in the image is actually reachable through your application code. Teams stop rebuilding images reflexively over vulnerabilities their code never touches.</p>
+                <p>Endor Labs also supports <strong>pre-computed reachability</strong>: reachability results are computed ahead of time, so scans &mdash; including pull request scans in CI &mdash; return with the reachability verdict already attached. Developers get precise, actionable feedback at pull request speed instead of waiting for deep analysis to finish.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Where Reachability Shows Up Next</h4>
+                    <p>Reachability is the connective tissue of the platform. It feeds <strong>Endor Scores</strong> and prioritization decisions (Module 04), powers <strong>VEX statements</strong> that document which findings are not exploitable (Module 06), and drives <strong>finding policies</strong> that block only what is real (Module 07). Master this module and the rest of the track falls into place.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> Endor Labs classifies a vulnerability as <em>reachable</em> only when:</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The vulnerable package appears anywhere in the dependency tree</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> A real call path from your first-party code reaches the vulnerable function</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> The CVE carries a critical CVSS score</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> The package is also used by other applications in the organization</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> How much SCA noise reduction did Zebra Technologies report after adopting Endor Labs reachability?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Up to 97%</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Up to 12%</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Exactly 50%</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Noise reduction has never been measured</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> Your application uses a charting library only for rendering quarterly reports. A critical CVE is published in the library&rsquo;s animation engine, which your code never calls. What does Endor Labs report?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Reachable &mdash; the library is in the tree, so the CVE must be fixed immediately</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Nothing at all &mdash; the finding is deleted from the platform</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Unreachable &mdash; it stays out of the remediation backlog</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Potentially exploitable &mdash; investigate within 24 hours</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/reachability-triage.html"><span class="resource-icon">&#128300;</span><span>Reachability Triage<span class="resource-meta">Practice triaging findings by call path</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="250">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="01-sca-overview.html" class="btn btn-secondary">&#8592; Previous: SCA Overview</a>
+                    <a href="03-license-compliance.html" class="btn btn-primary">Next: License Compliance &#8594;</a>
+                </div>
+            </div>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>API &amp; Webhooks - Endor Academy</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>API &amp; Webhooks</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>API &amp; Webhooks</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 250 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>One Platform, Fully Automatable</li>
+                    <li>Authentication: Keys, Service Accounts, and Keyless OIDC</li>
+                    <li>Webhooks: Push, Don't Poll</li>
+                    <li>Data Exporters, Integrations, and Automation Recipes</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>One Platform, Fully Automatable</h2>
+                <p>The Endor Labs REST API exposes the same objects the console uses, which is what makes the platform scriptable end to end: you can manage <strong>projects, findings, policies, and scan results</strong>, and configure <strong>scan profiles</strong>, from your own tooling. Anything an engineer does by hand in the UI &mdash; triage a finding, grant an exception, adjust a policy, review a scan &mdash; can be automated, scheduled, and folded into the customer&rsquo;s existing systems.</p>
+
+                <p>That is the partner-relevant point: the API is how Endor Labs lands inside an enterprise instead of alongside it. Customer dashboards, ticketing workflows, compliance evidence, and internal portals all become thin clients over the same data.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Resource</th>
+                                <th>What you manage through it</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Projects</strong></td>
+                                <td>The applications and repositories being scanned &mdash; listing, state, and metadata</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Findings</strong></td>
+                                <td>Vulnerabilities, secrets, license issues, and policy violations &mdash; filterable by severity, status, and reachability</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Policies</strong></td>
+                                <td>Finding, exception, and remediation policies, created and versioned like code</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scan results</strong></td>
+                                <td>Individual scan runs and their outcomes, for history and audit</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scan profiles</strong></td>
+                                <td>What each scan analyzes &mdash; the same profiles <code>endorctl</code> uses, managed centrally</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Work From the API Reference</h4>
+                    <p>The console itself runs on this API &mdash; automation is not a bolt-on. Endor Labs publishes a complete API reference (OpenAPI) documenting every endpoint, parameter, and schema. The examples in this module illustrate the patterns; exact paths and request shapes come from the reference for your tenant, and the reference evolves with the platform.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Authentication: Keys, Service Accounts, and Keyless OIDC</h2>
+                <p>API keys are created in the Endor Labs console and used to obtain short-lived bearer tokens, which travel in the <code>Authorization</code> header on every request. Tokens expire by design &mdash; build refresh into your client instead of caching one token forever, and never embed a key in source code: load it from an environment variable or a secrets manager.</p>
+
+                <p>For automation, create a <strong>dedicated service account</strong> with least-privilege scope rather than reusing a human&rsquo;s key. If a token leaks, you revoke the service account without disrupting a person; and the audit trail clearly attributes automated actions to the integration, not to whoever ran it.</p>
+
+                <p>In CI, prefer <strong>keyless OIDC authentication</strong> &mdash; supported for GitHub, AWS, Azure, and GCP &mdash; so no secret is ever stored in a pipeline at all. The GitHub Actions lab walks through this end to end.</p>
+
+                <pre><code># Authenticate an API call (illustrative - exact paths and schemas
+# are documented in the Endor Labs API reference)
+export ENDOR_API="https://api.endorlabs.com"
+
+curl -H "Authorization: Bearer $ENDOR_BEARER_TOKEN" \
+  "$ENDOR_API/orgs/$ORG_UUID/projects?pageSize=100"</code></pre>
+
+                <p>Two practical rules for any client you write: page through list results to the end (a large project has far more findings than one page), and when the API throttles you, wait and retry instead of hammering &mdash; throttling is normal operation, not an error condition.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Webhooks: Push, Don't Poll</h2>
+                <p>Polling finds out about a new critical finding whenever your next scheduled run happens. <strong>Webhooks</strong> close that gap: you register HTTPS endpoints, and Endor Labs pushes real-time notifications &mdash; a scan completing, a new finding, a policy violation &mdash; as JSON POSTs the moment the event occurs. Reaction time becomes a design decision, not a cron schedule.</p>
+
+                <p>A production receiver follows four rules: verify the request signature exactly as documented for your tenant, respond <code>2xx</code> quickly, hand heavy work to a background queue, and treat deliveries as repeatable (make handlers idempotent).</p>
+
+                <pre><code># Illustrative webhook receiver: validate, filter, fan out.
+from flask import Flask, request, os, requests
+
+app = Flask(__name__)
+
+@app.post("/webhooks/endor")
+def receive():
+    # Verify the request signature as documented for your tenant
+    # before trusting the payload. Field names below are illustrative.
+    event = request.get_json()
+
+    if event.get("severity") == "critical" and event.get("status") == "open":
+        notify_slack(event)          # alert the owning channel
+        create_jira_issue(event)     # land it in the backlog
+    return "", 204
+
+def notify_slack(event):
+    requests.post(os.environ["SLACK_WEBHOOK_URL"], json={
+        "text": f"Critical finding: {event.get('name')}"
+    })
+
+def create_jira_issue(event):
+    requests.post(
+        f"{os.environ['JIRA_URL']}/rest/api/3/issue",
+        auth=(os.environ["JIRA_USER"], os.environ["JIRA_TOKEN"]),
+        json={"fields": {"project": {"key": "SEC"},
+                         "summary": f"Security: {event.get('name')}"}})</code></pre>
+
+                <p>Before you write that receiver, check what already exists: Endor Labs ships integrations for <strong>Jira, Slack, and email</strong>, and connects findings into <strong>Vanta</strong> for compliance evidence and <strong>Microsoft Defender for Cloud</strong> for cloud security programs. Custom code should be the last resort, not the first draft.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Data Exporters, Integrations, and Automation Recipes</h2>
+                <p><strong>Data exporters</strong> push findings to the customer&rsquo;s systems of record with no custom code to maintain:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128187;</div>
+                        <h4>GitHub Advanced Security</h4>
+                        <p>Findings surface in the code-scanning view of the repositories developers already watch &mdash; security in the tools they have already paid for.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #f39c12;">&#128451;</div>
+                        <h4>S3</h4>
+                        <p>Findings land in a data lake for historical trends, SLA tracking, and custom BI &mdash; no polling job required.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #3498db;">&#9729;</div>
+                        <h4>Wiz</h4>
+                        <p>Application findings correlate with cloud security posture, so one team sees code risk and cloud risk together.</p>
+                    </div>
+                </div>
+
+                <p>Six automation recipes partners deploy again and again:</p>
+
+                <ol class="steps-list">
+                    <li><strong>GHAS export</strong> &mdash; surface reachable critical and high findings in GitHub code scanning</li>
+                    <li><strong>S3 export</strong> &mdash; keep findings history for trend and remediation-time reporting in your BI tool</li>
+                    <li><strong>Wiz export</strong> &mdash; correlate application findings with cloud posture in one console</li>
+                    <li><strong>Jira integration</strong> &mdash; auto-create issues for reachable criticals, assigned to the owning team</li>
+                    <li><strong>Slack alerts</strong> &mdash; notify the channel that owns the affected service in real time</li>
+                    <li><strong>Scan profiles via API</strong> &mdash; manage scan configuration as code across every project in the org</li>
+                </ol>
+
+                <p>And when the automation needs to <em>act</em> rather than report, <code>endorctl</code> closes the loop in any pipeline &mdash; GitHub Actions, Jenkins, GitLab, Azure DevOps, Bitbucket, CircleCI, Google Cloud Build, and Buildkite &mdash; as covered in the endorctl CLI &amp; Automation module.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Exporters are the &ldquo;meet the customer where they already are&rdquo; story: no rip-and-replace, no parallel dashboard. The GHAS exporter is a wedge into GitHub-heavy accounts that have already bought Advanced Security; Vanta and Microsoft Defender for Cloud extend the conversation into compliance and cloud security, where new budget lives.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> Which set of objects can you manage through the Endor Labs REST API?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Projects, findings, policies, scan results, and scan profiles</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Only read-only exports of findings</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Billing, licensing, and seat assignments</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Source code and build artifacts</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> What is the recommended way to authenticate an Endor Labs integration running in GitHub Actions?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> A personal API key pasted into the workflow file</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> The maintainer's console password</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Keyless OIDC authentication, so no secret is stored in the pipeline at all</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> A long-lived token that never expires</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 3:</strong> Which of these are Endor Labs data exporters?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Salesforce and HubSpot</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Jira and Slack</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Datadog and New Relic</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> GitHub Advanced Security, S3, and Wiz</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/sbom-vex-export.html"><span class="resource-icon">&#128736;</span><span>Lab: SBOM &amp; VEX Export<span class="resource-meta">Export findings data for downstream tools</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="250">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="05-custom-policies.html" class="btn btn-secondary">&#8592; Previous: Custom Security Policies</a>
+                    <a href="07-secure-ai-coding.html" class="btn btn-primary">Next: Secure AI Coding &amp; Agent Governance &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

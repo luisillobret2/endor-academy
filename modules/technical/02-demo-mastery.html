@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Demo Mastery &amp; Lab Setup - Endor Academy</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Demo Mastery &amp; Lab Setup</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Demo Mastery &amp; Lab Setup</h1>
+                <div class="module-meta">
+                    <span>&#128338; 45 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 250 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The 17-Minute Endor Labs Demo Flow</li>
+                    <li>Demo Environment Setup Checklist</li>
+                    <li>Tailoring the Story by Audience</li>
+                    <li>Common Demo Mistakes &amp; Recovery</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The 17-Minute Endor Labs Demo Flow</h2>
+                <p>A demo that runs long loses the room. The Endor Labs story fits in 17 minutes because every act ends in a decision, not a feature tour. Run the acts in this order and hold the clock: if the prospect is engaged, deepen an act rather than adding a new one.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Act</th>
+                                <th>What you show</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>1. Connect &amp; scan</strong></td>
+                                <td>Connect a repository through the SCM app, watch toolchain detection build the scan profile, and open the first findings set</td>
+                                <td>3 min</td>
+                            </tr>
+                            <tr>
+                                <td><strong>2. Reachability triage</strong></td>
+                                <td>Open a critical finding, show the call path from application code into the vulnerable function, then dismiss an unreachable finding with a reason</td>
+                                <td>5 min</td>
+                            </tr>
+                            <tr>
+                                <td><strong>3. Remediation</strong></td>
+                                <td>Run upgrade impact analysis, show the automated pull request, then show an Endor Patch where no upstream fix exists</td>
+                                <td>3 min</td>
+                            </tr>
+                            <tr>
+                                <td><strong>4. Package Firewall</strong></td>
+                                <td>Attempt to install a known-malicious package and let the firewall block it at install time</td>
+                                <td>3 min</td>
+                            </tr>
+                            <tr>
+                                <td><strong>5. AI &amp; agents</strong></td>
+                                <td>Inventory agents, models, MCP servers, and skills, then show an AI SAST review comment on a pull request</td>
+                                <td>3 min</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Reachability is the act that sells. When a critical CVE is marked unreachable and you can display the call graph evidence behind that verdict, noise-weary teams lean in. Reserve the most time for act 2 and rehearse the call-path narration until it is under a minute.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Demo Environment Setup Checklist</h2>
+                <p>Demo quality is an operations problem, not a talent problem. Maintain one hardened demo organization and treat it like production.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Demo organization</strong> &mdash; a dedicated namespace with realistic projects across Java, Python, JavaScript/TypeScript, and Go, plus at least one container image and one Bazel or monorepo project.</li>
+                    <li><strong>Pre-scanned repositories</strong> &mdash; scan everything the night before so findings, call graphs, and dashboards are already populated when the call starts.</li>
+                    <li><strong>Malicious package fixture</strong> &mdash; a throwaway project that references a known-bad package so the Package Firewall block is repeatable.</li>
+                    <li><strong>Agent and MCP inventory</strong> &mdash; at least one registered agent, one MCP server, and context files such as <code>AGENTS.md</code> so governance decisions are visible.</li>
+                    <li><strong>Remediation artifacts</strong> &mdash; a pre-opened pull request and one Endor Patch example, so act 3 never waits on a build.</li>
+                    <li><strong>Fallback captures</strong> &mdash; screenshots or a short recording of each act in case the network, SSO, or a live scan misbehaves.</li>
+                </ol>
+
+                <p>Refresh the environment monthly: replace aging CVEs with current ones, re-run scans so timestamps look live, confirm every integration still authenticates, and add newly released capabilities within a week.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Never demo on an unproven network. Ask the customer to confirm screen-share bandwidth and whether outbound HTTPS is filtered on their side. If the customer insists on scanning their own repository live, run a dry scan against a clone beforehand and keep the pre-scanned project as the fallback path.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Tailoring the Story by Audience</h2>
+                <p>The same 17 minutes should feel different to different rooms. Change the framing and the depth, not the product.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128200;</div>
+                        <h4>CISO / VP Security</h4>
+                        <p>Lead with noise reduction, reachable-finding coverage, MTTR, and governance. Show the OSS coverage and analytics dashboards, the agent audit trail, and how exception policies create an evidence trail for audits.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128736;&#65039;</div>
+                        <h4>VP Engineering / Platform</h4>
+                        <p>Lead with developer workflow: PR scans that comment inline and can block, upgrade impact analysis, automated pull requests, and Endor Patches that clear dependencies no upstream release will fix.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128274;</div>
+                        <h4>Security Engineering / AppSec</h4>
+                        <p>Lead with depth: scan profiles and <code>scanprofile.yaml</code>, policy types, SBOM and VEX export, RSPM for GitHub misconfigurations, and how call graph construction produces reachability verdicts.</p>
+                    </div>
+                </div>
+
+                <p>Before showing anything, ask one question: &ldquo;What would make this hour worth your time?&rdquo; Then cut acts that do not serve that answer. A demo that skips act 4 to spend nine minutes on reachability is a better demo than one that runs every act on schedule.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Common Demo Mistakes &amp; Recovery</h2>
+                <ul>
+                    <li><strong>Feature tour instead of a story</strong> &mdash; narrate a developer&rsquo;s day: finding, triage, fix, merge. Never walk a menu.</li>
+                    <li><strong>Testing an unreachable CVE</strong> &mdash; if the flagship finding turns out to be unreachable, you have argued against your own value. Curate findings that are both critical and reachable.</li>
+                    <li><strong>Boiling the ocean</strong> &mdash; scanning the customer&rsquo;s entire estate live produces an unusable backlog. Scan one representative repository.</li>
+                    <li><strong>Ignoring the incumbent</strong> &mdash; never disparage the tool the room bought. Frame Endor Labs as the consolidation path that removes the noise their current tool generates.</li>
+                    <li><strong>No next step</strong> &mdash; every demo ends with a named action: a scoped POV, a repository list, or an architecture review date.</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Recover in the open. If a scan fails mid-demo, say so, switch to the pre-scanned project, and use it as proof that you plan for failure. Prospects remember composure far longer than they remember a call graph.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> In the 17-minute flow, which act immediately follows connecting a repository and running the first scan?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Package Firewall blocking a malicious install</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Reachability triage with call-path evidence</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> AI SAST review on a pull request</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Commercial packaging discussion</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> Which evidence turns a critical CVE from a claim into a demonstration?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> The license inventory for the dependency</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> The SBOM export</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> The call path showing the vulnerable function is reachable</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> The CVSS score alone</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 3:</strong> Which practice most reduces demo risk?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Live-scanning an unfamiliar repository without a dry run</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Keeping a pre-scanned demo organization and fallback captures</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Showing every feature in a fixed order</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Skipping environment checks to save time</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/reachability-triage.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: Reachability Triage<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="250">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="01-technical-deep-dive.html" class="btn btn-secondary">&#8592; Previous: Architecture &amp; Deployment Deep Dive</a>
+                    <a href="03-poc-management.html" class="btn btn-primary">Next: POC &amp; Trial Management &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

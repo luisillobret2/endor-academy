@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>IDE, MCP &amp; Coding Agents - Endor Academy</title>
+    <meta name="description" content="Connect the Endor Labs MCP server to Cursor, Claude Code, or VS Code so coding agents can find and fix vulnerabilities, flag secrets, and block malicious packages.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>IDE, MCP &amp; Coding Agents</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>IDE, MCP &amp; Coding Agents</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>One Security Protocol for Every Coding Agent</li>
+                    <li>Install the Endor Labs MCP Server</li>
+                    <li>What Your Agent Can Now Do</li>
+                    <li>Agent Kit and Safe Autonomy</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>One Security Protocol for Every Coding Agent</h2>
+                <p>The old integration model &mdash; one plugin per IDE &mdash; ages badly. Every IDE release breaks a plugin, and every new coding assistant needs yet another integration to be written and maintained. Endor Labs took a different path: it exposes the platform&rsquo;s security capabilities through an <strong>MCP server</strong>, so any MCP-capable client can call the same tools.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; What Is MCP?</h4>
+                    <p>The Model Context Protocol is an open standard for connecting AI applications to external tools and data sources. Instead of building a plugin for every editor, Endor Labs builds one MCP server &mdash; and Cursor, Claude Code, VS Code, Codex, Gemini CLI, and the rest all speak to it in the same way.</p>
+                </div>
+
+                <p>For developers this matters commercially as well as technically: Endor Labs&rsquo; agentic security capabilities are <strong>free for developers</strong> &mdash; &ldquo;AURI for developers is free forever&rdquo; &mdash; so individual engineers and entire dev teams can adopt the MCP server without a procurement cycle.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Install the Endor Labs MCP Server</h2>
+                <p>Starting the server is one command &mdash; no separate binary to install and keep up to date, because <code>npx</code> fetches and runs it for you:</p>
+
+                <pre><code>npx -y endorctl ai-tools mcp-server</code></pre>
+
+                <ol class="steps-list">
+                    <li><strong>Check prerequisites</strong> &mdash; you need Node.js/<code>npx</code> available and an authenticated <code>endorctl</code>.</li>
+                    <li><strong>Cursor users</strong> &mdash; use the one-click install from the Endor Labs integrations page, or register the server in <code>.cursor/mcp.json</code> as shown below.</li>
+                    <li><strong>Every other client</strong> &mdash; register the same command in your client&rsquo;s MCP configuration; the snippet shape is identical for Claude Code, Codex, VS Code/Copilot, Gemini CLI, and the rest.</li>
+                </ol>
+
+                <div class="key-concept">
+                    <h4>&#128161; Register the Server in .cursor/mcp.json</h4>
+                    <p>Drop this into your repository so the whole team gets the Endor Labs tools with zero per-machine setup:</p>
+                    <pre><code>{
+  "mcpServers": {
+    "endor-labs": {
+      "command": "npx",
+      "args": ["-y", "endorctl", "ai-tools", "mcp-server"]
+    }
+  }
+}</code></pre>
+                </div>
+
+                <p>Supported clients include <strong>Cursor, Claude Code, OpenAI Codex, VS Code/Copilot, Gemini CLI, Augment, IntelliJ, Google Antigravity, Devin, OpenCode, and GitHub AgentHQ</strong>. One server, one command, every major agent.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>What Your Agent Can Now Do</h2>
+                <p>Once connected, the agent&rsquo;s security skills stop being prompts and start being tools backed by the Endor Labs platform:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #e74c3c;">&#128027;</div>
+                        <h4>Find and Fix Vulnerabilities</h4>
+                        <p>The agent pulls findings with their call-path evidence, proposes the version upgrade or code fix, and &mdash; because it sees reachability &mdash; works the findings that matter instead of chasing unreachable noise.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #f39c12;">&#128273;</div>
+                        <h4>Detect Secrets Before Commit</h4>
+                        <p>Agents routinely paste example keys and tokens into code. Endor Labs secrets detection flags credentials before they are committed &mdash; with the same rules from laptop to pipeline.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128737;</div>
+                        <h4>Block Malicious Packages</h4>
+                        <p>Before the agent installs a package, Endor Labs checks it against malicious-package intelligence &mdash; typosquatting, dependency confusion, and compromised releases &mdash; with the Package Firewall enforcing policy at install time.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #3498db;">&#128202;</div>
+                        <h4>Answer With Evidence</h4>
+                        <p>&ldquo;Is this library safe to add?&rdquo; The agent answers with Endor Scores &mdash; activity, popularity, security, and code quality &mdash; instead of guessing from a README.</p>
+                    </div>
+                </div>
+
+                <p>Everything happens in your editor&rsquo;s normal flow: the agent proposes a diff, you review it, you accept it. The agent does the legwork; you stay in control.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Agent Kit and Safe Autonomy</h2>
+                <p>The <strong>Endor Labs Agent Kit</strong> packages pre-built agent workflows for <strong>Claude Code, Cursor, OpenAI Codex, Gemini CLI, Google Antigravity CLI, and the Cursor SDK</strong>. The workflows are portable &mdash; defined once and run in different environments &mdash; so a team can version, review, and share agent workflows exactly like code.</p>
+
+                <p>The safety model is what makes autonomy acceptable: Agent Kit actions are <strong>approval-gated and read-only by default</strong>. Agents propose changes rather than silently making them, risky actions pause for a human, and every action is logged. The full governance story &mdash; inventories, policies, and audit trails &mdash; is covered in the Secure AI Coding &amp; Agent Governance module.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Developers are already asking agents to write code &mdash; the only question is whether security rides along or gets bolted on later. The MCP server (free for developers) plus an Agent Kit demo is the strongest developer-land opening Endor Labs has, and it sets up the governance conversation that follows.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 1:</strong> Which command starts the Endor Labs MCP server?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> <code>endorctl mcp install</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> <code>npm install -g endorctl-mcp</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> <code>npx -y endorctl ai-tools mcp-server</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> <code>endorctl ide --mcp</code></label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> What does adding the server to <code>.cursor/mcp.json</code> accomplish?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> It registers the Endor Labs MCP server so Cursor&rsquo;s agent can call Endor Labs security tools</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> It installs the endorctl binary on every teammate&rsquo;s machine automatically</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> It disables Cursor&rsquo;s built-in security extensions</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> It schedules nightly scans of the repository</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 3:</strong> What is the Agent Kit safety model?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Agents run with full write access to move faster</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Approval-gated, read-only-by-default actions, with every action logged</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Agents may only run inside containerized sandboxes</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Agents require a security team member online to execute any step</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/mcp-agent-kit-setup.html"><span class="resource-icon">&#128736;</span><span>Lab: MCP Server &amp; Agent Kit Setup<span class="resource-meta">Connect Cursor or Claude Code</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="01-developer-quickstart.html" class="btn btn-secondary">&#8592; Previous: Developer Quickstart</a>
+                    <a href="03-cli-automation.html" class="btn btn-primary">Next: endorctl CLI &amp; Automation &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

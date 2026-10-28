@@ -1,0 +1,200 @@
+---
+title: endorctl CLI &amp; Automation - Endor Academy
+description: Master the endorctl CLI - install and authenticate, run scans and PR scans, pin behavior with scan profiles, and gate any CI pipeline on documented exit codes.
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>endorctl CLI &amp; Automation</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>endorctl CLI &amp; Automation</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>One Binary for Every Surface</li>
+                    <li>Install, Authenticate, and Scan</li>
+                    <li>Scan Profiles: Repeatable by Construction</li>
+                    <li>Exit Codes, CI Gating, and Scripting Patterns</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>One Binary for Every Surface</h2>
+                <p><code>endorctl</code> is the single command-line tool that drives the Endor Labs platform from a laptop, a container, or a CI runner. One binary covers every surface developers and automation need:</p>
+
+                <ul>
+                    <li><strong>Scans</strong> &mdash; <code>endorctl scan</code> runs SCA with reachability, plus SAST, secrets, and container analysis according to the scan profile</li>
+                    <li><strong>Dependency inventory</strong> &mdash; every scan resolves the complete direct and transitive dependency tree, which you can explore from the CLI or the console</li>
+                    <li><strong>PR scans</strong> &mdash; scan pull requests so findings land as PR comments, and can block merges when policy requires it</li>
+                    <li><strong>Container scans</strong> &mdash; analyze images, with reachability from your code into the image</li>
+                    <li><strong>Any pipeline</strong> &mdash; because it is a plain binary with documented exit codes, <code>endorctl</code> gates builds in whatever CI system the team already owns</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Same CLI, Laptop to Pipeline</h4>
+                    <p>Behavior is identical whether you run <code>endorctl</code> locally or in CI: the same commands, the same scan profile, the same policy. When a gate fails in the pipeline, you can reproduce exactly what CI saw on your own machine &mdash; no &ldquo;works on my laptop&rdquo; drift.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Install, Authenticate, and Scan</h2>
+                <p>Install the binary with the packaged installer for your OS (or pull the container image on a CI runner), then run the three commands that do 90% of the work:</p>
+
+                <pre><code># Verify the installation
+endorctl --version
+
+# Authenticate with an API token created in the console
+endorctl activate-token --token=$ENDOR_TOKEN
+
+# Scan the current repository
+endorctl scan</code></pre>
+
+                <p>Results land in your project in the console at <code>app.endorlabs.com</code>: the dependency tree, prioritized findings, and secrets. From there, two variations matter for automation:</p>
+
+                <ul>
+                    <li><strong>PR scans</strong> &mdash; run <code>endorctl</code> from CI against pull requests; findings appear as PR comments and policy violations can block the merge</li>
+                    <li><strong>Keyless authentication in CI</strong> &mdash; on GitHub, AWS, Azure, and GCP, prefer keyless OIDC authentication over stored tokens: nothing secret sits in a pipeline, so nothing can leak</li>
+                </ul>
+
+                <p>Exact flags evolve between releases &mdash; confirm current options with <code>endorctl scan --help</code> before you script them into a runbook.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Scan Profiles: Repeatable by Construction</h2>
+                <p>A <strong>scan profile</strong> defines what a scan does: which languages and toolchains to analyze, which checks run (SCA, SAST, secrets, containers), and how results are reported. There are three ways to configure one:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Auto-detection</strong> &mdash; <code>endorctl</code> detects the toolchains in your repository across 40+ languages and builds a profile on the first scan</li>
+                    <li><strong><code>scanprofile.yaml</code></strong> &mdash; pin the profile in a file checked into the repository, so scans are declarative, reviewable in a PR, and identical for every teammate and pipeline</li>
+                    <li><strong>UI or API</strong> &mdash; manage profiles centrally for consistency across an entire organization</li>
+                </ol>
+
+                <div class="key-concept">
+                    <h4>&#128161; Profiles Are the Contract Between Developers and Security</h4>
+                    <p>Because the same profile drives local and pipeline scans, &ldquo;what will CI say?&rdquo; has a deterministic answer &mdash; run the scan locally with the pinned profile. Teams that treat <code>scanprofile.yaml</code> as code get security behavior that changes only when someone reviews a diff.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Exit Codes, CI Gating, and Scripting Patterns</h2>
+                <p><code>endorctl</code> documents its exit codes, which is what makes CI gating trivial: a scan exits <code>0</code> when the code passes policy and non-zero when it does not. Any pipeline that can run a shell can gate on Endor Labs findings:</p>
+
+                <pre><code># Gate a build on the scan result
+endorctl scan
+status=$?
+
+if [ $status -ne 0 ]; then
+    echo "Security gate failed (exit code $status) - see scan output"
+    exit $status
+fi</code></pre>
+
+                <p>The same pattern works everywhere Endor Labs ships CI/CD support: <strong>GitHub Actions, Jenkins, GitLab, Azure DevOps, Bitbucket, CircleCI, Google Cloud Build, and Buildkite</strong>.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Environment</th>
+                                <th>Authentication</th>
+                                <th>Typical gate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Developer laptop</td>
+                                <td>API token via <code>endorctl activate-token</code></td>
+                                <td>Run the pinned profile before opening a PR</td>
+                            </tr>
+                            <tr>
+                                <td>GitHub Actions</td>
+                                <td>Keyless OIDC (no stored secrets)</td>
+                                <td>Fail the job on non-zero exit; post PR comments</td>
+                            </tr>
+                            <tr>
+                                <td>Self-hosted runners</td>
+                                <td>Scoped service token in the secret manager</td>
+                                <td>Exit-code gate identical to cloud runners</td>
+                            </tr>
+                            <tr>
+                                <td>Any other CI</td>
+                                <td>API token or OIDC where available</td>
+                                <td><code>endorctl scan</code> + <code>$?</code> is the whole integration</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Exit-code gating is the fastest enterprise win in the CLI story: one command in a pipeline turns findings into an enforceable policy. In demos, flip a policy in the console and show the pipeline go green to red on the very next run &mdash; that moment lands the &ldquo;security without workflow change&rdquo; promise better than any slide.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> Which command authenticates endorctl with an API token?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> <code>endorctl auth login --token</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> <code>endorctl activate-token --token=$ENDOR_TOKEN</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> <code>endorctl --set-credentials</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> <code>endorctl register --api</code></label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> Why do teams pin a <code>scanprofile.yaml</code> in the repository?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> To make scans run faster on large monorepos</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> To avoid uploading results to the console</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> So local and pipeline scans run the same, reviewable configuration &mdash; no drift between environments</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> To enable scanning of languages the CLI cannot auto-detect</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 3:</strong> In CI, what should the pipeline do when <code>endorctl scan</code> exits non-zero?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Retry the scan &mdash; non-zero usually means a network problem</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Ignore the exit code and rely on the console report</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Uninstall the dependency that caused the finding</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Fail the gate &mdash; non-zero means the scan violated policy, exactly what exit codes are documented for</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/github-actions-integration.html"><span class="resource-icon">&#128736;</span><span>Lab: GitHub Actions Integration<span class="resource-meta">endorctl, keyless OIDC, and PR gating</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="02-ide-integration.html" class="btn btn-secondary">&#8592; Previous: IDE, MCP &amp; Coding Agents</a>
+                    <a href="04-dependency-updates.html" class="btn btn-primary">Next: Dependency Updates &amp; Automated PRs &#8594;</a>
+                </div>
+            </div>

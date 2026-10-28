@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="img/endor-logo.png">
+    <link rel="apple-touch-icon" href="img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <!-- seo -->
+    <meta name="description" content="Your Endor Academy profile: XP, level, badges, streaks, saved modules, and a downloadable progress transcript.">
+    <link rel="canonical" href="https://luisillobret2.github.io/endor-academy/profile.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Endor Academy">
+    <meta property="og:title" content="Profile - Endor Academy">
+    <meta property="og:description" content="Your Endor Academy profile: XP, level, badges, streaks, saved modules, and a downloadable progress transcript.">
+    <meta property="og:url" content="https://luisillobret2.github.io/endor-academy/profile.html">
+    <meta property="og:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Profile - Endor Academy">
+    <meta name="twitter:description" content="Your Endor Academy profile: XP, level, badges, streaks, saved modules, and a downloadable progress transcript.">
+    <meta name="twitter:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <title>Profile - Endor Academy</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <main class="page-content" id="main-content">
+        <div class="container">
+
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar" id="profile-avatar">JD</div>
+                <div class="profile-info">
+                    <h1 id="profile-name">Jane Doe</h1>
+                    <p id="profile-subtitle">Sales Engineer &middot; Acme Security (VAR) &middot; Silver Partner</p>
+                    <div class="profile-badges">
+                        <span class="badge badge-green" id="profile-cert-badge">Associate Certified</span>
+                        <span class="badge badge-accent" id="profile-level-badge">Level 5 &middot; Specialist</span>
+                        <span class="badge badge-orange" id="profile-streak-badge">14-Day Streak</span>
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top: 12px;">
+                        <button class="btn btn-secondary btn-sm" id="profile-edit-btn">Edit Profile</button>
+                        <button class="btn btn-secondary btn-sm" id="profile-transcript-btn">&#128196; Download Transcript</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Edit Profile Modal (hidden by default) -->
+            <div id="profile-edit-modal" class="profile-edit-modal" style="display:none;">
+                <div class="profile-edit-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3 style="margin:0;">Edit Profile</h3>
+                        <button id="profile-edit-close" class="btn btn-secondary btn-sm" style="padding:4px 10px;">&times;</button>
+                    </div>
+                    <form id="profile-edit-form">
+                        <div class="form-group">
+                            <label for="edit-name">Full Name</label>
+                            <input type="text" id="edit-name" class="form-input" placeholder="Your name" maxlength="60">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-role">Role</label>
+                            <select id="edit-role" class="form-input">
+                                <option value="Sales Engineer">Sales Engineer</option>
+                                <option value="Solution Architect">Solution Architect</option>
+                                <option value="Sales Rep">Sales Rep</option>
+                                <option value="Security Consultant">Security Consultant</option>
+                                <option value="Technical Administrator">Technical Administrator</option>
+                                <option value="Customer Success Manager">Customer Success Manager</option>
+                                <option value="Executive">Executive</option>
+                                <option value="Developer">Developer</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-company">Company</label>
+                            <input type="text" id="edit-company" class="form-input" placeholder="Your company" maxlength="80">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-partner-type">Partner Type</label>
+                            <select id="edit-partner-type" class="form-input">
+                                <option value="VAR">VAR</option>
+                                <option value="MSSP">MSSP</option>
+                                <option value="GSI">Global System Integrator</option>
+                                <option value="Technology Partner">Technology Partner</option>
+                                <option value="Distributor">Distributor</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+                            <button type="button" id="profile-cancel-btn" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="section">
+                <div class="grid-4" style="margin-bottom: 32px;">
+                    <div class="card-flat" style="text-align: center;">
+                        <div class="stat-value accent">2,450</div>
+                        <div class="stat-label">Total XP</div>
+                    </div>
+                    <div class="card-flat" style="text-align: center;">
+                        <div class="stat-value accent">12</div>
+                        <div class="stat-label">Modules Done</div>
+                    </div>
+                    <div class="card-flat" style="text-align: center;">
+                        <div class="stat-value accent">3</div>
+                        <div class="stat-label">Labs Done</div>
+                    </div>
+                    <div class="card-flat" style="text-align: center;">
+                        <div class="stat-value accent">#23</div>
+                        <div class="stat-label">Rank</div>
+                    </div>
+                </div>
+
+                <!-- XP to Next Level -->
+                <div class="card-flat mb-24">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h4>Level 5: Specialist</h4>
+                            <div class="text-sm text-muted">550 XP to Level 6: Advanced</div>
+                        </div>
+                        <span class="text-sm" style="color: var(--color-accent);">2,450 / 3,000 XP</span>
+                    </div>
+                    <div class="progress-bar" style="height: 10px;">
+                        <div class="fill" style="width: 82%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <!-- Certifications -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Certifications</h2>
+                    </div>
+                    <div class="flex flex-col gap-12">
+                        <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(46, 204, 113, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">&#128171;</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--color-text-bright);">Certified Associate</div>
+                                <div class="text-xs text-muted">Earned June 15, 2025 &middot; Expires June 15, 2026</div>
+                            </div>
+                            <a href="certificate.html?cert=associate" class="btn btn-secondary btn-sm">View Certificate</a>
+                        </div>
+                        <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: rgba(52, 152, 219, 0.15); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;">&#9881;</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--color-text-bright);">Certified Professional</div>
+                                <div class="text-xs text-muted">Next certification to earn</div>
+                                <div class="progress-bar" style="margin-top: 6px;"><div class="fill" style="width: 68%;"></div></div>
+                            </div>
+                            <span class="badge badge-blue">In Progress</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badges (dynamically rendered) -->
+                <div class="section">
+                    <div class="section-header">
+                        <h2>Achievement Badges</h2>
+                    </div>
+                    <div class="profile-badges-dynamic" style="display: flex; flex-wrap: wrap; gap: 12px;">
+                        <!-- Badges are rendered dynamically by initAchievementBadges() -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Saved Modules (dynamically rendered) -->
+            <div class="section" id="saved-modules-section" style="display:none;">
+                <div class="section-header">
+                    <h2>Saved Modules</h2>
+                </div>
+                <div id="saved-modules-list" class="flex flex-col gap-8"></div>
+            </div>
+
+            <!-- Skill Points -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>Skill Points</h2>
+                </div>
+                <div class="grid-4">
+                    <div class="card-flat">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-sm" style="font-weight: 600; color: var(--color-text-bright);">SCA Mastery</span>
+                            <span class="text-sm text-accent">680 / 1000</span>
+                        </div>
+                        <div class="progress-bar"><div class="fill" style="width: 68%;"></div></div>
+                    </div>
+                    <div class="card-flat">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-sm" style="font-weight: 600; color: var(--color-text-bright);">Developer Mastery</span>
+                            <span class="text-sm" style="color: var(--color-secondary);">250 / 1000</span>
+                        </div>
+                        <div class="progress-bar fill-secondary"><div class="fill" style="width: 25%;"></div></div>
+                    </div>
+                    <div class="card-flat">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-sm" style="font-weight: 600; color: var(--color-text-bright);">Integration</span>
+                            <span class="text-sm" style="color: var(--color-warning);">320 / 1000</span>
+                        </div>
+                        <div class="progress-bar fill-warning"><div class="fill" style="width: 32%;"></div></div>
+                    </div>
+                    <div class="card-flat">
+                        <div class="flex justify-between items-center mb-8">
+                            <span class="text-sm" style="font-weight: 600; color: var(--color-text-bright);">Sales Mastery</span>
+                            <span class="text-sm text-muted">0 / 1000</span>
+                        </div>
+                        <div class="progress-bar"><div class="fill" style="width: 0%;"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning History -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>Recent Activity</h2>
+                </div>
+                <div class="flex flex-col gap-8">
+                    <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0;"></div>
+                        <div style="flex: 1;">
+                            <div class="text-sm" style="color: var(--color-text-bright);">Completed: SCA Integration Patterns</div>
+                            <div class="text-xs text-muted">Today at 2:15 PM &middot; +75 XP</div>
+                        </div>
+                        <span class="badge badge-accent">+75 XP</span>
+                    </div>
+                    <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0;"></div>
+                        <div style="flex: 1;">
+                            <div class="text-sm" style="color: var(--color-text-bright);">Completed Lab: GitHub Actions Integration</div>
+                            <div class="text-xs text-muted">Yesterday at 4:30 PM &middot; +100 XP</div>
+                        </div>
+                        <span class="badge badge-accent">+100 XP</span>
+                    </div>
+                    <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-secondary); flex-shrink: 0;"></div>
+                        <div style="flex: 1;">
+                            <div class="text-sm" style="color: var(--color-text-bright);">Earned Badge: Lab Rat (3 labs completed)</div>
+                            <div class="text-xs text-muted">Yesterday at 4:30 PM</div>
+                        </div>
+                        <span style="font-size: 1.25rem;">&#129431;</span>
+                    </div>
+                    <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-accent); flex-shrink: 0;"></div>
+                        <div style="flex: 1;">
+                            <div class="text-sm" style="color: var(--color-text-bright);">Passed Knowledge Check: SCA Reporting (85%)</div>
+                            <div class="text-xs text-muted">2 days ago &middot; +75 XP</div>
+                        </div>
+                        <span class="badge badge-accent">+75 XP</span>
+                    </div>
+                    <div class="card-flat" style="display: flex; gap: 16px; align-items: center; padding: 16px;">
+                        <div style="width: 8px; height: 8px; border-radius: 50%; background: var(--color-warning); flex-shrink: 0;"></div>
+                        <div style="flex: 1;">
+                            <div class="text-sm" style="color: var(--color-text-bright);">7-Day Streak Achieved!</div>
+                            <div class="text-xs text-muted">5 days ago &middot; +100 XP bonus</div>
+                        </div>
+                        <span class="badge badge-accent">+100 XP</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="js/layout.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/homepage.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/cert-recommendations.js"></script>
+    <script src="js/badges.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

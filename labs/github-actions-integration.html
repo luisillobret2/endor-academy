@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive lab: Wire Endor Labs scanning into GitHub Actions with keyless OIDC authentication, PR scan comments, and policy-driven fail conditions.">
+    <title>Lab: GitHub Actions Integration - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>GitHub Actions Integration</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>GitHub Actions <span class="accent">Integration</span></h1>
+                <span class="lab-type-badge guided">Guided</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 60 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; Integration</span>
+                <span>&#128218; 6 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Connect a repository with the Endor Labs GitHub App</li>
+                <li>Authenticate CI scans keylessly with GitHub OIDC — no stored tokens</li>
+                <li>Create a GitHub Actions workflow that runs <code>endorctl scan</code></li>
+                <li>Trigger a pull request and review the automated PR scan comment</li>
+                <li>Configure policy-driven fail conditions and branch protection</li>
+                <li>Add a nightly full scan to keep the baseline fresh</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Connect the Repository with the Endor Labs GitHub App</h3>
+            <p>In the Endor Labs dashboard, open <strong>Settings &rarr; Integrations &rarr; GitHub</strong> and install the Endor Labs GitHub App on your organization, granting it access to <code>checkout-service</code>. This is the piece that enables monitoring, PR comments, and automated upgrade PRs.</p>
+            <p>Then clone the repository so you can add the workflow:</p>
+            <div class="lab-code-block"><span class="comment"># Clone the repository</span>
+gh repo clone acme-financial/checkout-service
+cd checkout-service</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> gh repo clone acme-financial/checkout-service
+<span class="term-info">Cloning into 'checkout-service'...</span>
+<span class="term-success">Repository connected via Endor Labs GitHub App (2 projects synced)</span></div>
+            <div class="lab-callout tip">
+                <strong>Why the app matters</strong>
+                PR scan comments post as the Endor Labs integration — you will not manage a bot account or store a GitHub PAT in your secrets. The workflow you create next only needs to run the scan; the app handles the GitHub-facing feedback.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Installed the Endor Labs GitHub App with access to the repository</li>
+                <li><span class="check-icon">&#10003;</span> Cloned <code>checkout-service</code> locally</li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Authorize the Runner: Keyless OIDC First</h3>
+            <p>Every CI integration has the same weak point: the credential stored in the pipeline. Endor Labs removes it. GitHub Actions runners can mint <strong>short-lived OIDC tokens</strong>, and Endor Labs trusts your organization's GitHub identity — so <code>endorctl</code> authenticates with no stored secret: nothing to leak, nothing to rotate.</p>
+            <p>Enable keyless auth in the dashboard: <strong>Settings &rarr; Integrations &rarr; GitHub &rarr; Keyless (OIDC)</strong>. Then confirm the workflow only needs the standard OIDC permission:</p>
+            <div class="lab-code-block"><span class="comment"># The only permission keyless auth needs</span>
+<span class="keyword">permissions:</span>
+  <span class="keyword">contents:</span> read
+  <span class="keyword">id-token:</span> write   <span class="comment"># required for keyless OIDC</span></div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> gh secret list
+<span class="term-info">(no repository secrets — the workflow authenticates keylessly via GitHub OIDC)</span></div>
+            <div class="lab-callout warning">
+                <strong>Fallback: ENDOR_TOKEN</strong>
+                Runners that cannot mint OIDC tokens (some self-hosted setups) can use an API key instead: create one in <strong>Settings &rarr; API keys</strong>, store it as the GitHub secret <code>ENDOR_TOKEN</code>, and export it in the step. Keyless is the default; the token is the exception.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Enabled keyless OIDC auth for GitHub in the dashboard</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed no long-lived token secret is needed</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Create the Workflow</h3>
+            <p>Create <code>.github/workflows/endor-scan.yml</code>. The workflow installs endorctl, runs the scan with SARIF output, and uploads the results to GitHub code scanning:</p>
+            <div class="lab-code-block"><span class="comment"># .github/workflows/endor-scan.yml</span>
+<span class="keyword">name:</span> Endor Labs Scan
+
+<span class="keyword">on:</span>
+  <span class="keyword">pull_request:</span>
+    <span class="keyword">branches:</span> [main]
+  <span class="keyword">push:</span>
+    <span class="keyword">branches:</span> [main]
+
+<span class="keyword">jobs:</span>
+  <span class="keyword">endor-scan:</span>
+    <span class="keyword">runs-on:</span> ubuntu-latest
+    <span class="keyword">permissions:</span>
+      <span class="keyword">contents:</span> read
+      <span class="keyword">id-token:</span> write
+    <span class="keyword">steps:</span>
+      - <span class="keyword">name:</span> Checkout code
+        <span class="keyword">uses:</span> actions/checkout@v4
+
+      - <span class="keyword">name:</span> Install endorctl
+        <span class="keyword">run:</span> curl -fsSL https://endorlabs.com/install.sh | bash
+
+      - <span class="keyword">name:</span> Run Endor Labs scan
+        <span class="keyword">run:</span> endorctl scan --output sarif
+
+      - <span class="keyword">name:</span> Upload SARIF to code scanning
+        <span class="keyword">if:</span> always()
+        <span class="keyword">uses:</span> github/codeql-action/upload-sarif@v3
+        <span class="keyword">with:</span>
+          <span class="keyword">sarif_file:</span> endor.sarif</div>
+            <div class="lab-callout tip">
+                <strong>Machine-readable output</strong>
+                <code>endorctl scan --output sarif</code> writes <code>endor.sarif</code> for code scanning; <code>--output json</code> is the choice when you want raw results stashed as a workflow artifact. The current workflow syntax lives at docs.endorlabs.com.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Created <code>.github/workflows/endor-scan.yml</code></li>
+                <li><span class="check-icon">&#10003;</span> Included <code>id-token: write</code> for keyless auth</li>
+                <li><span class="check-icon">&#10003;</span> Added the SARIF upload step for code scanning</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Trigger a PR and Watch the Loop</h3>
+            <p>Push a branch with a small change and open a pull request — the event the workflow is built around:</p>
+            <div class="lab-code-block"><span class="comment"># Create a branch, a small change, and a PR</span>
+git checkout -b feature/add-config
+echo "LOG_LEVEL=info" &gt;&gt; .env.example
+git add .env.example
+git commit -m "feat: add log level config"
+git push origin feature/add-config
+
+gh pr create --fill</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> gh pr create --fill
+<span class="term-success">https://github.com/acme-financial/checkout-service/pull/58</span>
+
+<span class="term-prompt">$</span> gh run watch --exit-status
+<span class="term-info">Job: endor-scan</span>
+<span class="term-info">  Checkout code ................. done</span>
+<span class="term-info">  Install endorctl .............. done</span>
+<span class="term-info">  Run Endor Labs scan ........... done</span>
+<span class="term-success">  Authenticated with Endor Labs using GitHub OIDC (keyless) — no token stored</span>
+<span class="term-info">  Scanning PR 58 (differential vs. main)</span>
+<span class="term-info">  New findings introduced by this PR: 1</span>
+<span class="term-success">Run succeeded in 1m 47s</span></div>
+            <p>Within a minute, the Endor Labs GitHub App posts the scan comment on PR #58:</p>
+            <div class="lab-code-block"><span class="comment"># PR comment posted by the Endor Labs GitHub App</span>
+Endor Labs PR scan
+
+This PR introduces 1 new finding:
+  [HIGH] CVE-2022-42003 — jackson-databind 2.13.2 — REACHABLE
+  Call path: OrderController.createOrder() -&gt; ObjectMapper.readValue() -&gt; ...
+Fix: upgrade jackson-databind to 2.13.4.2
+
+No policy violations — this PR is clear to merge.</div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Opened a PR that triggered the workflow</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed keyless OIDC authentication in the run logs</li>
+                <li><span class="check-icon">&#10003;</span> Reviewed the PR comment with the introduced finding and call path</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Fail Conditions That Mean Something</h3>
+            <p>The scan's exit code is driven by your Endor Labs finding policies, not by ad-hoc flags in YAML. In the dashboard, open <strong>Policies &rarr; Finding policies</strong> and set the action for reachable criticals to <strong>fail the pipeline</strong>. Scope it to findings <em>introduced</em> by the PR, so pre-existing debt does not break every branch:</p>
+            <div class="lab-code-block"><span class="comment"># Finding policy (dashboard)</span>
+Name:    Fail pipeline on reachable criticals
+Scope:   findings introduced by the PR (differential vs. baseline)
+Match:   severity = critical AND reachability = reachable
+Action:  fail the pipeline (endorctl exits non-zero)</div>
+            <p>Now watch a PR that reintroduces Log4Shell:</p>
+            <div class="lab-terminal"><span class="term-info"># GitHub Actions log, job endor-scan</span>
+<span class="term-prompt">$</span> endorctl scan --output sarif
+<span class="term-info">Scanning PR 61 (differential vs. main)</span>
+<span class="term-info">New findings introduced by this PR: 1</span>
+  <span class="term-error">[CRITICAL] CVE-2021-44228 — log4j-core 2.14.1 — REACHABLE</span>
+<span class="term-warn">Policy violations: 1 (fail pipeline on reachable critical)</span>
+<span class="term-error">exit status 1</span></div>
+            <p>Finish the gate in GitHub: <strong>Settings &rarr; Branches &rarr; Add rule</strong> for <code>main</code>, enable <strong>Require status checks to pass before merging</strong>, and select <code>endor-scan</code> as a required check.</p>
+            <div class="lab-callout warning">
+                <strong>Heads up</strong>
+                Fail on <em>introduced</em> findings first. Failing every build on all historical debt creates pressure to disable the gate entirely — the opposite of what you want. Tighten the scope gradually as the backlog shrinks.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Created the fail-on-reachable-criticals policy scoped to introduced findings</li>
+                <li><span class="check-icon">&#10003;</span> Saw the scan exit non-zero on a violating PR</li>
+                <li><span class="check-icon">&#10003;</span> Added <code>endor-scan</code> as a required status check on <code>main</code></li>
+            </ul>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="lab-step" data-step="6">
+            <div class="lab-step-number">6</div>
+            <h3>Nightly Full Scans and a Fresh Baseline</h3>
+            <p>PR scans are differential and fast — perfect for the merge gate. But reachability and dependency data need a periodic full pass to stay honest. Add a scheduled job to the same workflow:</p>
+            <div class="lab-code-block"><span class="comment"># Nightly full scan of main</span>
+<span class="keyword">on:</span>
+  <span class="keyword">schedule:</span>
+    - <span class="keyword">cron:</span> <span class="string">'0 3 * * *'</span>
+  <span class="keyword">workflow_dispatch:</span></div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> gh workflow run "Endor Labs Scan" --ref main
+
+<span class="term-prompt">$</span> gh run watch
+<span class="term-info">Nightly full scan of main</span>
+<span class="term-info">Resolving dependencies... done (47 direct, 183 total)</span>
+<span class="term-info">Analyzing reachability... done</span>
+<span class="term-info">Findings: 27 (3 reachable)</span>
+<span class="term-success">Baseline updated: 2026-11-05 03:00 UTC</span></div>
+            <div class="lab-callout tip">
+                <strong>The full picture</strong>
+                A PR gate stops new reachable criticals; the nightly full scan keeps the baseline, reachability, and dependency data current; automated PRs from Endor Labs can propose dependency upgrades so the backlog shrinks without anyone triaging CVE lists by hand.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Added the scheduled full scan to the workflow</li>
+                <li><span class="check-icon">&#10003;</span> Verified the baseline updates after the nightly run</li>
+                <li><span class="check-icon">&#10003;</span> Noted where automated upgrade PRs would come from</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">Which GitHub Actions permission enables keyless OIDC authentication?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false"><code>permissions: contents: write</code></li>
+                <li class="lab-quiz-option" data-correct="true"><code>permissions: id-token: write</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>permissions: security-events: write</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>permissions: pull-requests: write</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">Why is keyless OIDC preferred over storing an <code>ENDOR_TOKEN</code> secret?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">It makes scans run faster</li>
+                <li class="lab-quiz-option" data-correct="false">It avoids needing the GitHub App</li>
+                <li class="lab-quiz-option" data-correct="true">The runner exchanges a short-lived OIDC token for access — nothing long-lived is stored, so nothing can leak or go stale</li>
+                <li class="lab-quiz-option" data-correct="false">It is required for SARIF output</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">Who posts the PR scan comment on a pull request?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">A custom bot step in your workflow using <code>secrets.GITHUB_TOKEN</code></li>
+                <li class="lab-quiz-option" data-correct="true">The Endor Labs GitHub App via the SCM integration</li>
+                <li class="lab-quiz-option" data-correct="false">GitHub code scanning, automatically</li>
+                <li class="lab-quiz-option" data-correct="false">A GitHub Actions maintainer account you create</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">How do you make the scan step fail a pull request?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Add <code>continue-on-error: false</code> to the checkout step</li>
+                <li class="lab-quiz-option" data-correct="false">Set a branch protection rule only — no scan configuration needed</li>
+                <li class="lab-quiz-option" data-correct="true">Configure a finding policy to fail the pipeline on matching findings — endorctl exits non-zero and the required status check blocks the merge</li>
+                <li class="lab-quiz-option" data-correct="false">Upload the SARIF file with a failing annotation</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've wired Endor Labs into GitHub Actions with keyless OIDC auth, automated PR feedback through the GitHub App, enforced policy-driven fail conditions on protected branches, and scheduled nightly scans to keep the baseline fresh.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="sbom-vex-export.html" class="btn btn-primary">Next Lab: SBOM &amp; VEX Export</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 6;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('github-actions-integration', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Compliance &amp; Regulatory Overview - Endor Academy</title>
+    <meta name="description" content="How SBOM mandates, the EU Cyber Resilience Act, US Executive Order 14028, FedRAMP, HIPAA, PCI, and SOC 2 turn application security into evidence - and how Endor Labs produces it.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Foundation Track</span> &rsaquo; <span>Compliance &amp; Regulatory Overview</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Compliance &amp; Regulatory Overview</h1>
+                <div class="module-meta">
+                    <span>&#128338; 30 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 100 XP</span>
+                    <span class="level-badge beginner">Level 1 - Beginner</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Why Compliance Now Drives AppSec Budgets</li>
+                    <li>The SBOM Mandate</li>
+                    <li>Mapping Frameworks to Endor Labs Evidence</li>
+                    <li>License Compliance and Open-Source Governance</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Why Compliance Now Drives AppSec Budgets</h2>
+                <p>Compliance is the fastest path from an AppSec conversation to a funded project. When a regulation sets a deadline or a customer contract requires evidence, the security team gets budget it could not win on engineering merit alone. Four drivers show up in almost every deal:</p>
+
+                <ul>
+                    <li><strong>Regulation with deadlines</strong> &mdash; the EU Cyber Resilience Act, US Executive Order 14028, and sector rules such as FDA premarket cybersecurity guidance put software composition and vulnerability handling requirements into law with fixed dates</li>
+                    <li><strong>Customer and procurement requirements</strong> &mdash; enterprise buyers require SOC 2, ISO 27001, or a completed vendor security questionnaire before signing, and increasingly ask for an SBOM and a description of vulnerability handling</li>
+                    <li><strong>Government and public sector</strong> &mdash; FedRAMP authorization and federal software attestations require demonstrable supply chain controls and continuous vulnerability monitoring, not a one-time audit artifact</li>
+                    <li><strong>Insurance and board reporting</strong> &mdash; cyber insurers and boards ask for evidence of repeatable controls, and a policy-driven platform produces that evidence continuously instead of reconstructing it before an audit</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Compliance Is an Output of Good Security</h4>
+                    <p>The most persuasive framing for partners: Endor Labs does not exist to produce compliance artifacts. It produces security work, and compliance evidence falls out of the platform as SBOMs, policies, findings history, and remediation records. Customers who scan for security get audit evidence for free.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>The SBOM Mandate</h2>
+                <p>An <strong>SBOM (Software Bill of Materials)</strong> is the machine-readable inventory of every component in a software product: packages, versions, licenses, and identifiers. What began as a NIST and NTIA recommendation is now a procurement and regulatory requirement in multiple jurisdictions.</p>
+
+                <ul>
+                    <li><strong>US Executive Order 14028</strong> &mdash; directs federal agencies to require SBOMs from software suppliers, with NTIA defining the minimum data elements an SBOM must contain</li>
+                    <li><strong>EU Cyber Resilience Act</strong> &mdash; introduces cybersecurity obligations across the lifetime of products sold in the EU, including software composition transparency and coordinated vulnerability handling</li>
+                    <li><strong>FDA premarket guidance</strong> &mdash; medical device manufacturers are expected to document software components as part of cybersecurity submissions</li>
+                    <li><strong>Commercial contracts</strong> &mdash; enterprise and public sector buyers increasingly require an SBOM and a VEX statement as a condition of purchase</li>
+                </ul>
+
+                <p>Endor Labs generates SBOMs in <strong>CycloneDX</strong> and <strong>SPDX</strong> and supports SBOM import, so an organization can consolidate third-party SBOMs into the same platform it uses for its own products. Exports are paired with <strong>VEX (Vulnerability Exploitability eXchange)</strong>, which communicates whether a listed vulnerability is actually exploitable in the product rather than merely present in a component.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>An SBOM alone is a list. The value in a customer conversation is the combination: SBOM for composition, reachability and VEX for exploitability, and policies for the evidence that a control was applied consistently. Sell the workflow, deliver the artifact.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Mapping Frameworks to Endor Labs Evidence</h2>
+                <p>Most customers are subject to more than one framework. The same platform outputs satisfy the overlapping requirements, which is why one investment can cover several audits:</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Framework or Mandate</th>
+                                <th>What It Requires</th>
+                                <th>Endor Labs Evidence</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SOC 2</strong></td>
+                                <td>Documented monitoring of vulnerabilities and change management over the audit period</td>
+                                <td>Continuous scan history, finding policies, remediation records, and exported reports</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PCI DSS</strong></td>
+                                <td>Identification and remediation of vulnerabilities in bespoke and third-party software</td>
+                                <td>SCA with reachability, SAST on first-party code, and policy-driven remediation timelines</td>
+                            </tr>
+                            <tr>
+                                <td><strong>HIPAA</strong></td>
+                                <td>Risk analysis and safeguards for systems handling protected health information</td>
+                                <td>Inventory of components and vulnerabilities affecting systems in scope, with exception records</td>
+                            </tr>
+                            <tr>
+                                <td><strong>FedRAMP</strong></td>
+                                <td>Continuous monitoring and supply chain risk management for federal cloud services</td>
+                                <td>SBOM and VEX exports, container scanning, RSPM findings, and audit-ready policy evidence</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ISO 27001</strong></td>
+                                <td>Managed controls for secure development and supplier relationships</td>
+                                <td>Policy configuration, RBAC and SSO controls, and documented handling of third-party risk</td>
+                            </tr>
+                            <tr>
+                                <td><strong>EO 14028 / EU CRA</strong></td>
+                                <td>Software composition transparency and vulnerability handling across the product lifetime</td>
+                                <td>CycloneDX and SPDX SBOMs, VEX statements, and continuous monitoring baselines</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Referenceable outcomes help here: <strong>Egnyte</strong> reduced mean time to remediate by 70% while pursuing FedRAMP, and <strong>Zebra Technologies</strong> cut vulnerability noise by 97%, which is what made continuous monitoring practical rather than aspirational.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>License Compliance and Open-Source Governance</h2>
+                <p>Compliance is not only about vulnerabilities. Open-source licenses carry obligations, and a copyleft dependency pulled in transitively can create disclosure requirements the engineering team never intended to accept. Endor Labs surfaces license findings alongside security findings, using the same policies and the same triage workflow.</p>
+
+                <ul>
+                    <li><strong>License policies</strong> &mdash; define which license families are allowed, restricted, or require review, and apply them consistently across every repository</li>
+                    <li><strong>Exception policies</strong> &mdash; record an accepted risk with an owner and an expiry date, so an exception is a decision rather than a forgotten alert</li>
+                    <li><strong>Remediation policies</strong> &mdash; standardize how fixes are proposed, approved, and merged, including automated pull requests</li>
+                    <li><strong>RSPM</strong> &mdash; repository security posture findings, such as permissive GitHub settings, that auditors ask about under secure development controls</li>
+                    <li><strong>Evidence exports</strong> &mdash; SBOMs, VEX statements, and policy reports that legal, procurement, and audit teams can attach directly to a review</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Compliance requirements are the most reliable budget trigger in the Endor Labs portfolio, and the platform&rsquo;s advantage is that the same scan satisfies security and compliance stakeholders. When a prospect says &ldquo;we have an SBOM requirement,&rdquo; the correct follow-up is not a document export feature list &mdash; it is a scan that produces SBOMs, VEX, reachability, and policy evidence together.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What does US Executive Order 14028 require from software suppliers to the federal government?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> That all software be open source</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> That SBOMs be provided for software sold to the US government</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> That every developer hold a security certification</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> That software be hosted in US data centers</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> Which compliance framework is most commonly requested by enterprise SaaS customers?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> SOC 2 Type II</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> FedRAMP</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> HIPAA</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> PCI DSS</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> What does a VEX statement communicate?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> The list of open-source licenses used in a product</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> The CVSS severity of every component in a product</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Whether a product is actually affected by a specific vulnerability</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> The build provenance of a container image</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/sbom-vex-export.html"><span class="resource-icon">&#128202;</span><span>Lab: SBOM &amp; VEX Export<span class="resource-meta">Produce audit-ready evidence</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="100">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="04-vulnerability-types.html" class="btn btn-secondary">&#8592; Previous</a>
+                    <a href="../../certifications.html" class="btn btn-primary">View Certifications &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

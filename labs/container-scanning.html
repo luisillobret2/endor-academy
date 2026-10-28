@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive lab: Scan container images with endorctl container scan, read reachability from code to image, and apply base image remediation.">
+    <title>Lab: Container Image Scanning - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>Container Image Scanning</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>Container <span class="accent">Image Scanning</span></h1>
+                <span class="lab-type-badge guided">Guided</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 40 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; Containers</span>
+                <span>&#128218; 5 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Build a container image for the sample application</li>
+                <li>Scan the image with <code>endorctl container scan</code></li>
+                <li>Understand reachability from source code into the image</li>
+                <li>Apply base image remediation and use incremental scanning</li>
+                <li>Gate images in the pipeline before they reach a registry</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Build the Image</h3>
+            <p><code>checkout-service</code> ships as a container image built from a simple Dockerfile on top of a Java runtime base image. Build the app, then the image:</p>
+            <div class="lab-code-block"><span class="comment"># Dockerfile</span>
+FROM eclipse-temurin:17-jre
+COPY target/checkout-service-1.4.2.jar /app/app.jar
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]</div>
+            <div class="lab-code-block"><span class="comment"># Build the app, then the image</span>
+mvn -q -DskipTests package
+docker build -t ghcr.io/acme/checkout-service:1.4.2 .</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> mvn -q -DskipTests package
+<span class="term-info">BUILD SUCCESS — target/checkout-service-1.4.2.jar</span>
+
+<span class="term-prompt">$</span> docker build -t ghcr.io/acme/checkout-service:1.4.2 .
+<span class="term-info">[+] Building 4.2s (8/8) FINISHED</span>
+<span class="term-info"> =&gt; [1/2] FROM docker.io/library/eclipse-temurin:17-jre</span>
+<span class="term-info"> =&gt; [2/2] COPY target/checkout-service-1.4.2.jar /app/app.jar</span>
+<span class="term-success">Successfully tagged ghcr.io/acme/checkout-service:1.4.2</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                In production you would pin the base image by digest so builds are reproducible. In this lab the floating tag is deliberate — it is about to teach us something about base image drift.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Built <code>checkout-service-1.4.2.jar</code></li>
+                <li><span class="check-icon">&#10003;</span> Built and tagged <code>ghcr.io/acme/checkout-service:1.4.2</code></li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Scan the Image</h3>
+            <p>Endor Labs container scanning analyzes every image layer: OS packages from the base, language packages from your app, and the correlation between the two. Run it against the local image:</p>
+            <div class="lab-code-block"><span class="comment"># Scan the container image</span>
+endorctl container scan ghcr.io/acme/checkout-service:1.4.2</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl container scan ghcr.io/acme/checkout-service:1.4.2
+<span class="term-info">Loading image... done (11 layers)</span>
+<span class="term-info">Analyzing OS packages... done (214 packages, debian bullseye)</span>
+<span class="term-info">Analyzing language packages... done (87 from app jar)</span>
+<span class="term-info">Correlating image contents with source code... done</span>
+<span class="term-info">Analyzing reachability... done</span>
+
+<span class="term-info">Findings summary</span>
+  <span class="term-error">Critical:  4  (1 reachable from app code)</span>
+  <span class="term-warn">High:       9  (1 reachable from app code)</span>
+  <span class="term-info">Medium:    14  (0 reachable)</span>
+  <span class="term-success">Low:        6  (0 reachable)</span>
+
+<span class="term-info">  From base image (eclipse-temurin:17-jre): 26 findings</span>
+<span class="term-warn">  From application dependencies:           7 findings</span>
+
+<span class="term-success">Results uploaded to Endor Labs:</span>
+<span class="term-info">https://app.endorlabs.com/acme-financial/container-images/checkout-service:1.4.2</span></div>
+            <div class="lab-callout warning">
+                <strong>Notice</strong>
+                33 findings, and the scan tells you where each one lives: 26 come from the base image, 7 from your application's dependencies. That split is your remediation plan — the two need completely different fixes.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Scanned the image and reviewed the summary</li>
+                <li><span class="check-icon">&#10003;</span> Noted the base-image vs. application-dependency split</li>
+                <li><span class="check-icon">&#10003;</span> Opened the image findings in the dashboard</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Reachability from Code to Image</h3>
+            <p>This is what separates Endor Labs container scanning from a flat CVE list: reachability analysis extends from your source code into the image. You know which of the 33 image findings your application actually executes.</p>
+            <p>Open the CVE-2021-44228 finding on the image and read the call path:</p>
+            <div class="lab-code-block"><span class="comment"># Call path — CVE-2021-44228, inside the image</span>
+Entry point: POST /api/orders  (served by app.jar in the image)
+  1. OrderController.createOrder()       [your code, in image]
+  2. OrderService.validatePayment()      [your code, in image]
+  3. Logger.error(paymentCtx)             [log4j-api, in image]
+  4. JndiLookup.lookup()                  [log4j-core 2.14.1, in image]  * vulnerable function</div>
+            <p>The same reachable Log4Shell path from the source scan — now proven inside the shipped image. Compare with CVE-2023-0286 in <code>openssl</code> from the base image: present in the image, but no path from application code calls the vulnerable function. It is still worth patching via a base update, but it is not exploitable through <code>checkout-service</code> today.</p>
+            <div class="lab-callout tip">
+                <strong>How the scanning works</strong>
+                Endor Labs container scanning is incremental — re-scans analyze only changed layers, so iteration is fast. It also leaves <strong>zero cluster footprint</strong>: nothing is deployed into your Kubernetes cluster, and registry scanning covers third-party images (like that Postgres you pulled) as well.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Traced the Log4Shell call path into the image layers</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the base-image openssl CVE is unreachable through app code</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Base Image Remediation</h3>
+            <p>Open one of the base-image findings in the dashboard — for example CVE-2023-0286 in <code>openssl</code>. The remediation panel shows the base image has been rebuilt upstream with the patched library. Pull the refreshed base and rebuild:</p>
+            <div class="lab-code-block"><span class="comment"># Pull the updated base image and rebuild</span>
+docker pull eclipse-temurin:17-jre
+docker build --pull -t ghcr.io/acme/checkout-service:1.4.3 .</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl container scan ghcr.io/acme/checkout-service:1.4.3
+<span class="term-info">Loading image... done (11 layers)</span>
+<span class="term-info">Incremental analysis: 2 changed layers, re-analyzing...</span>
+<span class="term-success">base layer updated: openssl 1.1.1n -&gt; 1.1.1v   [-11 findings]</span>
+
+<span class="term-info">Findings summary</span>
+  <span class="term-error">Critical:  3  (1 reachable — log4j, fix in app code)</span>
+  <span class="term-warn">High:       2  (1 reachable)</span>
+<span class="term-success">Incremental scan finished in 41s</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                One base-image rebuild removed 11 findings — this is the highest-leverage container fix there is. For application-level Java and Python libraries you cannot upgrade outright, Endor Patches provides backported security fixes instead of forcing a major version bump.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Rebuilt the image on the refreshed base</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the incremental re-scan cleared the openssl findings in 41 seconds</li>
+                <li><span class="check-icon">&#10003;</span> Noted the remaining reachable finding lives in app code, not the base</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Gate Images in the Pipeline</h3>
+            <p>Scanning on your laptop is a check; scanning in the pipeline is a gate. Add a container scan step that runs <em>before</em> the image is pushed to the registry, so a vulnerable image never becomes pullable:</p>
+            <div class="lab-code-block"><span class="comment"># CI step (example: GitHub Actions) — scan before push</span>
+- name: Scan image before push
+  run: |
+    endorctl container scan ghcr.io/acme/checkout-service:${{ github.sha }}</div>
+            <div class="lab-terminal"><span class="term-info"># Pull request that reintroduces a reachable critical:</span>
+<span class="term-prompt">$</span> endorctl container scan ghcr.io/acme/checkout-service:pr-58
+<span class="term-info">Loading image... done</span>
+<span class="term-info">Analyzing packages... done</span>
+<span class="term-info">Analyzing reachability... done</span>
+
+  <span class="term-error">Critical: 1 (1 reachable from app code)</span>
+<span class="term-warn">1 policy violation: reachable critical in image (CVE-2021-44228)</span>
+<span class="term-error">exit status 1</span>
+
+<span class="term-info"># Pipeline fails, image is never pushed to the registry.</span></div>
+            <div class="lab-callout tip">
+                <strong>Recap</strong>
+                Endor Labs container scanning gives you: reachability from code to image (what your app actually calls), incremental speed (changed layers only), base image remediation guidance, registry scanning for third-party images — all with zero cluster footprint.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Added a container scan step before the registry push</li>
+                <li><span class="check-icon">&#10003;</span> Saw the scan exit non-zero on a reachable critical policy violation</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the image never reached the registry on failure</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">Which command scans a container image?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl scan --image &lt;image&gt;</code></li>
+                <li class="lab-quiz-option" data-correct="true"><code>endorctl container scan &lt;image&gt;</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl image scan &lt;image&gt;</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl docker &lt;image&gt;</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">What does "reachability from code to image" tell you?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Which container registry the image came from</li>
+                <li class="lab-quiz-option" data-correct="false">How many layers the image has</li>
+                <li class="lab-quiz-option" data-correct="true">Which vulnerabilities in the image your application code actually calls</li>
+                <li class="lab-quiz-option" data-correct="false">Whether the image runs in Kubernetes or Docker</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">26 findings come from the base image. What is the fastest way to clear most of them?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Patch each library inside the running container</li>
+                <li class="lab-quiz-option" data-correct="true">Rebuild on the updated base image</li>
+                <li class="lab-quiz-option" data-correct="false">Disable OS-package analysis in the scan</li>
+                <li class="lab-quiz-option" data-correct="false">Dismiss them as unreachable and move on</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">What does incremental container scanning mean?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Only critical findings are analyzed</li>
+                <li class="lab-quiz-option" data-correct="true">Only changed image layers are re-analyzed on re-scan, making iteration fast</li>
+                <li class="lab-quiz-option" data-correct="false">Scans run only when the container is deployed</li>
+                <li class="lab-quiz-option" data-correct="false">The scan skips base images you have scanned before</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've built and scanned a container image, traced reachability from source code into image layers, wiped out 11 findings with one base rebuild, and turned container scanning into a pipeline gate.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="github-actions-integration.html" class="btn btn-primary">Next Lab: GitHub Actions Integration</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 5;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('container-scanning', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

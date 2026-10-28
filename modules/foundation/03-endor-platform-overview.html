@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Endor Labs Platform Overview - Endor Academy</title>
+    <meta name="description" content="A complete overview of the Endor Labs Agentic Application Security Platform - company background, the Scan-Triage-Remediate workflow, capabilities, deployment options, and who the platform is built for.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Foundation Track</span> &rsaquo; <span>Endor Labs Platform Overview</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Endor Labs Platform Overview</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 100 XP</span>
+                    <span class="level-badge beginner">Level 1 - Beginner</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Who Is Endor Labs?</li>
+                    <li>Scan, Triage, Remediate: The Platform Workflow</li>
+                    <li>What the Platform Covers</li>
+                    <li>Deployment, Tooling, and Who It Is For</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Who Is Endor Labs?</h2>
+                <p>Endor Labs is an application security company founded in 2022 in Palo Alto by <strong>Varun Badhwar</strong> (CEO) and <strong>Dimitri Stiliadis</strong> (CTO), both previously at Palo Alto Networks, where they built and led Prisma Cloud. The company raised a $25M seed round, a $70M Series A, and a $93M Series B &mdash; roughly $188M in total &mdash; to build a single platform for software supply chain and application security.</p>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">2022</div>
+                        <div class="stat-label">Founded in Palo Alto, California</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">$188M</div>
+                        <div class="stat-label">Total funding raised (seed through Series B)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">40+</div>
+                        <div class="stat-label">Languages with function-level reachability</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">97%</div>
+                        <div class="stat-label">Noise reduction reported by Zebra Technologies</div>
+                    </div>
+                </div>
+
+                <p>Endor Labs positions itself as an <strong>Agentic Application Security Platform</strong>, with the tagline <strong>&ldquo;Code without compromise.&rdquo;</strong> One platform covers SCA, SAST, secrets detection, malicious package detection, Package Firewall, coding agent governance, and container scanning &mdash; rather than selling each as a separate product with its own integration and policy model.</p>
+
+                <p>Customers include Zebra Technologies, Egnyte, Rubrik, Atlassian, Glean, Astronomer, Peloton, Netskope, Five9, Snowflake, OpenAI, and Cursor. Three proof points worth remembering: Zebra Technologies cut noise by 97%, Egnyte reduced mean time to remediate by 70% on its path to FedRAMP, and Rubrik adopted Endor Labs for a Bazel-based build environment where other scanners struggled.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Scan, Triage, Remediate: The Platform Workflow</h2>
+                <p>Every Endor Labs conversation should be anchored on the same three-step workflow. It is the simplest way to explain the platform to both a security leader and a developer:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Scan</strong> &mdash; discover dependencies, vulnerabilities, secrets, and AI models across the codebase with a single integration. No per-language configuration, no separate agent per scanner, and coverage of monorepos, Bazel builds, and binary artifacts.</li>
+                    <li><strong>Triage</strong> &mdash; apply reachability analysis and risk scoring so teams focus only on what impacts the application. Function-level call graph analysis keeps vulnerabilities in code that is never called out of the backlog.</li>
+                    <li><strong>Remediate</strong> &mdash; fix, not just find. Upgrade impact analysis shows what an upgrade will break, AI-powered remediation proposes the change, Endor Patches backports fixes, and automated pull requests land in the developer&rsquo;s workflow.</li>
+                </ol>
+
+                <p>Customer adoption follows a predictable arc, and partners can use it as an implementation roadmap:</p>
+                <ul>
+                    <li><strong>Day 0 &mdash; Onboard:</strong> connect repositories, run the first scan, establish a baseline of dependencies, vulnerabilities, secrets, and AI models.</li>
+                    <li><strong>Day 1 &mdash; Prioritize:</strong> drive remediation of reachable vulnerabilities first and configure policies so routine triage decisions are automated rather than debated.</li>
+                    <li><strong>Day 2+ &mdash; Optimize:</strong> embed the platform in CI/CD, push findings into developer workflows, and keep a continuous baseline as code and dependencies change.</li>
+                </ul>
+            </section>
+
+            <section class="module-section">
+                <h2>What the Platform Covers</h2>
+                <p>Six capabilities form the core of the platform. Each one addresses a distinct risk surface, but they share one inventory, one policy engine, and one workflow:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128737;</div>
+                        <h4>SCA with Reachability</h4>
+                        <p>Function-level reachability across 40+ languages builds call graphs so only vulnerabilities the code actually calls reach the backlog. Includes pre-computed reachability, Endor Scores for package activity, popularity, security, and code quality, Bazel and monorepo support, and binary artifact scans.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128269;</div>
+                        <h4>AI SAST</h4>
+                        <p>Rule-based SAST with custom rules, cloned rules, exception policies, and AI context rules, plus AI SAST agent-based dataflow analysis that runs across repositories and pull requests, catches logic flaws rule-based scanners miss, and cuts up to 95% of false positives.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128273;</div>
+                        <h4>Secrets Detection</h4>
+                        <p>Secrets are caught before the commit, with one policy that applies from the developer laptop through the pipeline, supported by built-in rules and custom patterns.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128230;</div>
+                        <h4>Container Scanning</h4>
+                        <p>Reachability from code to image keeps CVEs in packages the application never loads out of the queue. Adds incremental scanning, registry scanning, base image remediation, and artifact signing &mdash; with nothing to install in the cluster.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128683;</div>
+                        <h4>Package Firewall</h4>
+                        <p>Blocks known-malicious packages at install time, before they reach developer machines or CI. Covers typosquatting, dependency confusion, and compromised packages.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#129302;</div>
+                        <h4>Coding Agent Governance (AURI)</h4>
+                        <p>Inventories every coding agent, model, MCP server, and skill, learns architecture from context files such as AGENTS.md and CLAUDE.md, and enforces allow, block, or ask-a-human policies on risky agent actions in real time with a full audit trail.</p>
+                    </div>
+                </div>
+
+                <p>Beyond those six, the platform includes <strong>Endor Patches</strong> (backported security fixes delivered through Patch Factory, with JFrog Artifactory and Sonatype Nexus integration), <strong>AI Model Discovery</strong> (models in code, policies, scores, and Hugging Face organization integration), <strong>RSPM</strong> for repository misconfigurations such as GitHub settings, <strong>SBOM and VEX</strong> export and import in CycloneDX and SPDX, PR scans with block-on-findings and PR comments, and a full policy framework spanning finding, exception, action, and remediation policies. Administration is enterprise-ready out of the box: RBAC, SSO via SAML or OIDC with Okta or Entra ID, API keys, namespaces, and notifications, plus integrations with Jira, Slack, Vanta, Wiz, S3, and GitHub Advanced Security.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Be precise about maturity. Endor Labs SAST launched in August 2025 and is AI-native rather than decades-old rule-based scanning &mdash; AI SAST reports 2.6x more true positives than frontier AI models on the same code. Endor Patches currently cover Java and Python only. Credibility with a technical buyer depends on stating these boundaries clearly instead of over-claiming.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Deployment, Tooling, and Who It Is For</h2>
+                <p>The platform deploys where the customer needs it and integrates with the toolchain they already run:</p>
+
+                <ul>
+                    <li><strong>Deployment:</strong> SaaS, or Endor Outpost for environments that require a customer-controlled component inside their infrastructure</li>
+                    <li><strong>CLI and automation:</strong> the <code>endorctl</code> CLI for scans, policy, and CI jobs, plus a REST API for custom workflows</li>
+                    <li><strong>AI-assisted development:</strong> an MCP server (<code>npx -y endorctl ai-tools mcp-server</code>) that brings findings and reachability context into Cursor, Claude Code, Codex, VS Code, Gemini CLI, Antigravity, and IntelliJ</li>
+                    <li><strong>CI/CD:</strong> GitHub Actions, Jenkins, GitLab, Azure DevOps, Bitbucket, CircleCI, Google Cloud Build, and Buildkite, with keyless OIDC authentication for GitHub, AWS, Azure, and GCP</li>
+                </ul>
+
+                <p>Three buyer profiles show up again and again in partner-led deals:</p>
+
+                <ul>
+                    <li><strong>Security teams drowning in noise</strong> &mdash; they already own SCA and cannot close the backlog. Reachability turns an unmanageable queue into a prioritized list, and policies automate the triage decisions they repeat every week.</li>
+                    <li><strong>Engineering-heavy organizations</strong> &mdash; monorepos, Bazel builds, and dozens of languages break scanners designed for a single ecosystem. This is the profile where deep language coverage and binary artifact scans decide the deal.</li>
+                    <li><strong>AI-adopting teams</strong> &mdash; teams rolling out coding agents need governance over what those agents install, change, and access, plus an inventory of the models and MCP servers already in use.</li>
+                </ul>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> What is the correct order of the Endor Labs platform workflow?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Scan, Triage, Remediate</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Scan, Remediate, Report</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Detect, Block, Escalate</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Inventory, Patch, Deploy</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> Which capability blocks known-malicious packages at install time, before they reach developer machines or CI?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Reachability analysis</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Endor Patches</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Package Firewall</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Repository Security Posture Management</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 3:</strong> Which Endor Labs capability inventories coding agents, models, and MCP servers and enforces allow, block, or ask-a-human policies on agent actions?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> AI Model Discovery</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Repository Security Posture Management</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Secrets detection</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Coding Agent Governance (AURI)</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/mcp-agent-kit-setup.html"><span class="resource-icon">&#129302;</span><span>Lab: MCP Server &amp; Agent Kit Setup<span class="resource-meta">Connect Endor Labs to your AI IDE</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="100">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="02-supply-chain-security.html" class="btn btn-secondary">&#8592; Previous</a>
+                    <a href="04-vulnerability-types.html" class="btn btn-primary">Next: Security Vulnerability Types &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

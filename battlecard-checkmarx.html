@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="img/endor-logo.png">
+    <link rel="apple-touch-icon" href="img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <!-- seo -->
+    <meta name="description" content="Competitive battlecard: how Endor Labs compares to Checkmarx. Feature matrix, win themes, and proof points.">
+    <link rel="canonical" href="https://luisillobret2.github.io/endor-academy/battlecard-checkmarx.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Endor Academy">
+    <meta property="og:title" content="Battlecard: Endor Labs vs. Checkmarx - Endor Academy">
+    <meta property="og:description" content="Competitive battlecard: how Endor Labs compares to Checkmarx. Feature matrix, win themes, and proof points.">
+    <meta property="og:url" content="https://luisillobret2.github.io/endor-academy/battlecard-checkmarx.html">
+    <meta property="og:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Battlecard: Endor Labs vs. Checkmarx - Endor Academy">
+    <meta name="twitter:description" content="Competitive battlecard: how Endor Labs compares to Checkmarx. Feature matrix, win themes, and proof points.">
+    <meta name="twitter:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <title>Battlecard: Endor Labs vs. Checkmarx - Endor Academy</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/module.css">
+    <link rel="stylesheet" href="css/battlecard.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <section class="hero" style="padding: 36px 0;">
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge badge-orange mb-4">&#9876; Battlecard</span>
+                <h1>Endor Labs vs. <span class="accent">Checkmarx</span></h1>
+                <p>Checkmarx has SAST heritage; Endor Labs cuts the noise with function-level reachability and AI SAST.</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="battlecard-main">
+        <div class="container">
+            <a href="resources.html" class="battlecard-back">&#8592; Back to Resources</a>
+
+            <section class="battlecard-section">
+                <h2>Positioning Summary</h2>
+                <div class="key-concept">
+                    <h4>&#128161; The One-Liner</h4>
+                    <p>Checkmarx is a SAST incumbent with very broad language coverage and a deep query engine &mdash; don't try to out-language them, out-signal them. Endor Labs keeps only reachable findings in the backlog (up to 97% SCA noise reduction reported by Zebra Technologies), AI SAST agents cut up to 95% of false positives without query tuning, and Endor Patches backport fixes when no upgrade exists. Be candid that Endor Labs SAST is newer; contrast on tuning burden, reachability, and time-to-value.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Feature Comparison</h2>
+                <div class="compare-table">
+                    <table>
+                        <thead>
+                            <tr><th class="col-feature">Feature</th><th class="col-endor">Endor Labs</th><th>Checkmarx</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="col-feature">Platform scope</td><td class="col-endor">One Agentic Application Security Platform: SCA, rule-based SAST, AI SAST, secrets, containers, SBOM and VEX, RSPM, and unified policies.</td><td>SAST incumbent (Checkmarx One) with ASPM ambitions and very broad language coverage; the SCA offering is newer.</td></tr>
+                            <tr><td class="col-feature">Reachability &amp; prioritization</td><td class="col-endor">Function-level call graphs across 40+ languages keep only vulnerabilities the code actually calls in the backlog &mdash; up to 97% SCA noise reduction reported by Zebra Technologies.</td><td>Query-based analysis is deep, but prioritization carries a heavy false-positive tuning burden.</td></tr>
+                            <tr><td class="col-feature">Agentic security &amp; agent governance</td><td class="col-endor">Coding Agent Governance (AURI) inventories every coding agent, model, MCP server, and skill; enforces allow, block, or ask-a-human policies with a full audit trail &mdash; plus AI Model Discovery, Agent Kit, and an endorctl MCP server for Cursor, Claude Code, Codex, VS Code, Gemini CLI, Antigravity, and IntelliJ.</td><td>No coding-agent governance equivalent; AI features center on scanning AI-generated code.</td></tr>
+                            <tr><td class="col-feature">SAST approach</td><td class="col-endor">Rule-based SAST plus AI SAST: security-engineer agents trace dataflow across every repo and PR, catch logic flaws, cut up to 95% of false positives, and surface 2.6x more true positives than frontier AI models.</td><td>Mature query-based SAST engine &mdash; powerful, but tuning and query maintenance fall on the customer.</td></tr>
+                            <tr><td class="col-feature">Dependency management &amp; remediation</td><td class="col-endor">Upgrade impact analysis, automated pull requests, and Endor Patches &mdash; backported fixes for Java and Python when no upstream patch exists &mdash; plus Patch Factory and JFrog Artifactory / Sonatype Nexus integration.</td><td>SCA remediation guidance; no backported-fix equivalent.</td></tr>
+                            <tr><td class="col-feature">Malware &amp; package firewall</td><td class="col-endor">Package Firewall blocks malicious packages at install &mdash; typosquatting, dependency confusion, compromised packages &mdash; before they reach developer machines or CI, backed by malware detection.</td><td>Malicious-package detection via intelligence feeds; no install-time package firewall.</td></tr>
+                            <tr><td class="col-feature">Secrets</td><td class="col-endor">Secrets detection under one policy from laptop to pipeline, enforced pre-commit and in CI.</td><td>Available in the suite, but not a headline capability.</td></tr>
+                            <tr><td class="col-feature">Containers</td><td class="col-endor">Code-to-image reachability call graphs, incremental and registry scanning, base image remediation, and zero cluster footprint.</td><td>Container support is newer to the platform; no code-to-image reachability.</td></tr>
+                            <tr><td class="col-feature">Pricing model</td><td class="col-endor">Per-seat scan credits, quote-based, with a free developer tier for AURI and MCP tooling; no per-product stacking.</td><td>Enterprise licensing with complex, sometimes on-prem, deployments; TCO grows with tuning and services.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Why Teams Choose Endor Labs</h2>
+                <div class="win-grid">
+                    <div class="win-card"><h4>Noise reduction as a design principle</h4><p>Function-level call graphs across 40+ languages mean only vulnerabilities the code actually calls reach the backlog &mdash; up to 97% SCA noise reduction reported by Zebra Technologies. Astronomer calls Endor Labs &ldquo;noise-canceling headphones for vulnerability management.&rdquo;</p></div>
+                    <div class="win-card"><h4>AI SAST instead of query maintenance</h4><p>Security-engineer agents trace dataflow across every repo and PR and cut up to 95% of false positives &mdash; no query tuning, no dedicated triage staff.</p></div>
+                    <div class="win-card"><h4>Remediation that closes the loop</h4><p>Upgrade impact analysis, automated PRs, and Endor Patches &mdash; backported fixes for Java and Python when no upstream patch exists.</p></div>
+                    <div class="win-card"><h4>Governance for the AI coding era</h4><p>AURI inventories and governs every coding agent, model, MCP server, and skill, with allow/block/ask-a-human policies and a full audit trail.</p></div>
+                    <div class="win-card"><h4>Prevention at install</h4><p>The Package Firewall blocks typosquatting, dependency confusion, and compromised packages before they reach developer machines or CI.</p></div>
+                    <div class="win-card"><h4>Modern deployment without the services bill</h4><p>SaaS-first with Endor Outpost for restricted environments; endorctl and native CI/CD replace heavyweight rollouts.</p></div>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Watch Out</h2>
+                <div class="key-concept">
+                    <h4>&#9888;&#65039; Where Checkmarx is Genuinely Strong</h4>
+                    <p>Checkmarx's engine is genuinely deep &mdash; very broad language coverage, a flexible query language, and a long enterprise track record. Teams with dedicated AppSec staff who live in queries get real value from it, and the install base is large.</p>
+                    <p>Acknowledge it, then pivot: &ldquo;For teams that need to write their own queries, Checkmarx is a serious engine &mdash; the question is what it costs your engineers to keep it precise.&rdquo; Contrast on false-positive burden, reachability, and remediation. Be candid that Endor Labs SAST launched in Aug 2025; lead with SCA noise reduction and AI SAST precision, where the evidence is strongest.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Endor Labs Proof Points</h2>
+                <div class="proof-grid">
+                    <div class="proof-stat"><div class="num">97%</div><div class="lbl">SCA noise reduction reported by Zebra Technologies</div></div>
+                    <div class="proof-stat"><div class="num">70%</div><div class="lbl">Faster vulnerability MTTR reported by Egnyte</div></div>
+                    <div class="proof-stat"><div class="num">95%</div><div class="lbl">Of false positives cut by AI SAST (up to)</div></div>
+                    <div class="proof-stat"><div class="num">2.6x</div><div class="lbl">More true positives than frontier AI models</div></div>
+                    <div class="proof-stat"><div class="num">40+</div><div class="lbl">Languages with function-level reachability</div></div>
+                    <div class="proof-stat"><div class="num">$188M</div><div class="lbl">Raised across seed, Series A, and Series B funding</div></div>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Competitor Background</h2>
+                <div class="key-concept">
+                    <h4>&#128270; At a Glance</h4>
+                    <p>Founded in 2006, with roots in Tel Aviv and New York. A long-standing SAST vendor known for very broad language coverage and its query-based engine, now expanding into ASPM with Checkmarx One. Focus: enterprise static analysis. A broad global enterprise install base, including complex on-prem deployments.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Objection-Handling Reminder</h2>
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Keep It Classy</h4>
+                    <p>Never disparage Checkmarx by name in front of a customer. Contrast on outcomes &mdash; false-positive burden, time-to-fix, and total cost of ownership &mdash; and let the buyer draw their own conclusion. If query depth comes up, acknowledge it and steer to signal quality: up to 95% fewer false positives with AI SAST.</p>
+                </div>
+            </section>
+
+            <section class="battlecard-section">
+                <h2>Other Battlecards</h2>
+                <div class="flex" style="flex-wrap: wrap; gap: 8px;">
+                    <a href="battlecard-snyk.html" class="btn btn-secondary btn-sm">vs. Snyk</a>
+                    <a href="battlecard-mend.html" class="btn btn-secondary btn-sm">vs. Mend.io</a>
+                    <a href="battlecard-veracode.html" class="btn btn-secondary btn-sm">vs. Veracode</a>
+                    <a href="battlecard-checkmarx.html" class="btn btn-secondary btn-sm">vs. Checkmarx</a>
+                    <a href="battlecard-black-duck.html" class="btn btn-secondary btn-sm">vs. Black Duck</a>
+                    <a href="battlecard-github-advanced-security.html" class="btn btn-secondary btn-sm">vs. GitHub Advanced Security</a>
+                    <a href="battlecard-sonatype.html" class="btn btn-secondary btn-sm">vs. Sonatype</a>
+                </div>
+            </section>
+
+            <p class="battlecard-source">Source: Endor Labs competitive analysis &middot; Competitor public documentation. For partner enablement use.</p>
+        </div>
+    </main>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="js/layout.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/homepage.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/cert-recommendations.js"></script>
+    <script src="js/badges.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

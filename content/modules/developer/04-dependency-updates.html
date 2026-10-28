@@ -1,0 +1,169 @@
+---
+title: Dependency Updates &amp; Automated PRs - Endor Academy
+description: Keep dependencies healthy with automated update pull requests, upgrade impact analysis, Endor Patches for when you cannot upgrade, and Endor Scores for choosing packages.
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>Dependency Updates &amp; Automated PRs</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Dependency Updates &amp; Automated PRs</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The Case for Continuous Dependency Updates</li>
+                    <li>Automated Pull Requests and Upgrade Impact Analysis</li>
+                    <li>Endor Patches: Fix When You Cannot Upgrade</li>
+                    <li>Choosing Healthy Dependencies with Endor Scores</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The Case for Continuous Dependency Updates</h2>
+                <p>Updating dependencies is the cheapest security control that exists &mdash; and the chore teams defer the longest. The reasons are rational: upgrades might break things, nobody owns the decision, and a green build today feels like enough. The consequence is predictable: applications pin themselves to old versions, vulnerabilities accumulate, and the eventual upgrade becomes bigger and scarier than the sum of the updates you skipped.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Small and Continuous Beats Rare and Risky</h4>
+                    <p>A stream of minor updates, each verified with impact analysis and CI, is dramatically lower risk than one panicked major-version jump during an incident. The goal of dependency automation is not &ldquo;more updates&rdquo; &mdash; it is making the safe path the path of least resistance.</p>
+                </div>
+
+                <p>Endor Labs automates the update lifecycle with three mechanisms: <strong>automated pull requests</strong> that propose the updates, <strong>upgrade impact analysis</strong> that shows what each update touches before you take it, and <strong>Endor Patches</strong> that close the vulnerability window when you cannot upgrade yet.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Automated Pull Requests and Upgrade Impact Analysis</h2>
+                <p>Endor Labs raises <strong>automated pull requests for vulnerable and outdated dependencies</strong>. The PR arrives where developers already work &mdash; not in a security portal &mdash; and carries its security context with it: what the update fixes, whether the affected code is reachable, and why the change matters.</p>
+
+                <p>The piece that changes the review conversation is <strong>upgrade impact analysis</strong>: before you merge, you see what the upgrade actually touches. Because Endor Labs already holds the function-level call graph, it can show which functions and call paths in <em>your</em> application are affected by the new version &mdash; you learn whether an upgrade is routine or risky from evidence, not from vibes.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Propose</strong> &mdash; Endor Labs opens an update PR with the fix context attached</li>
+                    <li><strong>Analyze</strong> &mdash; impact analysis shows the blast radius: what changes, what it fixes, which of your code paths it touches</li>
+                    <li><strong>Review</strong> &mdash; the reviewer reads that evidence alongside the PR scan results from CI</li>
+                    <li><strong>Merge</strong> &mdash; the follow-up scan confirms the finding clears; the dependency moves forward one safe step</li>
+                </ol>
+
+                <p>Contrast that with a naive version-bump bot: a PR that says &ldquo;upgrade package X from 2.3 to 2.9&rdquo; and hopes. Evidence-backed updates are the difference between automation developers trust and automation they mute.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Endor Patches: Fix When You Cannot Upgrade</h2>
+                <p>Sometimes you genuinely cannot upgrade: the next version is a breaking major, the branch is frozen, or the upgrade requires a migration you have not scheduled. The vulnerability does not wait for your roadmap.</p>
+
+                <p><strong>Endor Patches</strong> solve this by backporting the security fix to the version you are already on. Patches are produced through <strong>Patch Factory</strong> for <strong>Java and Python</strong> packages, and are delivered through your existing artifact infrastructure &mdash; <strong>JFrog Artifactory and Sonatype Nexus integrations</strong> &mdash; so your build pulls the patched artifact without any change to your dependency declarations or your source code.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Fix Now, Upgrade Later</h4>
+                    <p>An Endor Patch closes the vulnerability window today; the full version upgrade can happen on your schedule, with proper testing and a real migration plan. You stop choosing between &ldquo;insecure&rdquo; and &ldquo;disruptive.&rdquo;</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Every enterprise has a Java or Python service pinned to a version it cannot upgrade next quarter. Endor Patches are a standout differentiator for exactly those estates: &ldquo;we can make your current version safe on Monday&rdquo; is a statement competitors relying on version bumps alone cannot make.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Choosing Healthy Dependencies with Endor Scores</h2>
+                <p>The best update is the one you never have to panic about &mdash; and that starts before a package enters your tree. When a developer (or a coding agent) proposes adding a new dependency, <strong>Endor Scores</strong> rate the candidate package on four dimensions:</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Score</th>
+                                <th>The question it answers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Activity</strong></td>
+                                <td>Is this package actively maintained, or drifting toward abandonware?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Popularity</strong></td>
+                                <td>Is it widely adopted, or an experiment with a single maintainer?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Security</strong></td>
+                                <td>Does it carry vulnerabilities or a history of malicious activity?</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Code quality</strong></td>
+                                <td>Is the codebase well built, or a liability you are importing wholesale?</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Pull the four signals together and a healthy dependency strategy looks like this: choose new packages by their scores, let automated PRs move them forward continuously, use impact analysis to keep reviews evidence-based, and fall back to Endor Patches for the rare cases that cannot move. Dependencies stop being a quarterly fire drill and become part of the normal pull-request flow.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What does upgrade impact analysis show you <em>before</em> you take an upgrade?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The number of GitHub stars the new version has</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> What the upgrade touches &mdash; which functions and call paths in your application are affected</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> The license changes between the two versions</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> A guess at build time impact, based on package size</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> A service is pinned to a Java version it cannot upgrade this year, and a critical CVE lands. What does Endor Labs offer?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Nothing until the major upgrade is scheduled</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> A waiver that suppresses the finding permanently</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> An Endor Patch that backports the security fix to the pinned version, served via Patch Factory and pulled through Artifactory or Nexus</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> A forced downgrade to an older, unaffected version</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 3:</strong> Which four dimensions make up Endor Scores for evaluating a candidate package?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Activity, popularity, security, and code quality</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Speed, size, age, and price</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Downloads, stars, forks, and contributors</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Coverage, tests, docs, and bundle size</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/package-firewall-setup.html"><span class="resource-icon">&#128736;</span><span>Lab: Package Firewall Configuration<span class="resource-meta">Guard update PRs at install time</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="03-cli-automation.html" class="btn btn-secondary">&#8592; Previous: endorctl CLI &amp; Automation</a>
+                    <a href="05-custom-policies.html" class="btn btn-primary">Next: Custom Security Policies &#8594;</a>
+                </div>
+            </div>

@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: endoracademy
+      POSTGRES_PASSWORD: endoracademy
+      POSTGRES_DB: endoracademy
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U endoracademy"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://endoracademy:endoracademy@db:5432/endoracademy
+      SESSION_SECRET: ${SESSION_SECRET:-dev-secret-change-in-production}
+      FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:8080}
+      NODE_ENV: development
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

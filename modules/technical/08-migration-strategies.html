@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Migration &amp; Consolidation Strategies - Endor Academy</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Migration &amp; Consolidation Strategies</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Migration &amp; Consolidation Strategies</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Mapping the Multi-Scanner Estate</li>
+                    <li>Parallel-Run Validation: Reachable Findings vs. the Old Backlog</li>
+                    <li>CI Migration Patterns &amp; Rollout by Team</li>
+                    <li>Exceptions, Suppressions &amp; Measuring TCO Improvement</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Mapping the Multi-Scanner Estate</h2>
+                <p>Consolidation is a change-management project with a technical core. Most enterprises arrive with two or three overlapping scanners &mdash; typically an SCA tool such as Snyk, GitHub Advanced Security for repository-native coverage, and one or more legacy AppSec platforms &mdash; each with its own backlog, suppression rules, and pipeline gate.</p>
+
+                <p>Start with an inventory, not a migration plan. Build a single table the customer can validate, and keep it in the customer&rsquo;s vocabulary.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Inventory item</th>
+                                <th>Why it matters</th>
+                                <th>Capture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Repositories and projects</strong></td>
+                                <td>Defines coverage and the scan profile each project needs</td>
+                                <td>SCM organization, language, build system, criticality</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scan points</strong></td>
+                                <td>Determines which CI integrations must be replaced</td>
+                                <td>SCM app, CI platform, scheduled scans, local developer runs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Policies and gates</strong></td>
+                                <td>Explains why pipelines block today, and what must not regress</td>
+                                <td>Severity thresholds, blocking rules, scan types enabled</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Suppressions and exceptions</strong></td>
+                                <td>Reveals hidden risk that will resurface after migration</td>
+                                <td>Ignored findings with their original reasons and owners</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Integrations and consumers</strong></td>
+                                <td>Prevents a silent reporting outage on cutover day</td>
+                                <td>Jira, Slack, SIEM, warehouse exports, dashboards, compliance reporting</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Ask for the incumbent&rsquo;s suppression file early. Ignored findings are where an old tool hides its unresolved risk, and they are the fastest way to prove the new platform sees what the old one learned to ignore.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Parallel-Run Validation: Reachable Findings vs. the Old Backlog</h2>
+                <p>Never decommission an incumbent scanner on the strength of a demo. Run both tools against the same repositories for a defined window &mdash; one full sprint is the practical minimum &mdash; and compare the results that matter.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Fix the comparison set</strong> &mdash; the same repositories, the same branches, and the same window, with both tools reporting on the same days.</li>
+                    <li><strong>Compare reachable findings</strong> &mdash; not raw counts. The migration question is whether Endor Labs surfaces the exploitable findings the incumbent surfaced, and how many additional reachable findings it reveals in transitive dependencies.</li>
+                    <li><strong>Explain every delta</strong> &mdash; for each difference, record whether it is a coverage gain, a reachability verdict, a duplicate, or a false negative in the incumbent. Unexplained deltas become objections later.</li>
+                    <li><strong>Re-check the old backlog</strong> &mdash; take the incumbent&rsquo;s open critical findings and confirm each one has a corresponding Endor Labs verdict. A clean one-to-one on critical items is the single most persuasive artifact in a migration.</li>
+                    <li><strong>Publish a weekly comparison note</strong> &mdash; a short table keeps security and platform stakeholders aligned and prevents the comparison from becoming a debate at the end.</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Do not promise that counts will match. Different tools count findings differently, and a lower total from Endor Labs is often the point &mdash; unreachable noise removed. Anchor the conversation on reachable findings, critical coverage, and time-to-fix instead of raw totals.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>CI Migration Patterns &amp; Rollout by Team</h2>
+                <p>Pipeline migration is mechanical once the inventory is done. The risk is sequencing: teams that inherit a blocking gate without a tuning period will disable it.</p>
+
+                <ul>
+                    <li><strong>Shadow mode first</strong> &mdash; add the Endor Labs scan step alongside the incumbent gate. Findings appear, nothing blocks, and teams tune their profile and policies with real data.</li>
+                    <li><strong>Then enforce</strong> &mdash; enable PR blocking and policy gates per team once thresholds are tuned and exception policies are in place, starting with the pilot team.</li>
+                    <li><strong>Remove the old step</strong> &mdash; delete the incumbent CI step only after the team has run a full sprint with enforcement enabled and the comparison note is clean.</li>
+                    <li><strong>Roll out by team</strong> &mdash; sequence by business unit or product group, not alphabetically. Each wave carries its own policies, owners, and office hours.</li>
+                </ul>
+
+                <h3>Timeline Template</h3>
+                <ul>
+                    <li><strong>Inventory and baseline (2 weeks)</strong> &mdash; exit criteria: a validated estate inventory plus the incumbent baseline metrics.</li>
+                    <li><strong>Parallel run (1 sprint)</strong> &mdash; exit criteria: weekly comparison notes with every delta explained.</li>
+                    <li><strong>Pilot enforcement (1&ndash;2 sprints)</strong> &mdash; exit criteria: gates enforced for the pilot team with tuned policies.</li>
+                    <li><strong>Wave rollout (1&ndash;2 sprints per wave)</strong> &mdash; exit criteria: each wave enforcing in CI with its own owners.</li>
+                    <li><strong>Decommission (1 sprint)</strong> &mdash; exit criteria: legacy steps removed, licences retired, retrospective published.</li>
+                </ul>
+            </section>
+
+            <section class="module-section">
+                <h2>Exceptions, Suppressions &amp; Measuring TCO Improvement</h2>
+                <p>Suppressed findings are the most political part of any migration. Copy them blindly and you inherit years of undocumented risk; discard them and you break the security team&rsquo;s trust.</p>
+
+                <ul>
+                    <li><strong>Re-evaluate, do not import.</strong> Take each suppressed finding and re-adjudicate it in Endor Labs. Many will resolve themselves as unreachable, which is a legitimate and documented outcome.</li>
+                    <li><strong>Use exception policies with templates.</strong> Where a suppression is still valid, express it as an exception policy with a reason, an owner, and an expiry date so it is reviewed rather than forgotten.</li>
+                    <li><strong>Record the rationale.</strong> Dismissals and exceptions carry reasons in the platform, which turns an inherited ignore file into an auditable decision record.</li>
+                    <li><strong>Keep the audit trail.</strong> Compliance platforms such as Vanta consume control evidence, so the exception history becomes part of the customer&rsquo;s evidence rather than a shadow process.</li>
+                </ul>
+
+                <h3>TCO Metrics to Report</h3>
+                <p>Consolidation is justified by sustained outcomes, not by a single comparison. Report coverage, scan success rate, MTTR, reachable-finding coverage, PR scan adoption, and the number of legacy scanners and licences retired. Pair the savings with the risk removed &mdash; findings the incumbent suppressed that the new workflow now adjudicates explicitly &mdash; so the business case covers both cost and coverage.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Publish a retrospective at the end of the migration: what moved, what was adjusted, final metrics, and what remains. It is the artifact that supports renewal, expansion into the next business unit, and the reference for the customer&rsquo;s next consolidation.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> What is the correct validation step before decommissioning an incumbent scanner?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Parallel-run both tools for a defined window and compare reachable findings against the old backlog</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Turn off the incumbent immediately and rely on the demo results</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Wait for the incumbent contract to expire and then run one Endor Labs scan</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Compare raw finding totals only</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> How should findings suppressed in the incumbent tool be handled?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Import the ignore file verbatim so nothing changes</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Delete them permanently without review</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Re-adjudicate each one, then express valid suppressions as exception policies with a reason, owner, and expiry</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Keep them in a spreadsheet outside the platform</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 3:</strong> Which combination best demonstrates TCO improvement after consolidation?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> The number of repositories scanned</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Average scan duration</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> The number of policy rules created</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Legacy scanners and licences retired, reported alongside sustained coverage, MTTR, and reachable-finding coverage</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/github-actions-integration.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: GitHub Actions Integration<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="07-customer-workshops.html" class="btn btn-secondary">&#8592; Previous: Customer Workshop Facilitation</a>
+                    <button class="btn btn-primary mark-complete-btn" data-xp="200">Mark Complete</button>
+                <a href="../../certifications.html" class="btn btn-primary">View Certifications &#8594;</a>
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

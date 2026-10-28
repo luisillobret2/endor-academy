@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Custom Security Policies - Endor Academy</title>
+    <meta name="description" content="See policies from the developer side - finding, exception, and remediation policies, PR scans that can block merges, and how to set thresholds a development team will trust.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>Custom Security Policies</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Custom Security Policies</h1>
+                <div class="module-meta">
+                    <span>&#128338; 30 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Policies: The Contract Between Security and Developers</li>
+                    <li>Finding Policies Across Every Risk Area</li>
+                    <li>Exception Policies: Justified, Time-Boxed, Auditable</li>
+                    <li>Remediation Policies and Sane Thresholds</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Policies: The Contract Between Security and Developers</h2>
+                <p>A policy is what the platform enforces automatically, so nobody has to negotiate each finding by hand. Endor Labs applies <strong>one policy from laptop to pipeline</strong>: the rules that gate your local <code>endorctl scan</code> are the rules that gate the PR scan and the CI build. For developers, the deal is simple and worth internalizing &mdash; if it passes policy, it ships; if it does not, the finding tells you exactly why, and what to do about it.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Three Policy Families</h4>
+                    <p>Endor Labs policies come in three families, and every mature rollout uses all three: <strong>finding policies</strong> decide what gets flagged and what blocks a build; <strong>exception policies</strong> define how documented risk is allowed to exist, temporarily; and <strong>remediation policies</strong> set what gets fixed, in what order, and by whom.</p>
+                </div>
+
+                <p>This module is the developer&rsquo;s view of that machinery. You will not spend your days writing policies &mdash; but you will live inside them, and partners who can explain how they feel from the developer chair design rollouts that actually stick.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Finding Policies Across Every Risk Area</h2>
+                <p>Finding policies cover every risk area Endor Labs analyzes, and PR scans can <strong>block pull requests</strong> when findings violate them:</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Policy area</th>
+                                <th>What it governs</th>
+                                <th>Example developer effect</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>OSS</strong></td>
+                                <td>Vulnerabilities and malicious packages in dependencies</td>
+                                <td>A PR introducing a reachable critical CVE fails the scan</td>
+                            </tr>
+                            <tr>
+                                <td><strong>License</strong></td>
+                                <td>Licensing obligations of dependencies</td>
+                                <td>A new copyleft dependency is flagged for legal review</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SAST</strong></td>
+                                <td>Flaws in first-party code</td>
+                                <td>A risky pattern in your diff is commented on the PR</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Secret</strong></td>
+                                <td>Credentials committed to the repository</td>
+                                <td>Any new secret blocks the merge until it is rotated out</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Container</strong></td>
+                                <td>Findings in images and base images</td>
+                                <td>A Dockerfile change pulling a vulnerable base is gated</td>
+                            </tr>
+                            <tr>
+                                <td><strong>RSPM</strong></td>
+                                <td>Registry and package repository findings</td>
+                                <td>Issues in your package mirrors surface on the PR that pulls from them</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitHub Action</strong></td>
+                                <td>Third-party actions used in your workflows</td>
+                                <td>Your CI is supply chain too &mdash; a risky action is caught</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>The detail that keeps PRs civil: scans focus on what the pull request <em>introduces</em>. A PR that adds a new reachable critical finding gets blocked; pre-existing debt that has nothing to do with your change does not flood your review.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Exception Policies: Justified, Time-Boxed, Auditable</h2>
+                <p>Sometimes a finding cannot be fixed right now, and pretending otherwise helps nobody. Exception policies make that conversation structured instead of furtive. A well-formed exception carries four things:</p>
+
+                <ul>
+                    <li><strong>Justification</strong> &mdash; why the risk is acceptable for now (and it had better be more than &ldquo;we are busy&rdquo;)</li>
+                    <li><strong>Owner</strong> &mdash; a named human who is on the hook for the follow-up</li>
+                    <li><strong>Expiration</strong> &mdash; the date the exception resurfaces if the finding is not fixed; risk that never expires is just unmanaged debt</li>
+                    <li><strong>Review trail</strong> &mdash; who approved it, when, and under what conditions, visible to security and auditors</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; A Blocked PR Is the System Working</h4>
+                    <p>When a policy blocks your PR, do not route around it by deleting the scanner config. File the exception instead: it takes the same two minutes, it leaves an audit trail instead of a hole, and when the expiration date arrives, the finding comes back &mdash; with its context intact &mdash; instead of being silently forgotten.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Remediation Policies and Sane Thresholds</h2>
+                <p>Remediation policies set the expectations around fixing: which findings get prioritized, what the target timelines are, and who they land with. They are what turn a findings backlog into a managed queue rather than a wallpaper &mdash; and they drive the automated update PRs you met in the previous module.</p>
+
+                <p>The art is in the thresholds. The fastest way to kill a security program is to block everything on day one; the fastest way to grow one is to make the first gate defensible:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Observe</strong> &mdash; run PR scans in report-only mode and let teams see what would have fired</li>
+                    <li><strong>Warn</strong> &mdash; post findings as PR comments without blocking, so the habit forms</li>
+                    <li><strong>Block narrowly</strong> &mdash; fail PRs only on reachable critical and high findings that the PR itself introduces</li>
+                    <li><strong>Tighten over time</strong> &mdash; extend coverage as the team clears debt and trusts the gate</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Reachability is what makes the first blocking policy defensible: the gate fires only on findings that are actually exploitable in the customer&rsquo;s code, so developers cannot dismiss it as noise. When you help a customer design their first policy, start narrow and let the win rate build the mandate &mdash; policy tuning decides whether the platform is adopted or ignored.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What are the three families of Endor Labs policies?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Build, deploy, and runtime policies</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Finding policies, exception policies, and remediation policies</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Organization, team, and repository policies</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Scanning, reporting, and alerting policies</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> What is the sanest first blocking policy for a team new to gating?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Block any PR that contains any finding of any severity, anywhere in the codebase</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Block all pulls requests touching open-source dependencies</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Block only reachable critical and high findings that the PR itself introduces</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Block nothing &mdash; rely on quarterly manual review</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 3:</strong> A policy blocks your PR and you believe the risk is genuinely acceptable for now. What is the right move?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> File a time-boxed exception with justification, an owner, and an expiration date</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Delete the scanner configuration from the pipeline</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Merge around the gate with an admin override</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Rename the dependency so the scanner cannot match it</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/github-actions-integration.html"><span class="resource-icon">&#128736;</span><span>Lab: GitHub Actions Integration<span class="resource-meta">PR gating on policy findings</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="04-dependency-updates.html" class="btn btn-secondary">&#8592; Previous: Dependency Updates &amp; Automated PRs</a>
+                    <a href="06-api-integration.html" class="btn btn-primary">Next: API &amp; Webhooks &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

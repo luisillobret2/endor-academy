@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive lab: Install endorctl, activate your API token, connect a repository, run your first Endor Labs scan, and read reachability results.">
+    <title>Lab: Your First Endor Labs Scan - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>Your First Endor Labs Scan</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>Your First <span class="accent">Endor Labs Scan</span></h1>
+                <span class="lab-type-badge guided">Guided</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 45 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; SCA</span>
+                <span>&#128218; 6 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Install <code>endorctl</code> and activate your Endor Labs API token</li>
+                <li>Connect a GitHub repository with the Endor Labs GitHub App</li>
+                <li>Run your first full scan with <code>endorctl scan</code></li>
+                <li>Interpret findings, severities, and the dependency tree</li>
+                <li>Understand function-level reachability and read a call path</li>
+                <li>Fix your first reachable finding and verify it with a re-scan</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Install endorctl and Activate Your Token</h3>
+            <p><code>endorctl</code> is the single command-line interface for the Endor Labs Agentic Application Security Platform. Local scans, CI scans, dependency listing, container scans, and the MCP server for AI agents all run through it. Install it, then activate a token so your scans are linked to your organization.</p>
+            <div class="lab-code-block"><span class="comment"># Install endorctl (macOS and Linux)</span>
+curl -fsSL https://endorlabs.com/install.sh | bash
+
+<span class="comment"># Windows and per-OS installers: see the install guide at docs.endorlabs.com</span></div>
+            <p>Next, generate a token: in the Endor Labs dashboard at <code>app.endorlabs.com</code>, open <strong>Settings &rarr; API tokens</strong> and generate a new token. The value is shown once, so copy it now.</p>
+            <div class="lab-code-block"><span class="comment"># Link endorctl to your organization</span>
+endorctl activate-token --token "eyJhbGciOiJSUzI1NiIs...truncated...9k2Q"</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl activate-token --token "eyJhbGciOiJSUzI1NiIs...truncated...9k2Q"
+<span class="term-success">Token activated successfully.</span>
+<span class="term-info">Organization:   Acme Financial (sandbox)</span>
+<span class="term-info">Namespace:      acme-financial</span>
+<span class="term-info">Signed in as:   learner@endorlabs.com</span>
+<span class="term-info">endorctl v4.12.0 — latest syntax at https://docs.endorlabs.com</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                The activated token is stored in your local Endor Labs config, never in the repository. For CI pipelines, prefer keyless OIDC authentication (covered in the GitHub Actions lab) or a dedicated API key with minimal scope.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> endorctl installed and available on your PATH</li>
+                <li><span class="check-icon">&#10003;</span> Token activated and your organization name confirmed in the output</li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Connect Your Repository</h3>
+            <p>Scans are organized under projects, and projects are connected to repositories through the SCM integration. In the Endor Labs dashboard, open <strong>Settings &rarr; Integrations &rarr; GitHub</strong> and install the Endor Labs GitHub App, granting it access to your organization and to the lab's sample repository, <code>endor-academy/checkout-service</code>.</p>
+            <p>Then clone the sample repository locally:</p>
+            <div class="lab-code-block"><span class="comment"># Clone the lab's sample repository</span>
+gh repo clone endor-academy/checkout-service
+cd checkout-service</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> gh repo clone endor-academy/checkout-service
+<span class="term-info">Cloning into 'checkout-service'...</span>
+<span class="term-info">remote: Enumerating objects: 1284, done.</span>
+<span class="term-success">Receiving objects: 100% (1284/1284), done.</span>
+
+<span class="term-prompt">$</span> cd checkout-service
+
+<span class="term-prompt">$</span> ls
+<span class="term-info">Dockerfile  README.md  pom.xml  src/</span></div>
+            <div class="lab-callout tip">
+                <strong>Why the GitHub App matters</strong>
+                The app connection is what later enables pull request scan comments, monitoring, and automated upgrade PRs. A token alone is enough to run local scans of any repository on your machine.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Endor Labs GitHub App installed with access to the sample repository</li>
+                <li><span class="check-icon">&#10003;</span> Cloned <code>checkout-service</code> and confirmed <code>pom.xml</code> is present</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Run Your First Scan</h3>
+            <p>From the repository root, run a full scan. <code>endorctl</code> detects the build system, resolves the dependency tree, builds a call graph from your source, and evaluates which vulnerabilities your code actually reaches.</p>
+            <div class="lab-code-block"><span class="comment"># Full scan: dependencies, reachability, secrets, and policy evaluation</span>
+endorctl scan</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl scan
+<span class="term-info">Scanning project: checkout-service</span>
+<span class="term-info">Detected: Java (Maven) — pom.xml</span>
+<span class="term-info">Resolving dependencies... done (47 direct, 183 total)</span>
+<span class="term-info">Building call graph... done (12,438 functions analyzed)</span>
+<span class="term-info">Analyzing reachability... done</span>
+<span class="term-info">Evaluating policies... done</span>
+
+<span class="term-info">Findings summary</span>
+  <span class="term-error">Critical:   3  (1 reachable)</span>
+  <span class="term-warn">High:       7  (2 reachable)</span>
+  <span class="term-info">Medium:    12  (0 reachable)</span>
+  <span class="term-success">Low:        5  (0 reachable)</span>
+  <span class="term-error">Secrets:    1</span>
+  <span class="term-warn">Policy violations: 2</span>
+
+<span class="term-success">Results uploaded to Endor Labs:</span>
+<span class="term-info">https://app.endorlabs.com/acme-financial/projects/checkout-service/findings</span>
+<span class="term-info">Scan finished in 2m 41s</span></div>
+            <div class="lab-callout warning">
+                <strong>Notice</strong>
+                The scan found 27 vulnerabilities, but only 3 are reachable through your code. Most scanners would page you for all 27; Endor Labs separates the signal from the noise with function-level reachability so your backlog contains only what your code actually calls.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Ran <code>endorctl scan</code> to completion</li>
+                <li><span class="check-icon">&#10003;</span> Noted how many findings are reachable versus total</li>
+                <li><span class="check-icon">&#10003;</span> Opened the findings view in the dashboard</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Read Your Findings and Dependency Tree</h3>
+            <p>In the dashboard, the findings list is sorted by severity. Each row shows the package, CVE, CVSS score, and a reachability chip: <strong>Reachable</strong>, <strong>Unreachable</strong>, or <strong>Unknown</strong>. Click the CVE-2021-44228 finding to open its detail view — you will explore it fully in the next step.</p>
+            <p>From the CLI, <code>endorctl deps</code> prints the resolved dependency tree with the flagged versions inline:</p>
+            <div class="lab-code-block"><span class="comment"># List the resolved dependency tree</span>
+endorctl deps</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl deps
+<span class="term-info">com.acme:checkout-service:1.4.2</span>
+<span class="term-info">-- org.apache.logging.log4j:log4j-core:2.14.1</span>
+<span class="term-error">   flagged: CVE-2021-44228 (critical 10.0) - REACHABLE</span>
+<span class="term-info">-- org.yaml:snakeyaml:1.29</span>
+<span class="term-error">   flagged: CVE-2022-1471 (critical 9.0) - unreachable</span>
+<span class="term-info">-- org.springframework:spring-webmvc:5.3.16</span>
+<span class="term-error">   flagged: CVE-2022-22965 (critical 9.8) - unreachable</span>
+<span class="term-info">-- com.fasterxml.jackson.core:jackson-databind:2.13.2</span>
+<span class="term-warn">   flagged: CVE-2020-36518 (high 7.5) - UNKNOWN</span>
+<span class="term-info">-- ... 43 more direct dependencies, 136 transitive</span></div>
+            <div class="lab-callout tip">
+                <strong>Key terms</strong>
+                <strong>Reachable</strong>: your code has a complete call path to the vulnerable function. <strong>Unreachable</strong>: the package is in your tree but no path calls the vulnerable function. <strong>Unknown</strong>: reachability could not be confirmed, usually pending version inference.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Opened the findings list and sorted by severity</li>
+                <li><span class="check-icon">&#10003;</span> Located log4j-core 2.14.1 in the dependency tree</li>
+                <li><span class="check-icon">&#10003;</span> Identified the reachability status of each critical finding</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Reachability Basics: Read the Call Path</h3>
+            <p>Endor Labs performs <strong>function-level reachability analysis</strong> across 40+ languages: it maps which vulnerable functions your code actually calls, not just which vulnerable packages are in your tree. Open the CVE-2021-44228 finding and expand the <strong>Call path</strong> section:</p>
+            <div class="lab-code-block"><span class="comment"># Call path — CVE-2021-44228 (Log4Shell)</span>
+Entry point: POST /api/orders  (internet-facing)
+  1. OrderController.createOrder()       [your code]
+  2. OrderService.validatePayment()      [your code]
+  3. Logger.error(paymentCtx)             [log4j-api 2.14.1]
+  4. JndiLookup.lookup()                  [log4j-core 2.14.1]  * vulnerable function</div>
+            <p>A complete path exists from an HTTP entry point to <code>JndiLookup.lookup()</code>, so the finding is <strong>Reachable</strong>. This is the classic Log4Shell pattern: attacker-controlled data reaches a log statement that performs a JNDI lookup.</p>
+            <p>Compare it with CVE-2022-22965 (Spring4Shell) in <code>spring-webmvc</code>: the package is present, but no path from your code reaches the vulnerable data-binding code, so it is <strong>Unreachable</strong> — context, not a crisis.</p>
+            <div class="lab-callout tip">
+                <strong>Why it matters</strong>
+                Zebra used reachability triage to cut SCA noise by 97%. Reachable findings are your backlog; everything else is reference material for auditors and planning.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Traced the call path from the HTTP entry point to <code>JndiLookup.lookup()</code></li>
+                <li><span class="check-icon">&#10003;</span> Compared the reachable Log4Shell finding with the unreachable Spring4Shell finding</li>
+            </ul>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="lab-step" data-step="6">
+            <div class="lab-step-number">6</div>
+            <h3>Fix Your First Finding and Verify</h3>
+            <p>From the CVE-2021-44228 detail view, Endor Labs offers remediation options: upgrade to the fixed version, apply an <strong>Endor Patch</strong> backport (for Java and Python, when you cannot take the full upgrade), or open a documented exception. Take the direct upgrade: bump the <code>log4j.version</code> property in <code>pom.xml</code> from 2.14.1 to 2.17.1, rebuild, and re-scan.</p>
+            <div class="lab-code-block"><span class="comment"># pom.xml: &lt;log4j.version&gt;2.14.1&lt;/log4j.version&gt;  -&gt;  2.17.1</span>
+mvn -q -DskipTests compile
+
+<span class="comment"># Re-scan to verify the fix</span>
+endorctl scan</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl scan
+<span class="term-info">Scanning project: checkout-service</span>
+<span class="term-info">Detected: Java (Maven) — pom.xml</span>
+<span class="term-info">Resolving dependencies... done (47 direct, 183 total)</span>
+<span class="term-info">Analyzing reachability... done</span>
+
+<span class="term-info">Findings summary</span>
+  <span class="term-success">Critical:   2  (0 reachable)   [-1 reachable vs. last scan]</span>
+  <span class="term-warn">High:       7  (2 reachable)</span>
+  <span class="term-info">Medium:    12  (0 reachable)</span>
+  <span class="term-info">Low:        5  (0 reachable)</span>
+  <span class="term-success">Policy violations: 0   [-2 vs. last scan]</span>
+
+<span class="term-success">CVE-2021-44228 remediated: log4j-core 2.14.1 -&gt; 2.17.1</span>
+<span class="term-info">Scan finished in 2m 12s</span></div>
+            <div class="lab-callout tip">
+                <strong>Machine-readable output</strong>
+                Every scan can emit results for tooling with <code>endorctl scan --output json</code> or <code>endorctl scan --output sarif</code> — the format CI pipelines and code-scanning tools consume. You will use this in the GitHub Actions lab.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Upgraded log4j-core to 2.17.1</li>
+                <li><span class="check-icon">&#10003;</span> Re-ran the scan and confirmed zero reachable criticals</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed policy violations dropped to zero</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">Which command links endorctl to your Endor Labs organization?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl login --org acme-financial</code></li>
+                <li class="lab-quiz-option" data-correct="true"><code>endorctl activate-token</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl connect --github</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl auth --login</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">A finding is marked <strong>Reachable</strong> when:</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">The vulnerable package is a direct dependency</li>
+                <li class="lab-quiz-option" data-correct="false">The CVE has a CVSS score of 9.0 or higher</li>
+                <li class="lab-quiz-option" data-correct="true">Your code has a complete call path to the vulnerable function</li>
+                <li class="lab-quiz-option" data-correct="false">The package appears anywhere in the dependency tree</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">Which command prints the resolved dependency tree?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="true"><code>endorctl deps</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl tree</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl list --dependencies</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl show deps</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">In this lab, why was CVE-2021-44228 reachable while CVE-2022-22965 was not?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Log4Shell had a higher CVSS score</li>
+                <li class="lab-quiz-option" data-correct="false">log4j-core was a direct dependency and spring-webmvc was transitive</li>
+                <li class="lab-quiz-option" data-correct="true">A call path existed from an HTTP entry point to the JNDI lookup function, while no path reached Spring's vulnerable data-binding code</li>
+                <li class="lab-quiz-option" data-correct="false">The scan policy was configured to ignore Spring findings</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've activated your token, connected a repository, run your first endorctl scan, read findings through the lens of reachability, and remediated your first reachable critical.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="reachability-triage.html" class="btn btn-primary">Next Lab: Reachability Triage</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 6;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('endorctl-first-scan', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

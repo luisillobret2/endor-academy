@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Enterprise SCA at Scale - Endor Academy</title>
+    <meta name="description" content="Scale Endor Labs SCA across the enterprise - monorepo and Bazel support, SCM apps for parallel multi-repo scanning, REST API automation, rollout patterns, and measuring success.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>Enterprise SCA at Scale</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Enterprise SCA at Scale</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 300 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The Enterprise Scaling Challenge</li>
+                    <li>Monorepos, Bazel, and Build-Scale Scanning</li>
+                    <li>Multi-Repo Operations with SCM Apps</li>
+                    <li>API Automation and Measuring Success</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The Enterprise Scaling Challenge</h2>
+                <p>Everything in this track works beautifully on one repository. Enterprises do not have one repository. A large organization runs <strong>thousands of repositories</strong>, dozens of languages, monorepos that hold entire product portfolios, custom build systems, and binary artifacts with no source available. Scaling SCA is its own engineering problem, and it is where weak tools collapse.</p>
+                <p>The failure modes are predictable:</p>
+                <ul>
+                    <li><strong>Coverage gaps</strong> &mdash; tools that only handle standard manifests quietly skip monorepos, Bazel builds, and binaries, leaving the majority of code unscanned</li>
+                    <li><strong>CI meltdown</strong> &mdash; naive full scans on every commit overwhelm build infrastructure at fleet size</li>
+                    <li><strong>Organizational chaos</strong> &mdash; without structure mapping to the business, nobody can tell who owns which risk, and reports become meaningless averages</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Scale Is a Product Capability, Not a Suffix</h4>
+                    <p>Endor Labs was built for this from the start: reachability across 40+ languages, monorepo support, Bazel support, scanning strategies per language, parallel scanning of many repositories, and a REST API for automation. This module is the material for enterprise conversations, where these details decide deals.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Monorepos, Bazel, and Build-Scale Scanning</h2>
+                <p>Monorepos concentrate an entire organization&rsquo;s code in one place, which breaks tools that assume one manifest per repository. Endor Labs supports monorepos natively: a single repository can hold many projects and services, each scanned with its own dependency context and reported separately.</p>
+                <p>For organizations on Bazel &mdash; the build system behind some of the largest codebases in the industry &mdash; Endor Labs provides dedicated <strong>Bazel support</strong>. Rubrik, an Endor Labs customer, has praised Endor Labs&rsquo; Bazel support as the best on the market. When you meet a prospect running a large Bazel monorepo, that is a conversation opener most competitors cannot survive.</p>
+                <p>Three further capabilities cover the long tail of enterprise builds:</p>
+                <ul>
+                    <li><strong>Scanning strategies per language</strong> &mdash; how analysis runs is tuned per language and build setup, instead of forcing every ecosystem through the same pipeline</li>
+                    <li><strong>Approximate scans</strong> &mdash; when a full build is not feasible in a given context, approximate scanning still produces dependency and finding data where other tools simply refuse</li>
+                    <li><strong>Binary artifact scanning</strong> &mdash; for artifacts whose source or manifests are not available, scans still produce inventory and findings &mdash; closing the gap traditional SCA leaves around vendor and legacy binaries</li>
+                </ul>
+            </section>
+
+            <section class="module-section">
+                <h2>Multi-Repo Operations with SCM Apps</h2>
+                <p>At fleet scale, per-repository setup is a non-starter. Endor Labs <strong>SCM apps</strong> for GitHub, GitLab, and Bitbucket connect at the organization level: administrators onboard repositories in bulk, and Endor Labs scans them <strong>in parallel</strong> without touching a single CI configuration file. This is the single fastest path from &ldquo;we have 2,000 repos&rdquo; to &ldquo;we have 2,000 repos scanned.&rdquo;</p>
+                <p>Supporting capabilities for fleet operations:</p>
+                <ul>
+                    <li><strong>Supervisory scans via Jenkins</strong> &mdash; a central Jenkins job can supervise scanning across repositories, ideal for scheduled, org-wide scans without per-repo pipeline work</li>
+                    <li><strong>Namespaces</strong> &mdash; the org structure from Module 07, so findings, policies, and reports map to business units instead of an undifferentiated pile</li>
+                    <li><strong>Keyless OIDC authentication</strong> &mdash; scan from GitHub, AWS, Azure, or GCP without managing long-lived tokens</li>
+                    <li><strong>Endor Outpost</strong> &mdash; the deployment component for environments with specific deployment requirements, keeping scans inside the customer&rsquo;s infrastructure boundaries</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; The Onboarding Conversation</h4>
+                    <p>When sizing an enterprise deployment, ask three questions: How many repositories, which build systems (any Bazel?), and what CI do they standardize on? The answers map directly onto the rollout: SCM apps for bulk coverage, CI integrations for enforcement, and supervisory scans for the schedules in between.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>API Automation and Measuring Success</h2>
+                <p>Enterprise programs are run programmatically. The Endor Labs <strong>REST API</strong> exposes the platform &mdash; findings, dependencies, projects, and metrics &mdash; so customers automate onboarding, trigger scans, export data to their own dashboards, and wire findings into ticketing systems without manual steps.</p>
+                <p>A proven enterprise rollout follows a Day 0 / Day 1 / Day 2+ journey:</p>
+                <ol class="steps-list">
+                    <li><strong>Day 0 &mdash; visibility</strong> &mdash; connect the SCM app, onboard repositories in bulk, and run baseline scans to establish the initial dependency and findings inventory</li>
+                    <li><strong>Day 1 &mdash; prioritization</strong> &mdash; turn on reachability and triage what is real; introduce PR scans in observation mode so teams acclimate with low friction</li>
+                    <li><strong>Day 2+ &mdash; enforcement and automation</strong> &mdash; enable blocking policies, adopt Endor Patches and automated fix PRs, automate SBOM/VEX export, and report metrics org-wide through the API</li>
+                </ol>
+                <p>Measure the program with the metrics that matter to executives:</p>
+                <ul>
+                    <li><strong>Noise reduction</strong> &mdash; the collapse from raw findings to reachable ones; Zebra Technologies reported up to 97%</li>
+                    <li><strong>Mean time to remediate (MTTR)</strong> &mdash; how fast reachable findings get fixed; Egnyte reported roughly 70% faster MTTR</li>
+                    <li><strong>Coverage</strong> &mdash; share of repositories onboarded and scanning</li>
+                    <li><strong>Policy compliance</strong> &mdash; blocked findings, exception volume, and exception aging over time</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners: Anchor Enterprise Claims in Customer Evidence</h4>
+                    <p>At this scale, buyers are skeptical. Anchor every capability claim in named evidence &mdash; Zebra on noise, Rubrik on Bazel, Egnyte on MTTR and FedRAMP &mdash; and be explicit that these are customer-reported results that vary by environment. Then propose a proof of value across a representative slice of their repositories, so the first number the customer trusts is their own.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> Which build system does Endor Labs support &mdash; a capability Rubrik publicly praised as the best on the market?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Maven</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Bazel</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Make</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Gradle</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> What is the purpose of supervisory scans, run for example through Jenkins?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> They review developer performance across teams</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> They scan only production container images</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> They centrally schedule and roll out scans across many repositories</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> They replace CI pipelines entirely</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 3:</strong> Which pair of metrics best demonstrates the business impact of an enterprise SCA rollout?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Noise reduction and mean time to remediate</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Repository count and lines of code scanned</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Number of security tools purchased</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Meetings held per sprint</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/github-actions-integration.html"><span class="resource-icon">&#128253;</span><span>GitHub Actions Integration<span class="resource-meta">Practice fleet-wide CI scanning</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="300">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="07-policy-enforcement.html" class="btn btn-secondary">&#8592; Previous: Policy Enforcement &amp; Governance</a>
+                    <span></span>
+                    <a href="../../certifications.html" class="btn btn-primary">View Certifications &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

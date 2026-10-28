@@ -1,0 +1,198 @@
+---
+title: SCA Overview - Endor Academy
+description: Learn what software composition analysis is, why open-source dependency risk matters, and how Endor Labs SCA with function-level reachability cuts CVE noise across your applications.
+---
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>SCA Overview</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>SCA Overview</h1>
+                <div class="module-meta">
+                    <span>&#128338; 30 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>What Software Composition Analysis Is</li>
+                    <li>Why Open-Source Dependency Risk Matters</li>
+                    <li>The Noise Problem with Traditional SCA</li>
+                    <li>Endor Labs SCA Capabilities and Where It Runs</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>What Is Software Composition Analysis?</h2>
+                <p>Modern applications are assembled, not written from scratch. The overwhelming majority of the code in a typical application comes from open-source packages, pulled in through manifests such as <code>package.json</code>, <code>pom.xml</code>, <code>requirements.txt</code>, and <code>go.mod</code>. Software Composition Analysis (SCA) builds a complete inventory of that third-party code and tells you what it means for your security, license, and compliance posture.</p>
+                <p>Endor Labs SCA resolves your full dependency tree &mdash; every package you declared plus everything those packages pull in &mdash; and evaluates each component for known vulnerabilities, malicious packages, license obligations, and overall package health. Findings surface in the Endor Labs platform, where security and engineering teams triage and fix them together.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Direct vs. Transitive Dependencies</h4>
+                    <p><strong>Direct dependencies</strong> are the packages you explicitly declare. <strong>Transitive dependencies</strong> are the packages your dependencies pull in &mdash; often the majority of the tree. You never reviewed that code, but you ship it, and a vulnerability anywhere in the tree can affect your application.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Why Open-Source Dependency Risk Matters</h2>
+                <p>Open source accelerates delivery, but it also imports risk you did not author. SCA exists because that risk is real, growing, and impossible to track manually:</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Risk</th>
+                                <th>What It Looks Like</th>
+                                <th>Why It Matters</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Known vulnerabilities</strong></td>
+                                <td>CVEs published against packages anywhere in your dependency tree</td>
+                                <td>Attackers scan for exploitable versions; you inherit every flaw your dependencies carry</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Malicious packages</strong></td>
+                                <td>Typosquatting, dependency confusion, and compromised maintainer accounts</td>
+                                <td>Attacks can execute at install time, before anyone reviews the code</td>
+                            </tr>
+                            <tr>
+                                <td><strong>License risk</strong></td>
+                                <td>Copyleft or restricted licenses inside a proprietary product</td>
+                                <td>Legal and financial exposure that ships silently with transitive packages</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Unhealthy packages</strong></td>
+                                <td>Abandoned projects with no fixes or maintainer response</td>
+                                <td>Findings in these packages can linger for months with no upstream fix</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>The Noise Problem with Traditional SCA</h2>
+                <p>Traditional SCA tools report every CVE found anywhere in the dependency tree, regardless of whether your application can actually trigger it. The result is a flood of findings: a single project can generate hundreds or thousands of alerts, and studies show that most reported CVEs are never actually invoked by the application.</p>
+                <p>The consequences are predictable. Security teams burn out triaging noise, developers stop trusting the tool, and genuinely exploitable vulnerabilities get lost in the pile. When everything is flagged &ldquo;critical,&rdquo; nothing is.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; The Endor Labs Answer: Reachability</h4>
+                    <p>Endor Labs&rsquo; flagship capability, <strong>function-level reachability analysis</strong>, determines whether your code actually calls a vulnerable function in a dependency &mdash; across direct and transitive packages, in 40+ languages. Only findings with a real call path into your code enter your backlog. Zebra Technologies reported cutting SCA noise by up to <strong>97%</strong> with this approach. Module 02 covers reachability in depth.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Endor Labs SCA Capabilities and Where It Runs</h2>
+                <p>Endor Labs is an agentic application security platform &mdash; &ldquo;code without compromise&rdquo; &mdash; built so that every SCA capability starts from the findings that actually matter:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128269;</div>
+                        <h4>Reachability Analysis</h4>
+                        <p>Function-level call graphs through direct and transitive dependencies cut noise and surface what is truly exploitable.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128200;</div>
+                        <h4>Endor Scores</h4>
+                        <p>Per-package risk scores built from activity, popularity, security, and code-quality signals &mdash; used for prioritization and for choosing healthy dependencies.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#9878;&#65039;</div>
+                        <h4>License Compliance</h4>
+                        <p>License detection for every dependency, with policies that block or flag risky licenses such as the GPL family.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128220;</div>
+                        <h4>SBOM &amp; VEX</h4>
+                        <p>Export CycloneDX and SPDX SBOMs, plus VEX statements documenting which findings are not exploitable.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#129520;</div>
+                        <h4>Endor Patches</h4>
+                        <p>Backported security fixes for Java and Python when no fixed upstream version exists &mdash; delivered through your artifact repository.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128737;&#65039;</div>
+                        <h4>Policies &amp; CI Enforcement</h4>
+                        <p>Finding, license, and exception policies enforced in pull request scans, so new risk never reaches the default branch unnoticed.</p>
+                    </div>
+                </div>
+
+                <h3>Where It Runs</h3>
+                <ul>
+                    <li><strong>SCM apps</strong> for GitHub, GitLab, and Bitbucket &mdash; onboard and scan many repositories in parallel</li>
+                    <li><strong>CI/CD</strong> &mdash; GitHub Actions, Jenkins, GitLab, Azure DevOps, Bitbucket, CircleCI, Google Cloud Build, and Buildkite, with keyless OIDC authentication on GitHub, AWS, Azure, and GCP</li>
+                    <li><strong>endorctl CLI</strong> &mdash; on-demand scans (<code>endorctl scan</code>), dependency inspection, container scans, and PR scans from any workstation or pipeline</li>
+                    <li><strong>AI coding tools</strong> &mdash; the Endor Labs MCP server (<code>npx -y endorctl ai-tools mcp-server</code>) brings findings into Cursor, Claude Code, Codex, VS Code, Gemini CLI, Antigravity, and IntelliJ</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Open every SCA conversation with the noise problem, then position reachability as the differentiator: Endor Labs tells customers which vulnerabilities are exploitable in <em>their</em> code, not just which ones exist. Every other capability &mdash; scores, licenses, SBOMs, patches, policies &mdash; inherits that precision.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What does an SCA tool analyze to build your dependency inventory?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Only the source code you wrote yourself</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Dependency manifests and lockfiles, covering direct and transitive packages</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Only packages listed in your CI configuration</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Network traffic between your services</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> In Endor Labs SCA, when does a vulnerability enter your remediation backlog?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> When a real call path from your code reaches the vulnerable function</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> When its CVSS score is above 7.0</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> When the package has been downloaded more than a million times</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Whenever it appears anywhere in the dependency tree</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> A customer wants security findings delivered inside AI coding assistants such as Cursor or Claude Code. Which Endor Labs capability provides this?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Endor Patches</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Package Firewall</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> The Endor Labs MCP server</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> VEX statements</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/endorctl-first-scan.html"><span class="resource-icon">&#128640;</span><span>First Scan with endorctl<span class="resource-meta">Run your first Endor Labs scan</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <span></span>
+                    <a href="02-reachability-analysis.html" class="btn btn-primary">Next: Reachability Analysis &#8594;</a>
+                </div>
+            </div>

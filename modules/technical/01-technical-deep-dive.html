@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Architecture &amp; Deployment Deep Dive - Endor Academy</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Architecture &amp; Deployment Deep Dive</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Architecture &amp; Deployment Deep Dive</h1>
+                <div class="module-meta">
+                    <span>&#128338; 50 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Platform Architecture: SaaS Control Plane + Endor Outpost</li>
+                    <li>Authentication, Identity &amp; Access Control</li>
+                    <li>Scan Methods, Profiles &amp; Toolchain Detection</li>
+                    <li>Findings Pipeline, Policies &amp; Remediation</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Platform Architecture: SaaS Control Plane + Endor Outpost</h2>
+                <p>Endor Labs is an <strong>Agentic Application Security Platform</strong>: a SaaS control plane at <code>app.endorlabs.com</code> that scans code, dependencies, containers, secrets, and AI assets, then drives triage and remediation. Two architectural facts decide most enterprise conversations &mdash; the platform is SaaS-first, and <strong>Endor Outpost</strong> is the customer-controlled component that makes it viable where egress is restricted.</p>
+
+                <h3>Component Reference</h3>
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Component</th>
+                                <th>Purpose</th>
+                                <th>Deployment note</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Endor Labs SaaS</strong></td>
+                                <td>Scan orchestration, findings, policies, dashboards, API</td>
+                                <td>Hosted by Endor Labs at <code>app.endorlabs.com</code>, reached over HTTPS</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Endor Outpost</strong></td>
+                                <td>Customer-controlled deployment component for restricted-egress environments</td>
+                                <td>Runs inside the customer network and supports proxy configuration</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Namespaces &amp; RBAC</strong></td>
+                                <td>Organize projects and organizations; scope access and reporting</td>
+                                <td>Map one namespace per business unit; federate users via SAML/OIDC (Okta, Entra ID)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Lead architecture calls with the Outpost question: &ldquo;Can your build runners reach the public internet directly?&rdquo; If the answer is no, proxy rules and Outpost placement become the design, and everything else is configuration detail.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Authentication, Identity &amp; Access Control</h2>
+                <p>Three authentication paths cover almost every requirement. Start with the one that matches the customer&rsquo;s constraint, then show how they combine.</p>
+
+                <ul>
+                    <li><strong>SSO (SAML / OIDC)</strong> &mdash; federate human users through Okta, Entra ID, or any SAML/OIDC provider; group mappings drive authorization roles.</li>
+                    <li><strong>Keyless OIDC</strong> &mdash; CI workloads on GitHub, AWS, Azure, and Google Cloud authenticate with no long-lived secrets. Preferred in regulated pipelines.</li>
+                    <li><strong>API keys</strong> &mdash; for automation that cannot use OIDC; scope each key to the minimum namespace and rotate on a schedule.</li>
+                </ul>
+
+                <h3>Bootstrap a Scan in Four Steps</h3>
+                <ol class="steps-list">
+                    <li><strong>Install endorctl</strong> &mdash; use the packaged installer for the OS, or the container image on a CI runner.</li>
+                    <li><strong>Activate the token</strong> &mdash; run <code>endorctl activate-token --token &lt;API_KEY&gt;</code>; in CI, prefer keyless OIDC instead of a stored key.</li>
+                    <li><strong>Scan the repository</strong> &mdash; run <code>endorctl scan --path .</code>; toolchain detection creates a scan profile for the languages it finds.</li>
+                    <li><strong>Confirm findings</strong> &mdash; results land in the namespace the token was scoped to; verify the project in <code>app.endorlabs.com</code>.</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Never place a personal API key in a customer pipeline. Create a dedicated service key scoped to one namespace, store it in the customer&rsquo;s secret manager, and rotate it on their schedule. Exact CLI flags change between releases &mdash; confirm with <code>endorctl scan --help</code> before publishing a runbook.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Scan Methods, Profiles &amp; Toolchain Detection</h2>
+                <p>There is no single correct way to scan. Match the method to where the code already lives and where the customer will accept a gate.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Where it runs</th>
+                                <th>Best for</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>SCM apps</strong></td>
+                                <td>GitHub, GitLab, Bitbucket Cloud</td>
+                                <td>Fast onboarding with PR comments and PR blocking</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CI/CD integrations</strong></td>
+                                <td>GitHub Actions, Jenkins (including supervisory scans), GitLab, Azure DevOps, Bitbucket, CircleCI, Google Cloud Build, Buildkite</td>
+                                <td>Build-time gates inside pipelines the customer already owns</td>
+                            </tr>
+                            <tr>
+                                <td><strong>endorctl CLI</strong></td>
+                                <td>Developer laptop, container, any runner</td>
+                                <td>Ad-hoc scans, custom automation, constrained networks</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>Scan profiles define what runs. Configure them in the UI, through the API, or as code in <code>scanprofile.yaml</code>, and let <strong>toolchain detection</strong> create profiles automatically for each discovered language. Scan types include SCA, SAST (rule-based plus AI SAST), secrets, containers, malware, AI models, OSS licenses, RSPM for GitHub misconfigurations, and PR scans. Reachability comes from call graph construction, with pre-computed reachability available for faster triage. Binary artifact scans and approximate scans cover code without buildable sources, and <strong>Bazel</strong> (via Aspects) plus monorepos are first-class. Language coverage spans <strong>40+ languages</strong>, including Java, Python, Go, JavaScript/TypeScript, C/C++, PHP, Kotlin, Scala, .NET, Swift/Objective-C, Ruby, and Rust.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Findings Pipeline, Policies &amp; Remediation</h2>
+                <p>A finding only matters if it reaches the person who can fix it. The Endor Labs pipeline covers triage, policy, routing, and repair.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Find</strong> &mdash; scans produce findings that can be filtered by severity, reachability, package, project, and scan type.</li>
+                    <li><strong>Triage</strong> &mdash; dismiss findings with a recorded reason, or attach exception policies created from templates so decisions stay auditable.</li>
+                    <li><strong>Enforce</strong> &mdash; finding policies cover container, license, RSPM, OSS, SAST, secret, and GitHub Action findings; remediation and action policies automate the response.</li>
+                    <li><strong>Route</strong> &mdash; PR scans comment inline and can block a pull request; notifications and integrations push the rest to Jira, Slack, email, and webhooks.</li>
+                    <li><strong>Fix</strong> &mdash; upgrade impact analysis and automated pull requests handle version bumps; Endor Patches backport fixes for Java and Python via Patch Factory.</li>
+                </ol>
+
+                <ul>
+                    <li><strong>Dashboards &amp; reports</strong> &mdash; OSS overview, Endor Patches, first-party code, analytics, AI security code review, and OSS coverage views, plus scan history and scheduled reports.</li>
+                    <li><strong>SBOM &amp; VEX</strong> &mdash; export CycloneDX or SPDX SBOMs with VEX statements, and import SBOMs to enrich inventory for compliance work.</li>
+                    <li><strong>Package Firewall</strong> &mdash; blocks malicious packages at install time for agents and developers, closing the window between publish and patch.</li>
+                    <li><strong>AURI agent stack</strong> &mdash; inventories agents, models, MCP servers, and skills, and applies allow, block, or ask-a-human decisions with an audit trail.</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Anchor the architecture story on outcomes: reachability cuts the queue, PR scans keep it cut, and Endor Patches clear residue that no upgrade can fix. Zebra reports a 97% noise reduction and Egnyte reports 70% faster MTTR &mdash; use customer numbers as proof, not as promises.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> Which Endor Labs component makes the platform viable in an environment with restricted egress?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Endor Outpost, deployed inside the customer network</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> A second SaaS tenant in the customer's cloud region</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> The Package Firewall agent</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> The AURI agent inventory</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> Which authentication method removes long-lived secrets from a CI/CD pipeline?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> SAML single sign-on</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> A shared organization API key</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Keyless OIDC federation</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Basic authentication</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/endorctl-first-scan.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: Your First endorctl Scan<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <span></span>
+                    <a href="02-demo-mastery.html" class="btn btn-primary">Next: Demo Mastery &amp; Lab Setup &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

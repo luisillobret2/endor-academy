@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="img/endor-logo.png">
+    <link rel="apple-touch-icon" href="img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <!-- seo -->
+    <meta name="description" content="Practice application security skills in hands-on Endor Labs lab environments covering scanning, remediation, and platform workflows.">
+    <link rel="canonical" href="https://luisillobret2.github.io/endor-academy/labs.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Endor Academy">
+    <meta property="og:title" content="Hands-On Labs - Endor Academy">
+    <meta property="og:description" content="Practice application security skills in hands-on Endor Labs lab environments covering scanning, remediation, and platform workflows.">
+    <meta property="og:url" content="https://luisillobret2.github.io/endor-academy/labs.html">
+    <meta property="og:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Hands-On Labs - Endor Academy">
+    <meta name="twitter:description" content="Practice application security skills in hands-on Endor Labs lab environments covering scanning, remediation, and platform workflows.">
+    <meta name="twitter:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <title>Hands-On Labs - Endor Academy</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <section class="hero" style="padding: 36px 0;">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Hands-On <span class="accent">Labs</span></h1>
+                <p>Real Endor Labs environments in your browser. Practice scanning, configuring, integrating, and troubleshooting.</p>
+                <div class="hero-stats" style="margin-top: 24px;">
+                    <div class="hero-stat">
+                        <span class="value">3</span>
+                        <span class="label">Labs Completed</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="value">8</span>
+                        <span class="label">Labs Available</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="value">800</span>
+                        <span class="label">XP from Labs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="page-content" id="main-content">
+        <div class="container">
+
+            <!-- Filter -->
+            <div class="filter-bar" data-target="labs-grid">
+                <button class="filter-btn active" data-filter="all">All Labs</button>
+                <button class="filter-btn" data-filter="guided">Guided</button>
+                <button class="filter-btn" data-filter="challenge">Challenge</button>
+                <button class="filter-btn" data-filter="sca">SCA</button>
+                <button class="filter-btn" data-filter="ai">AI</button>
+                <button class="filter-btn" data-filter="integration">Integration</button>
+                <button class="filter-btn" data-filter="admin">Administration</button>
+            </div>
+
+            <div id="labs-grid" class="grid-3">
+
+                <!-- Lab 1 -->
+                <div class="lab-card" data-category="guided,sca">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(4, 120, 87, 0.1));">
+                        <span class="lab-icon">&#128737;</span>
+                        <span class="badge badge-green lab-type">Guided</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>Your First Endor Labs Scan</h3>
+                        <p>Activate your token, connect a repository, run <code>endorctl scan</code>, and triage your first findings in the dashboard.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 45 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="badge badge-green">Completed</span>
+                            <a href="labs/endorctl-first-scan.html" class="btn btn-secondary btn-sm">Redo Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 2 -->
+                <div class="lab-card" data-category="guided,sca">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(4, 120, 87, 0.1));">
+                        <span class="lab-icon">&#128203;</span>
+                        <span class="badge badge-green lab-type">Guided</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>Reachability Triage</h3>
+                        <p>Work a realistic backlog: trace function-level call paths, dismiss unreachable noise, and prioritize what is truly exploitable.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 45 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="badge badge-green">Completed</span>
+                            <a href="labs/reachability-triage.html" class="btn btn-secondary btn-sm">Redo Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 3 -->
+                <div class="lab-card" data-category="challenge,sca">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(231, 76, 60, 0.12));">
+                        <span class="lab-icon">&#128683;</span>
+                        <span class="badge badge-orange lab-type">Challenge</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>Package Firewall Configuration</h3>
+                        <p>Configure allow/block policies for package installs and watch a malicious package get blocked in real time, before it reaches CI.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 40 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="labs/package-firewall-setup.html" class="btn btn-primary btn-sm">Launch Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 4 -->
+                <div class="lab-card" data-category="challenge,ai">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(38, 208, 124, 0.15));">
+                        <span class="lab-icon">&#129302;</span>
+                        <span class="badge badge-orange lab-type">Challenge</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>MCP Server &amp; Agent Kit Setup</h3>
+                        <p>Connect the Endor Labs MCP server to Cursor or Claude Code, then let coding agents find and fix findings safely under policy.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 45 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="labs/mcp-agent-kit-setup.html" class="btn btn-primary btn-sm">Launch Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 5 -->
+                <div class="lab-card" data-category="guided,integration">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(4, 120, 87, 0.12));">
+                        <span class="lab-icon">&#9881;</span>
+                        <span class="badge badge-green lab-type">Guided</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>GitHub Actions Integration</h3>
+                        <p>Wire Endor Labs scanning into a GitHub Actions pipeline with keyless OIDC auth, PR scan comments, and fail conditions.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 60 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="badge badge-green">Completed</span>
+                            <a href="labs/github-actions-integration.html" class="btn btn-secondary btn-sm">Redo Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 6 -->
+                <div class="lab-card" data-category="guided">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(231, 76, 60, 0.15));">
+                        <span class="lab-icon">&#128272;</span>
+                        <span class="badge badge-green lab-type">Guided</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>Secrets Detection Setup</h3>
+                        <p>Enable secrets detection, create custom rules for internal token formats, run a historical scan, and route findings to Slack.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 45 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="badge badge-accent">New</span>
+                            <a href="labs/secrets-detection-setup.html" class="btn btn-primary btn-sm">Launch Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 7 -->
+                <div class="lab-card" data-category="guided">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(52, 152, 219, 0.15));">
+                        <span class="lab-icon">&#128230;</span>
+                        <span class="badge badge-green lab-type">Guided</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>Container Image Scanning</h3>
+                        <p>Scan a container image with <code>endorctl</code>, review reachability from code to image, and apply base image remediation.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 40 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="labs/container-scanning.html" class="btn btn-primary btn-sm">Launch Lab</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lab 8 -->
+                <div class="lab-card" data-category="challenge,sca">
+                    <div class="lab-card-visual" style="background: linear-gradient(135deg, #ECFDF5, rgba(155, 89, 182, 0.15));">
+                        <span class="lab-icon">&#128196;</span>
+                        <span class="badge badge-orange lab-type">Challenge</span>
+                    </div>
+                    <div class="lab-card-body">
+                        <h3>SBOM &amp; VEX Export</h3>
+                        <p>Generate CycloneDX and SPDX SBOMs, attach VEX statements that document non-reachable findings, and export everything for a compliance audit.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 30 min</span>
+                            <span>&#127942; 100 XP</span>
+                        </div>
+                        <div class="lab-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="labs/sbom-vex-export.html" class="btn btn-primary btn-sm">Launch Lab</a>
+                        </div>
+                    </div>
+                </div>
+      </div>
+
+        </div>
+    </main>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="js/layout.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/homepage.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/cert-recommendations.js"></script>
+    <script src="js/badges.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

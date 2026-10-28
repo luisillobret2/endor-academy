@@ -1,0 +1,180 @@
+---
+title: Developer Quickstart - Endor Academy
+description: Go from zero to your first endorctl scan, read findings through reachability, and ship your first fix without changing the way you work.
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>Developer Quickstart</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Developer Quickstart</h1>
+                <div class="module-meta">
+                    <span>&#128338; 30 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 100 XP</span>
+                    <span class="level-badge beginner">Level 1 - Beginner</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Security That Does Not Change Your Workflow</li>
+                    <li>Set Up: Account, Token, and Repository</li>
+                    <li>Install endorctl and Run Your First Scan</li>
+                    <li>Read Your Findings and Fix Your First One</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Security That Does Not Change Your Workflow</h2>
+                <p>Developers adopt security tooling for exactly one reason: it does not move their work. Endor Labs was built around that constraint. The platform runs where you already are &mdash; the terminal via <code>endorctl</code>, your editor and coding agents via the MCP server, your pull requests via PR scans, and your pipeline via CI/CD integrations. There is no new portal to visit and no new queue to babysit.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; The &ldquo;No Workflow Change&rdquo; Promise</h4>
+                    <p>One policy applies from laptop to pipeline. You scan the repository you already work in, findings arrive as PR comments or agent suggestions inside the tools you use, and fixes are applied from your editor. Security stops being a separate place you go and becomes part of the code review you already do.</p>
+                </div>
+
+                <p>This quickstart takes you from zero to a completed first scan and your first fix &mdash; the same path you will walk customers down during a demo. No security expertise is required, and nothing about your repository setup changes.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Set Up: Account, Token, and Repository</h2>
+                <p>Three steps stand between you and your first scan:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Create your account</strong> &mdash; sign in to the Endor Labs console at <code>app.endorlabs.com</code>. As a partner, use the credentials issued for your academy and partner workspace.</li>
+                    <li><strong>Create an API token</strong> &mdash; in the console, create a dedicated API token. Treat it like a password: store it in an environment variable, never in source code, and use a separate token for automation so you can revoke it without touching your own access.</li>
+                    <li><strong>Connect your repository</strong> &mdash; either connect the repository integration in the console, or simply run <code>endorctl</code> inside the repository. The project, its dependency inventory, and its findings are created automatically on your first scan.</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>The first five minutes decide adoption. When you walk a customer through Endor Labs, do not narrate slides &mdash; run these three steps live against a real repository. The quickstart <em>is</em> the demo: account, token, scan, findings, fix.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Install endorctl and Run Your First Scan</h2>
+                <p><code>endorctl</code> is a single binary for macOS, Linux, and Windows, and is also available as a container image for CI runners. Install it with the packaged installer for your operating system from the Endor Labs docs, then verify and run:</p>
+
+                <pre><code># Verify the installation
+endorctl --version
+
+# Authenticate with the token you created in the console
+endorctl activate-token --token=$ENDOR_TOKEN
+
+# Scan the repository you are in
+endorctl scan</code></pre>
+
+                <p>That last command does the heavy lifting. <code>endorctl</code> auto-detects your toolchains across 40+ languages, resolves the full dependency tree from manifests and lockfiles, maps call paths between your code and your dependencies, and uploads the results to your project in the console. Your first scan is a baseline: every dependency, every known vulnerability in them, plus secrets and code findings according to your scan profile.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; One Command, Full Inventory</h4>
+                    <p>Every <code>endorctl scan</code> resolves direct and transitive dependencies, builds the call graph that powers reachability analysis, and returns prioritized findings in the console within minutes. The scan profile &mdash; what to scan and which analyses to run &mdash; is auto-detected on first run and can be pinned in a <code>scanprofile.yaml</code> so every teammate and every pipeline scans identically.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Read Your Findings and Fix Your First One</h2>
+                <p>Open your project in the console and you will see findings grouped by risk. The single most important signal is <strong>reachability</strong>: Endor Labs function-level call graphs tell you whether your code actually calls the vulnerable function in a dependency &mdash; the difference between a vulnerability you can exploit and one that just looks scary in a report.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th>What it means</th>
+                                <th>What you do</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span style="color: #e74c3c; font-weight: 700;">Reachable</span></td>
+                                <td>Your code calls the vulnerable function &mdash; this can actually be triggered</td>
+                                <td>Fix first; these are the real risks</td>
+                            </tr>
+                            <tr>
+                                <td><span style="color: #f39c12; font-weight: 700;">Potentially Reachable</span></td>
+                                <td>A call path may exist; analysis is inconclusive</td>
+                                <td>Investigate and schedule</td>
+                            </tr>
+                            <tr>
+                                <td><span style="color: #2ecc71; font-weight: 700;">Unreachable</span></td>
+                                <td>Your code never calls the vulnerable function</td>
+                                <td>Deprioritize; update in the normal cycle</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>Your First Fix</h3>
+                <ol class="steps-list">
+                    <li><strong>Sort by reachable critical and high findings</strong> &mdash; start where the risk is real.</li>
+                    <li><strong>Open a finding and read the call path</strong> &mdash; see exactly how your code reaches the vulnerable function. Evidence beats severity scores.</li>
+                    <li><strong>Apply the suggested fix</strong> &mdash; take the recommended version upgrade (Endor Labs can raise the update as an automated pull request) or apply an Endor Patch when you cannot upgrade yet.</li>
+                    <li><strong>Re-run <code>endorctl scan</code></strong> &mdash; confirm the finding clears. That closes the loop.</li>
+                </ol>
+
+                <p>Scan, triage by reachability, fix, rescan &mdash; that is the entire developer loop with Endor Labs. The rest of this track shows you how to run that loop from your IDE and coding agents, your CI, and your policies.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> After installing endorctl, which command authenticates it against your Endor Labs organization?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> <code>endorctl activate-token --token=$ENDOR_TOKEN</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> <code>endorctl auth login --sso</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> <code>endorctl connect --console</code></label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> <code>endorctl register --org</code></label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> What does reachability tell you about a finding?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> The date the CVE was published</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Whether your code actually calls the vulnerable function in the dependency</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> The license of the affected dependency</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> How many packages depend on the vulnerable one</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 3:</strong> What does the &ldquo;no workflow change&rdquo; philosophy mean in practice?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Security reviews are handled by a separate team so developers are not involved</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Scans run only inside a dedicated security portal</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Findings are batched and reviewed once a quarter</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Endor Labs runs where developers already work: the terminal, the IDE and coding agents, PRs, and CI pipelines</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/endorctl-first-scan.html"><span class="resource-icon">&#128736;</span><span>Lab: Your First Endor Labs Scan<span class="resource-meta">Run endorctl against a sample repo</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="100">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="02-ide-integration.html" class="btn btn-primary">Next: IDE, MCP &amp; Coding Agents &#8594;</a>
+                </div>
+            </div>

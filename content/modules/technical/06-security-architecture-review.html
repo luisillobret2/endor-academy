@@ -1,0 +1,190 @@
+---
+title: Security Architecture Review - Endor Academy
+---
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Security Architecture Review</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Security Architecture Review</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Threat-Model the Customer&rsquo;s SDLC</li>
+                    <li>Map Controls to the Platform: Scan, Triage, Remediate</li>
+                    <li>Finding the Gaps: Agent Governance &amp; Package Firewall</li>
+                    <li>Write the Review as a Proposal</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Threat-Model the Customer&rsquo;s SDLC</h2>
+                <p>A security architecture review is not a product presentation. It is a structured threat model of how code travels from a developer&rsquo;s machine to production, followed by a control map that shows where the platform closes each gap. Run the review with Endor Labs as the lens, but start from the customer&rsquo;s pipeline, not your feature list.</p>
+                <p>Walk the pipeline in five stages and ask one question at each: <em>what can go wrong here, and who would notice?</em></p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SDLC stage</th>
+                                <th>Threat</th>
+                                <th>Control in the platform</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Author</strong> &mdash; IDE, agents, local installs</td>
+                                <td>A malicious package is pulled at install, or an agent reaches untrusted tooling</td>
+                                <td>Package Firewall blocks malicious packages at install; agent, model, and MCP inventory records what agents can reach</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Integrate</strong> &mdash; pull requests</td>
+                                <td>New code introduces a reachable vulnerability, a secret, or an insecure workflow</td>
+                                <td>PR scans with SAST (rule-based and AI SAST), secrets detection, RSPM for GitHub misconfigurations, and inline PR comments</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Build</strong> &mdash; CI/CD</td>
+                                <td>The pipeline itself becomes the weakest link: unenforced gates, unscoped scans</td>
+                                <td>CI integrations across GitHub Actions, Jenkins, GitLab, Azure DevOps, CircleCI, Google Cloud Build, and Buildkite with policy gates</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Publish</strong> &mdash; registries and artifacts</td>
+                                <td>Vulnerable or unlicensed components ship as first-party releases</td>
+                                <td>SCA with reachability, OSS license findings, SBOM and VEX export, and binary artifact scans</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Run</strong> &mdash; containers and production</td>
+                                <td>Base images and layers carry known vulnerabilities and malware</td>
+                                <td>Container scanning, malware detection, and Endor Patches where no upstream fix exists</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Send a one-page questionnaire before the session: languages, SCM platforms, CI systems, registries, current scanners, and the top three AppSec complaints. Arriving with the pipeline already sketched turns a discovery meeting into a design meeting.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Map Controls to the Platform: Scan, Triage, Remediate</h2>
+                <p>Once the pipeline is on the whiteboard, map every identified gap to one of four control verbs. Keep the mapping explicit &mdash; customers approve architectures they can trace.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Scan</strong> &mdash; connect SCM apps and CI pipelines, or run endorctl directly; define scan profiles in the UI, the API, or <code>scanprofile.yaml</code>, and let toolchain detection create profiles for each language.</li>
+                    <li><strong>Triage</strong> &mdash; use reachability from call graph construction to separate exploitable findings from theoretical ones, filter the queue, and dismiss findings with a recorded reason.</li>
+                    <li><strong>Remediate</strong> &mdash; run upgrade impact analysis, open automated pull requests, apply Endor Patches for Java and Python where no upstream release exists, and block malicious installs with Package Firewall.</li>
+                    <li><strong>Prove</strong> &mdash; export SBOMs and VEX in CycloneDX or SPDX, review OSS coverage and analytics dashboards, and feed compliance platforms such as Vanta with control evidence instead of screenshots.</li>
+                </ol>
+
+                <p>Express each control in the customer&rsquo;s language. If the audit team asks for supply-chain transparency, the answer is SBOM and VEX, not &ldquo;SCA&rdquo;. If the platform team asks how a dependency gets fixed, the answer is upgrade impact analysis and automated pull requests, not &ldquo;remediation&rdquo;.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Finding the Gaps: Agent Governance &amp; Package Firewall</h2>
+                <p>Most reviews find the same two blind spots. Traditional AppSec programs start at the pull request, so anything that happens before a scan &mdash; or outside the codebase entirely &mdash; is ungoverned.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128737;&#65039;</div>
+                        <h4>Before the scan: Package Firewall</h4>
+                        <p>Malicious packages act at install time, before any dependency scan runs. Package Firewall blocks them at install for both agents and developers, which is the only control that arrives early enough.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#129302;</div>
+                        <h4>Outside the codebase: agent governance</h4>
+                        <p>AURI inventories agents, models, MCP servers, and skills, draws context from files such as <code>AGENTS.md</code> and <code>CLAUDE.md</code>, and applies allow, block, or ask-a-human decisions with an audit trail.</p>
+                    </div>
+                </div>
+
+                <p>For AI-heavy customers, extend the review into the agent supply chain: which agents exist, which MCP servers they call, which models they reach through AI Model Discovery, and how Agents Hub delegated credentials and trust attribution are managed. The MCP server is available through <code>npx -y endorctl ai-tools mcp-server</code> for Cursor, Claude Code, Codex, VS Code, Gemini CLI, Antigravity, IntelliJ, Devin, OpenCode, and GitHub AgentHQ.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Never present a gap as a failure of the customer&rsquo;s team. Frame it as scope that no traditional scanner covers: &ldquo;Your program governs what lands in the repository; nothing currently governs what installs before that, or what your agents can reach.&rdquo; That framing makes the gap a roadmap item rather than a criticism.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Write the Review as a Proposal</h2>
+                <p>The deliverable is a short document that a champion can forward without editing. Six pages beat sixty: every section must support the recommendation that follows it.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Executive summary</strong> &mdash; current state, the three highest-risk gaps, and the proposed controls in one page.</li>
+                    <li><strong>Threat model</strong> &mdash; the pipeline diagram with the five stages and the threats identified in the workshop.</li>
+                    <li><strong>Control map</strong> &mdash; each threat paired with the platform capability that closes it, plus the integration required to deliver it.</li>
+                    <li><strong>Gap register</strong> &mdash; open items the platform does not cover today, with the compensating control or roadmap dependency stated plainly.</li>
+                    <li><strong>Phased rollout</strong> &mdash; pilot scope, repository list, integration order, and named owners on both sides.</li>
+                    <li><strong>Success metrics and commercial alignment</strong> &mdash; noise reduction, reachable-finding coverage, MTTR, PR scan adoption, and the licensing shape that supports the rollout.</li>
+                </ol>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Attach the review to the POV charter so the report becomes the technical appendix of the proposal. When the readout arrives, the customer is not evaluating a new document &mdash; they are confirming one they already helped write.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> In a control-mapping review, which capability separates &ldquo;this CVE exists in my dependency tree&rdquo; from &ldquo;this CVE can actually be exploited&rdquo;?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> SBOM export</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Reachability derived from call graph construction</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> License policy enforcement</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Agent inventory</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> Which two areas most often appear as gaps because they sit outside the scan-triage-remediate loop?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Malicious packages at install time, and AI agent and MCP governance</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> SCA and SAST coverage</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> SBOM generation and VEX statements</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Jira and Slack notifications</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 3:</strong> What makes the review document persuasive to an economic buyer?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Listing every vulnerability found during the session</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Pairing each gap with a platform capability, a phased rollout, and named owners</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Including raw scan output as an appendix</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Avoiding recommendations so the customer decides alone</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/package-firewall-setup.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: Package Firewall Setup<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="05-troubleshooting.html" class="btn btn-secondary">&#8592; Previous: Troubleshooting &amp; Support</a>
+                    <a href="07-customer-workshops.html" class="btn btn-primary">Next: Customer Workshop Facilitation &#8594;</a>
+                </div>
+            </div>

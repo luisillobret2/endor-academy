@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>License Compliance - Endor Academy</title>
+    <meta name="description" content="Learn how Endor Labs detects open-source licenses across your dependency tree, enforces license policies that block or flag copyleft risk, and produces license inventories for audits and SBOM export.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>License Compliance</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>License Compliance</h1>
+                <div class="module-meta">
+                    <span>&#128338; 25 min</span>
+                    <span>&#128218; 4 sections</span>
+                    <span>&#11088; 100 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Open-Source Licenses, Obligations, and Conflicts</li>
+                    <li>Endor Labs License Detection and Policies</li>
+                    <li>License Inventory, Audits, and SBOM Export</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Open-Source Licenses, Obligations, and Conflicts</h2>
+                <p>An open-source license is a legal contract that governs how a package can be used, modified, and redistributed. Every dependency you adopt &mdash; direct or transitive &mdash; brings its license obligations into your product. For proprietary software, the license terms matter as much as the vulnerability count.</p>
+                <p>The two families to understand first:</p>
+                <ul>
+                    <li><strong>Permissive licenses</strong> (MIT, Apache-2.0, BSD) ask for little beyond attribution &mdash; generally safe to embed in commercial products.</li>
+                    <li><strong>Copyleft licenses</strong> (the GPL family) require that derivative works be distributed under the same license. Embedding GPL-licensed code in a proprietary product can obligate you to open-source it &mdash; or expose you to legal claims if you do not.</li>
+                </ul>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Examples</th>
+                                <th>Risk in Proprietary Products</th>
+                                <th>Key Obligation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Permissive</strong></td>
+                                <td>MIT, Apache-2.0, BSD 2/3-Clause</td>
+                                <td><span style="color: #2ecc71;">Low</span></td>
+                                <td>Retain copyright notices and license text</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Weak copyleft</strong></td>
+                                <td>LGPL, MPL 2.0, EPL</td>
+                                <td><span style="color: #f39c12;">Medium</span></td>
+                                <td>Share modifications to the covered component itself</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Strong copyleft</strong></td>
+                                <td>GPL-2.0, GPL-3.0, AGPL-3.0</td>
+                                <td><span style="color: #e74c3c;">High</span></td>
+                                <td>Release derivative works under the same license</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Commercial / custom</strong></td>
+                                <td>Vendor-specific terms</td>
+                                <td><span style="color: #f39c12;">Variable</span></td>
+                                <td>Honor the vendor contract &mdash; may require paid rights</td>
+                            </tr>
+                            <tr>
+                                <td><strong>No license detected</strong></td>
+                                <td>Unlicensed code</td>
+                                <td><span style="color: #e74c3c;">High</span></td>
+                                <td>All rights reserved by default &mdash; no permission to use</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners: Legal Review Is Non-Negotiable</h4>
+                    <p>Endor Labs detects licenses and enforces your policy &mdash; it does not make legal decisions for you. Always recommend that customers involve legal counsel to define which licenses are approved, restricted, or banned for their products. Position Endor Labs as the enforcement and evidence layer for the policy legal teams define.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Endor Labs License Detection and Policies</h2>
+                <p>Endor Labs identifies the license for <strong>every direct and transitive dependency</strong> in your projects, including dual-licensed packages where the effective license depends on how you use the package. This matters because the licenses that cause the most trouble are usually the ones nobody chose on purpose &mdash; a permissive library that quietly pulls in a GPL-licensed helper.</p>
+
+                <h3>What License Policies Can Do</h3>
+                <ul>
+                    <li><strong>Block risky licenses</strong> &mdash; prevent GPL-family copyleft code from entering a proprietary product at all</li>
+                    <li><strong>Flag for review</strong> &mdash; surface weak-copyleft or custom licenses to security and legal stakeholders without blocking work</li>
+                    <li><strong>Restrict specific licenses</strong> &mdash; name individual licenses your organization will not accept, beyond the default categories</li>
+                    <li><strong>Scope by project</strong> &mdash; apply different rules to different applications, so an internal tool can carry a license your flagship product cannot</li>
+                    <li><strong>Enforce in pull requests</strong> &mdash; license policies run in PR scans, so a banned license fails the check before merge (covered in Module 07)</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Common Customer Scenario</h4>
+                    <p>A financial services company builds a proprietary trading platform. A developer adds a small open-source utility that turns out to be GPL-3.0 licensed &mdash; a transitive dependency of a package they actually chose. Endor Labs flags the license policy violation in the pull request, with the license and package clearly identified. The developer swaps in an MIT-licensed alternative in minutes, and legal never has to unwind a shipped product.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>License Inventory, Audits, and SBOM Export</h2>
+                <p>Detection and blocking handle new code. Audits require the full picture: a complete <strong>license inventory</strong> of everything your organization ships, with evidence that each item complies with policy. Endor Labs produces that inventory from the same dependency data that powers vulnerability findings &mdash; one scan, two compliance outputs.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Detect</strong> &mdash; every scan records the license of every direct and transitive dependency across your projects</li>
+                    <li><strong>Enforce</strong> &mdash; license policies block or flag violations at pull request time, keeping the tree clean going forward</li>
+                    <li><strong>Review exceptions</strong> &mdash; approved uses are documented as exceptions, so the inventory explains why each restricted license is present</li>
+                    <li><strong>Export</strong> &mdash; the license inventory ships inside your CycloneDX or SPDX SBOM exports, giving customers and auditors a standardized artifact</li>
+                    <li><strong>Evidence</strong> &mdash; reports and exception records back up SOC 2, FedRAMP, and similar audit questions about open-source governance</li>
+                </ol>
+
+                <p>License compliance is increasingly a procurement gate: enterprise buyers ask for a software bill of materials precisely so their own teams can review what is inside. A clean, current license inventory turns that question from a weeks-long fire drill into a routine export. Module 06 covers SBOM and VEX formats in detail.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 1:</strong> Which license family requires that derivative works be distributed under the same license, making it risky to embed in a proprietary product?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> MIT</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Apache-2.0</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> The GPL family (strong copyleft)</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> BSD 2-Clause</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> How does Endor Labs respond when a transitive dependency carries a GPL license that violates a customer&rsquo;s license policy?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> It blocks or flags the dependency according to the license policy</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> It rewrites the package under a permissive license</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> It hides the dependency from the SBOM</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Nothing &mdash; licenses are out of scope for SCA</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/sbom-vex-export.html"><span class="resource-icon">&#128220;</span><span>SBOM &amp; VEX Export<span class="resource-meta">Export a license inventory with your SBOM</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="100">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="02-reachability-analysis.html" class="btn btn-secondary">&#8592; Previous: Reachability Analysis</a>
+                    <a href="04-prioritization.html" class="btn btn-primary">Next: Prioritization &amp; Endor Scores &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

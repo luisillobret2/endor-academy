@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive lab: Triage a realistic vulnerability backlog with function-level reachability — trace call paths, dismiss unreachable noise, and prioritize what is exploitable.">
+    <title>Lab: Reachability Triage - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>Reachability Triage</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>Reachability <span class="accent">Triage</span></h1>
+                <span class="lab-type-badge guided">Guided</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 45 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; Reachability</span>
+                <span>&#128218; 6 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Survey a raw findings backlog and split it by reachability</li>
+                <li>Read function-level call paths to confirm true exploitability</li>
+                <li>Dismiss unreachable findings with documented, auditable reasons</li>
+                <li>Resolve findings whose reachability is Unknown</li>
+                <li>Prioritize the remaining work by real risk, not raw CVE counts</li>
+                <li>Set policies and alerts so the backlog stays clean</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Survey the Backlog</h3>
+            <p>You are the new AppSec engineer for Acme Financial's <code>checkout-service</code>. The service has <strong>214 open findings</strong> — the previous tool alerted on every CVE in the tree, and nobody has touched the backlog in months. Your job is to find the handful that can actually be exploited.</p>
+            <p>In the Endor Labs dashboard, open the findings view for <code>checkout-service</code> and add the <strong>Reachability</strong> filter. The backlog splits immediately:</p>
+            <div class="lab-code-block"><span class="comment"># Triage board — reachability split of 214 findings</span>
+Reachable         6    e.g. CVE-2021-44228 (log4j-core, critical)
+Unreachable     187    e.g. CVE-2022-22965 (spring-webmvc, critical)
+Unknown          21    e.g. CVE-2020-36518 (jackson-databind, high)</div>
+            <p>For offline analysis, export the current findings as JSON:</p>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl scan --output json &gt; findings.json
+<span class="term-info">Scanning project: checkout-service</span>
+<span class="term-info">Resolving dependencies... done</span>
+<span class="term-info">Analyzing reachability... done</span>
+<span class="term-success">214 findings exported to findings.json</span>
+<span class="term-info">  6 reachable / 187 unreachable / 21 unknown</span></div>
+            <div class="lab-callout warning">
+                <strong>Notice</strong>
+                Only 6 of 214 findings can actually be executed through your code. That ratio — not the raw count — is what reachability analysis gives you. Most of this backlog is noise, and you are about to dismiss it properly.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Opened the findings view filtered by reachability</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the 6 / 187 / 21 reachability split</li>
+                <li><span class="check-icon">&#10003;</span> Exported findings to <code>findings.json</code></li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Confirm the Reachable Criticals</h3>
+            <p>Open the CVE-2021-44228 finding (Log4Shell, log4j-core 2.14.1). Expand the <strong>Call path</strong> section and read it frame by frame:</p>
+            <div class="lab-code-block"><span class="comment"># Call path — CVE-2021-44228 (critical 10.0, REACHABLE)</span>
+Entry point: POST /api/orders  (internet-facing)
+  1. OrderController.createOrder()       [your code]
+  2. OrderService.validatePayment()      [your code]
+  3. Logger.error(paymentCtx)             [log4j-api 2.14.1]
+  4. JndiLookup.lookup()                  [log4j-core 2.14.1]  * vulnerable function</div>
+            <p>Attacker-controlled order data flows from an internet-facing endpoint into a log call that triggers the vulnerable JNDI lookup. This is a confirmed, exploitable path — it is your P1.</p>
+            <p>The second reachable critical, CVE-2022-1471 in <code>snakeyaml</code>, has its own path through the config loader that calls <code>Yaml.load()</code> on a developer-editable file. For each finding, note the remediation options Endor Labs presents: the direct upgrade (log4j-core 2.17.1), an <strong>Endor Patch</strong> backport if you cannot take the full upgrade, or a documented, time-boxed exception.</p>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                Reachability is function-level, not package-level: log4j-core being present is not the problem — a specific function being called by your specific code is. That is why two criticals in the same package tree can have completely different verdicts.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Traced the Log4Shell call path end to end</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the snakeyaml finding's path through the config loader</li>
+                <li><span class="check-icon">&#10003;</span> Noted the remediation options for each reachable critical</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Dismiss the Unreachable Noise — Properly</h3>
+            <p>Open CVE-2022-22965 (Spring4Shell, spring-webmvc 5.3.16). The call path section states why it is unreachable: no path from application code reaches the vulnerable data-binding code — the service is not deployed as a WAR on a standalone Tomcat, and no request parameter binds to a class property.</p>
+            <p>Dismiss it: click <strong>Dismiss</strong>, choose the reason <strong>Unreachable — no call path from application code</strong>, and set an expiry of 90 days. The dismissal is recorded as an auditable exception linked to the finding and the dependency version.</p>
+            <p>Now select all remaining unreachable findings in the list (the filter already isolates them), and apply the same dismissal with the same reason and expiry as a bulk action.</p>
+            <div class="lab-code-block"><span class="comment"># Dismissal applied to 187 unreachable findings</span>
+Reason:    Unreachable — no call path from application code
+Expiry:    90 days (auto re-opens if reachability changes)
+Recorded:  learner@endorlabs.com, 2026-11-04T14:22Z
+Scope:     187 findings across 62 packages</div>
+            <div class="lab-callout warning">
+                <strong>Notice</strong>
+                Never mass-dismiss without a reason and an expiry. The expiry matters: if a future commit adds a call path to one of these functions, the finding re-opens automatically. Dismissal is a documented bet that reachability will not change — not a delete button.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Dismissed CVE-2022-22965 with a documented reason and 90-day expiry</li>
+                <li><span class="check-icon">&#10003;</span> Bulk-dismissed the remaining unreachable findings with the same policy</li>
+                <li><span class="check-icon">&#10003;</span> Verified each dismissal is visible as an auditable exception</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Resolve the Unknowns</h3>
+            <p>21 findings have <strong>Unknown</strong> reachability. Typical cause: the analysis could not confirm which version of a dependency actually ships at runtime, so it cannot decide whether the vulnerable function is called. Example: CVE-2020-36518 in <code>jackson-databind</code> — two build profiles pin different versions.</p>
+            <p>Confirm the pinned version, align the build, and re-scan:</p>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl deps | grep jackson
+<span class="term-info">com.fasterxml.jackson.core:jackson-databind:2.13.2 (pinned in pom.xml)</span>
+
+<span class="term-prompt">$</span> endorctl scan
+<span class="term-info">Scanning project: checkout-service</span>
+<span class="term-info">Resolving dependencies... done</span>
+<span class="term-info">Analyzing reachability... done</span>
+<span class="term-success">CVE-2020-36518 (jackson-databind 2.13.2): unknown -&gt; unreachable</span>
+<span class="term-info">20 remaining unknown findings queued for version confirmation</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                For internet-facing services, treat Unknown as if it were Reachable until proven otherwise. Verify the runtime version the same day; never let an unknown sit quietly on a critical finding.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Confirmed the pinned jackson-databind version with <code>endorctl deps</code></li>
+                <li><span class="check-icon">&#10003;</span> Re-scanned and watched the Unknown status resolve to Unreachable</li>
+                <li><span class="check-icon">&#10003;</span> Scheduled version confirmation for the remaining unknowns</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Prioritize the Survivors</h3>
+            <p>Your real backlog is now 6 reachable findings plus a few unknowns worth verifying. Rank by reachability first, then severity, then exposure — <code>checkout-service</code> is an internet-facing payment path, which raises the stakes on everything reachable in it.</p>
+            <div class="lab-code-block"><span class="comment"># Final triage board — checkout-service</span>
+P1  CVE-2021-44228  log4j-core 2.14.1       critical  reachable   fix today
+P1  CVE-2022-1471   snakeyaml 1.29          critical  reachable   fix today
+P2  CVE-2022-42003  jackson-databind 2.13.2 high      reachable   this sprint
+P2  CVE-2023-24998  commons-fileupload 1.4  high      reachable   this sprint
+P3  20 unknown-reachability findings                  verify versions this week
+Snoozed  187 unreachable findings (auto-expire in 90 days)</div>
+            <div class="lab-callout tip">
+                <strong>Proof the workflow pays</strong>
+                Zebra cut SCA noise by 97% using exactly this reachability-first triage. A 214-item backlog became 6 actionable findings — small enough to actually finish, and each with a call path that proves why it matters.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Ranked the reachable findings into a fix queue (P1/P2/P3)</li>
+                <li><span class="check-icon">&#10003;</span> Recorded what happens to snoozed findings when their expiry passes</li>
+            </ul>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="lab-step" data-step="6">
+            <div class="lab-step-number">6</div>
+            <h3>Make the Triage Stick</h3>
+            <p>Triage is not a one-time cleanup — configure the platform so the backlog stays clean. In the dashboard:</p>
+            <ul>
+                <li><strong>Policies &rarr; Finding policies</strong>: require a reason and an expiry on every dismissal, so silent mass-dismissals are impossible by construction.</li>
+                <li><strong>Settings &rarr; Notifications</strong>: post to <code>#appsec</code> the moment a <em>new reachable critical</em> appears — the event worth interrupting a human for.</li>
+            </ul>
+            <p>Then fix the P1s (the endorctl-first-scan lab shows the upgrade loop) and re-scan:</p>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl scan
+<span class="term-info">Scanning project: checkout-service</span>
+<span class="term-info">Analyzing reachability... done</span>
+
+<span class="term-info">Findings summary</span>
+  <span class="term-success">Critical: 2 (0 reachable)   — P1 fixes merged, PR in review</span>
+  <span class="term-warn">High:     7 (2 reachable)   — scheduled this sprint</span>
+<span class="term-success">New reachable criticals: 0</span>
+<span class="term-info">Notification policy rp-07 armed: alert #appsec on new reachable critical</span>
+<span class="term-info">Scan finished in 2m 08s</span></div>
+            <div class="lab-callout tip">
+                <strong>The platform journey</strong>
+                This lab is the Day 1 "prioritize" step of the Endor Labs workflow — Scan, Triage, Remediate. Day 0 was onboarding; from Day 2 on, you optimize: automating PRs, tuning policies, and letting agents help with the routine fixes.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Configured the notification for new reachable criticals</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed dismissal exceptions require a reason and an expiry</li>
+                <li><span class="check-icon">&#10003;</span> Re-ran the scan and verified the reachable criticals were resolved</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">What makes a finding <strong>Reachable</strong>?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">The vulnerable package is a direct dependency</li>
+                <li class="lab-quiz-option" data-correct="true">A complete call path exists from your code to the vulnerable function</li>
+                <li class="lab-quiz-option" data-correct="false">The CVE has a CVSS score of 9.0 or higher</li>
+                <li class="lab-quiz-option" data-correct="false">The package appears in the SBOM</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">By how much did Zebra cut SCA noise using reachability?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">50%</li>
+                <li class="lab-quiz-option" data-correct="false">75%</li>
+                <li class="lab-quiz-option" data-correct="true">97%</li>
+                <li class="lab-quiz-option" data-correct="false">100%</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">What is the correct way to dismiss an unreachable finding?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Delete it from the findings list permanently</li>
+                <li class="lab-quiz-option" data-correct="false">Ignore it — it will disappear from the backlog eventually</li>
+                <li class="lab-quiz-option" data-correct="true">Dismiss with a documented reason and an expiry, so it re-opens if reachability changes</li>
+                <li class="lab-quiz-option" data-correct="false">Mark it as fixed and close the ticket</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">A critical finding in an internet-facing service has <strong>Unknown</strong> reachability. What should you do?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Dismiss it as unreachable and move on</li>
+                <li class="lab-quiz-option" data-correct="false">Wait for the next weekly scan to re-evaluate it</li>
+                <li class="lab-quiz-option" data-correct="true">Treat it as reachable until you verify the runtime version and resolve the status</li>
+                <li class="lab-quiz-option" data-correct="false">Escalate to the CTO immediately regardless of context</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've turned a 214-finding backlog into a 6-finding fix queue, dismissed noise with auditable reasons, resolved Unknowns, and armed alerts for the only event that matters: a new reachable critical.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="secrets-detection-setup.html" class="btn btn-primary">Next Lab: Secrets Detection Setup</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 6;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('reachability-triage', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

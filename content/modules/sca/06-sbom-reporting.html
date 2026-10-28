@@ -1,0 +1,150 @@
+---
+title: SBOM, VEX &amp; Reporting - Endor Academy
+description: Learn how Endor Labs generates CycloneDX and SPDX SBOMs, produces VEX statements that document which vulnerabilities are not exploitable, and delivers audit evidence for EU CRA and US EO 14028.
+---
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>SBOM, VEX &amp; Reporting</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>SBOM, VEX &amp; Reporting</h1>
+                <div class="module-meta">
+                    <span>&#128338; 25 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>What an SBOM Is and Why Regulators Ask for One</li>
+                    <li>SBOM Formats: CycloneDX and SPDX</li>
+                    <li>VEX: Documenting What Is Not Exploitable</li>
+                    <li>Reports and Audit Evidence</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>What an SBOM Is and Why Regulators Ask for One</h2>
+                <p>A Software Bill of Materials (SBOM) is a formal, machine-readable inventory of every component in a piece of software &mdash; your code, your direct dependencies, and the transitive dependencies behind them. If a product ships, its SBOM answers &ldquo;what is inside this?&rdquo; without anyone reading manifests by hand.</p>
+                <p>The demand is now regulatory and commercial:</p>
+                <ul>
+                    <li><strong>EU Cyber Resilience Act (CRA)</strong> &mdash; places security obligations on products with digital elements sold in the EU, driving SBOM and vulnerability transparency requirements</li>
+                    <li><strong>US Executive Order 14028</strong> &mdash; pushed SBOMs into federal software procurement and normalized them across enterprise buying in the US</li>
+                    <li><strong>Customer procurement</strong> &mdash; enterprise buyers now request SBOMs and vulnerability disclosure records as a condition of purchase</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; The SBOM Is Now a Deliverable</h4>
+                    <p>For software vendors, the SBOM has moved from &ldquo;nice to have&rdquo; to contract terms. Teams that can generate one on demand win deals and pass reviews; teams that cannot spend weeks assembling spreadsheets. Endor Labs generates SBOMs from the same dependency data that powers findings, so the export is always current and accurate.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>SBOM Formats: CycloneDX and SPDX</h2>
+                <p>Endor Labs supports the two industry-standard SBOM formats:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">&#9881;&#65039;</div>
+                        <h4>CycloneDX</h4>
+                        <p>An OWASP standard built for security use cases. Rich vulnerability and exploitability data, including support for VEX statements &mdash; the natural choice when the audience is a security team.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128220;</div>
+                        <h4>SPDX</h4>
+                        <p>The Linux Foundation standard (ISO/IEC 5962). Strong on license, copyright, and provenance information &mdash; frequently expected in compliance and government contexts.</p>
+                    </div>
+                </div>
+
+                <p>With Endor Labs you can <strong>export</strong> SBOMs in either format for your organization, applications, or projects &mdash; for example with <code>endorctl sbom</code> or through reports in the platform. You can also <strong>import</strong> SBOMs from third parties, so vendors&rsquo; SBOMs can be reviewed and monitored alongside your own findings rather than sitting in an email attachment.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>VEX: Documenting What Is Not Exploitable</h2>
+                <p>An SBOM answers &ldquo;what is inside?&rdquo; The next question is always &ldquo;are you affected by vulnerability X?&rdquo; &mdash; and answering it by re-triaging every CVE defeats the purpose. <strong>VEX (Vulnerability Exploitability eXchange)</strong> provides machine-readable statements that document, per vulnerability, whether a product is affected &mdash; including the &ldquo;not affected&rdquo; answers with justification.</p>
+                <p>This is where Endor Labs is different: <strong>reachability context feeds VEX</strong>. When your code has no call path to a vulnerable function, Endor Labs can issue a VEX statement saying the finding is not exploitable &mdash; backed by call-graph evidence rather than someone&rsquo;s opinion. Customers, auditors, and downstream teams receive a defensible answer, not a shrug.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; VEX Turns Noise Reduction into a Deliverable</h4>
+                    <p>Reachability cuts the backlog inside your organization; VEX communicates that same reduction to everyone downstream. &ldquo;We reviewed the CVE and you are not affected&rdquo; becomes a structured, evidence-backed artifact that ships with the product &mdash; the difference between arguing about alerts and closing them out.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Reports and Audit Evidence</h2>
+                <p>Between SBOMs and VEX, Endor Labs reporting covers the evidence a modern security program must produce:</p>
+                <ul>
+                    <li><strong>SBOM export</strong> &mdash; CycloneDX or SPDX, per application or organization, on demand</li>
+                    <li><strong>VEX statements</strong> &mdash; exploitability answers with reachability context</li>
+                    <li><strong>Findings and remediation reports</strong> &mdash; what was found, what was reachable, what was fixed, and how quickly</li>
+                    <li><strong>License inventories</strong> &mdash; the compliance picture from Module 03, exportable for legal review</li>
+                    <li><strong>Audit support</strong> &mdash; evidence packages that feed FedRAMP, HIPAA, PCI, and SOC 2 audits</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Compliance is a buying trigger, and reachability makes Endor Labs&rsquo; compliance story unique: competitors can export an SBOM, but few can back a &ldquo;not affected&rdquo; VEX statement with function-level evidence. When a customer faces EU CRA obligations, EO 14028-driven procurement, or a FedRAMP audit, lead with the evidence chain: inventory &rarr; reachability &rarr; VEX &rarr; audit package.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> What is a VEX statement?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> A machine-readable declaration of whether a product is affected by a specific vulnerability</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> A proprietary Endor Labs file format</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> A CVSS score recalculated by a vendor</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> A license compatibility matrix</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> Which regulation is driving SBOM and vulnerability transparency requirements for software sold in the European Union?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> US Executive Order 14028</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> The EU Cyber Resilience Act</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> HIPAA</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> SOX</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> How does reachability strengthen a VEX &ldquo;not affected&rdquo; statement?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> It removes the component from the SBOM entirely</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> It automatically lowers every CVE&rsquo;s severity</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> It backs the claim with call-graph evidence that no code path reaches the vulnerable function</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> It does not &mdash; VEX is unrelated to reachability</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/sbom-vex-export.html"><span class="resource-icon">&#128228;</span><span>SBOM &amp; VEX Export<span class="resource-meta">Generate CycloneDX, SPDX, and VEX</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="05-remediation.html" class="btn btn-secondary">&#8592; Previous: Remediation &amp; Endor Patches</a>
+                    <a href="07-policy-enforcement.html" class="btn btn-primary">Next: Policy Enforcement &amp; Governance &#8594;</a>
+                </div>
+            </div>

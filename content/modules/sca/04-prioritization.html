@@ -1,0 +1,155 @@
+---
+title: Prioritization &amp; Endor Scores - Endor Academy
+description: Go beyond CVSS with Endor Labs prioritization - reachability, exploitation likelihood, and Endor Scores built from package activity, popularity, security, and code quality.
+---
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>Prioritization &amp; Endor Scores</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Prioritization &amp; Endor Scores</h1>
+                <div class="module-meta">
+                    <span>&#128338; 30 min</span>
+                    <span>&#128218; 4 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Why CVSS Alone Is Not Enough</li>
+                    <li>Endor Scores: Package Health Signals</li>
+                    <li>Combining Reachability and Scores for Triage</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Why CVSS Alone Is Not Enough</h2>
+                <p>CVSS scores measure the <strong>intrinsic severity</strong> of a vulnerability &mdash; how bad the impact could be if it is exploited. They say nothing about whether the vulnerability is likely to be exploited, whether your application is exposed to it, or whether a fix exists. Sorting a backlog by CVSS alone produces exactly the noise problem reachability solves: hundreds of &ldquo;critical&rdquo; findings, most of which will never be triggered in your code.</p>
+                <p>Mature prioritization stacks multiple signals, each answering a different question:</p>
+                <ul>
+                    <li><strong>Severity (CVSS)</strong> &mdash; how bad could it be?</li>
+                    <li><strong>Exploitation likelihood</strong> &mdash; EPSS-style models estimate the probability that a CVE is actually exploited in the wild; a severity-9.8 bug nobody exploits is less urgent than a severity-7.5 bug under active attack</li>
+                    <li><strong>Exposure (reachability)</strong> &mdash; can my application actually trigger this? Only Endor Labs answers this at function level for your specific codebase</li>
+                    <li><strong>Actionability</strong> &mdash; is there a fixed version, a patch, or a healthier alternative package?</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; The Triage Funnel</h4>
+                    <p>Prioritization is a funnel: start with every finding, filter to reachable ones, then rank by severity and exploitation likelihood, then prefer the ones with a fix available. Each layer removes work that does not need to happen. Reachability is the filter no other signal can replicate &mdash; and it is the one Endor Labs is known for.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Endor Scores: Package Health Signals</h2>
+                <p>Endor Scores assign each package a risk score built from four families of signals, so you can judge the dependency itself &mdash; not just the CVE of the week:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">&#9200;</div>
+                        <h4>Activity</h4>
+                        <p>Is the project actively maintained? Are issues and pull requests being addressed, and did anything ship recently?</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128201;</div>
+                        <h4>Popularity</h4>
+                        <p>How widely is the package adopted? Broad usage signals a healthy community and faster awareness of new issues.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128737;&#65039;</div>
+                        <h4>Security</h4>
+                        <p>What is the package&rsquo;s vulnerability history and overall security posture, both historically and right now?</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128736;&#65039;</div>
+                        <h4>Code Quality</h4>
+                        <p>How well-engineered is the codebase? Quality predicts how quickly maintainers can ship correct fixes.</p>
+                    </div>
+                </div>
+
+                <p>Endor Scores are used two ways. First, for <strong>prioritization</strong>: a reachable finding in an abandoned, low-quality package deserves more urgency than the same finding in a healthy one &mdash; the healthy package will ship a fix, the abandoned one may never. Second, for <strong>dependency selection</strong>: before adding a new package, teams compare Endor Scores to choose healthy, actively maintained options and to identify abandoned dependencies worth replacing.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Dependency Selection in Action</h4>
+                    <p>Two libraries do the same job. One was last updated three years ago, has open issues with no maintainer response, and a history of CVEs. The other releases monthly, responds to reports, and has a clean security record. Endor Scores make that comparison a glance instead of an afternoon of research &mdash; and prevent tomorrow&rsquo;s findings by choosing better dependencies today.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Combining Reachability and Scores for Triage</h2>
+                <p>Signals multiply their value when used together. A practical triage routine for a customer&rsquo;s backlog looks like this:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Start with reachable findings</strong> &mdash; these are the vulnerabilities the customer&rsquo;s code can actually trigger; everything else stays out of the backlog</li>
+                    <li><strong>Rank by severity and exploitation likelihood</strong> &mdash; within the reachable set, work critical and actively exploited issues first</li>
+                    <li><strong>Weigh the package&rsquo;s Endor Score</strong> &mdash; an unhealthy, abandoned package raises urgency and may justify replacing the dependency rather than upgrading it</li>
+                    <li><strong>Check actionability</strong> &mdash; prefer findings with a fixed version or an Endor Patch available (Module 05); use upgrade impact analysis to see what a fix touches</li>
+                    <li><strong>Schedule and verify</strong> &mdash; assign owners, set dates, and confirm fixes with PR scans before merge</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners: Scores Refine, Reachability Decides</h4>
+                    <p>Never let scores override reachability. An unreachable CVE in a terrible package is still not urgent; a reachable CVE in an excellent package is still a real problem. The correct story: <strong>reachability decides what enters the backlog; Endor Scores and severity decide the order you work it.</strong> Astronomer, an Endor Labs customer, described the experience as &ldquo;noise canceling headphones&rdquo; for vulnerability management &mdash; a phrase worth borrowing in customer conversations.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What does a CVSS score actually tell you?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The probability that the vulnerability will be exploited</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> The intrinsic severity of a vulnerability if it is exploited</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Whether your code calls the vulnerable function</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> How healthy the vulnerable package is</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> Endor Scores combine which four signal families?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Activity, popularity, security, and code quality</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> CVSS, EPSS, CVE count, and install size</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Stars, forks, watchers, and contributors</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Scan speed, file count, license type, and package age</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> A team must choose between two functionally equivalent libraries. How do Endor Scores help?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> They guarantee the chosen package will never have a vulnerability</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> They replace the need for reachability analysis</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> They surface the healthier, actively maintained package before the team commits to it</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> They measure the download speed of each package</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/reachability-triage.html"><span class="resource-icon">&#128300;</span><span>Reachability Triage<span class="resource-meta">Rank findings with reachability and scores</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="03-license-compliance.html" class="btn btn-secondary">&#8592; Previous: License Compliance</a>
+                    <a href="05-remediation.html" class="btn btn-primary">Next: Remediation &amp; Endor Patches &#8594;</a>
+                </div>
+            </div>

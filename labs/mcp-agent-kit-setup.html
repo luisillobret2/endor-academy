@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive challenge lab: Connect the Endor Labs MCP server to Cursor and Claude Code, let an agent fix a finding safely, and govern agent actions with allow, block, and ask-a-human policies.">
+    <title>Lab: MCP Server &amp; Agent Kit Setup - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>MCP Server &amp; Agent Kit Setup</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>MCP Server &amp; <span class="accent">Agent Kit Setup</span></h1>
+                <span class="lab-type-badge challenge">Challenge</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 45 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; AI Agents</span>
+                <span>&#128218; 6 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Start the Endor Labs MCP server and verify its tools</li>
+                <li>Connect an agent in Cursor or Claude Code</li>
+                <li>Ask an agent to triage a finding using reachability data</li>
+                <li>Have the agent fix a finding safely — and prove it with a scan</li>
+                <li>Observe Coding Agent Governance (AURI) inventory and policy</li>
+                <li>Scale with Agent Kit and the Agents Hub</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Authenticate and Start the MCP Server</h3>
+            <p><strong>Challenge scenario:</strong> your team adopted AI coding agents last sprint, and everyone is guessing which ones are safe. Your mission: wire the agents to Endor Labs, let one fix a real finding, and keep every action governed. The MCP server is free for developers.</p>
+            <p>Prerequisites: endorctl installed and activated (<code>endorctl activate-token</code> — see the first-scan lab). Then start the server:</p>
+            <div class="lab-code-block"><span class="comment"># Start the Endor Labs MCP server (stdio transport)</span>
+npx -y endorctl ai-tools mcp-server</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> npx -y endorctl ai-tools mcp-server
+<span class="term-info">endorctl authenticated as learner@endorlabs.com (org: acme-financial)</span>
+<span class="term-info">Starting Endor Labs MCP server (stdio)...</span>
+<span class="term-info">Tools registered:</span>
+<span class="term-info">  search_findings        list and filter findings</span>
+<span class="term-info">  get_finding_details    CVSS, reachability, remediation options</span>
+<span class="term-info">  get_call_path          function-level call path for a finding</span>
+<span class="term-info">  list_dependencies     resolved dependency tree</span>
+<span class="term-info">  get_package_scores     Endor Scores for a package</span>
+<span class="term-success">MCP server ready — waiting for a client.</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                The server speaks stdio, so any MCP-compatible client can drive it. Tool names above are the training set — the current tool list ships with the server (see docs.endorlabs.com).
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Authenticated endorctl before starting the server</li>
+                <li><span class="check-icon">&#10003;</span> Started the MCP server and saw the tool registration list</li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Connect Your Agent</h3>
+            <p><strong>Cursor:</strong> use the one-click install from the Endor Labs dashboard, or add the server to <code>.cursor/mcp.json</code>:</p>
+            <div class="lab-code-block"><span class="comment"># .cursor/mcp.json</span>
+{
+  "mcpServers": {
+    "endor-cli-tools": {
+      "command": "npx",
+      "args": ["-y", "endorctl", "ai-tools", "mcp-server"]
+    }
+  }
+}</div>
+            <p><strong>Claude Code:</strong> register the server with a single command:</p>
+            <div class="lab-code-block"><span class="comment"># Register the MCP server in Claude Code</span>
+claude mcp add endor-cli-tools -- npx -y endorctl ai-tools mcp-server</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> claude mcp add endor-cli-tools -- npx -y endorctl ai-tools mcp-server
+<span class="term-success">Added MCP server endor-cli-tools to user config</span>
+
+<span class="term-prompt">$</span> claude mcp list
+<span class="term-success">endor-cli-tools: npx -y endorctl ai-tools mcp-server (connected)</span></div>
+            <div class="lab-callout tip">
+                <strong>Also supported</strong>
+                The same server works with VS Code (<code>.vscode/mcp.json</code>), Codex, Gemini CLI, IntelliJ, Antigravity, and more — any MCP-compatible client can use these tools.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Connected Cursor (one-click or <code>.cursor/mcp.json</code>) or registered Claude Code</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed the server shows as connected in your agent</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Ask the Agent to Triage</h3>
+            <p>Open <code>checkout-service</code> in your agent and ask it what matters. The agent answers with reachability data, not raw CVE noise:</p>
+            <div class="lab-code-block"><span class="comment"># Prompt</span>
+What is the most exploitable finding in checkout-service? Show me why.</div>
+            <div class="lab-terminal"><span class="term-info">&gt; What is the most exploitable finding in checkout-service? Show me why.</span>
+
+<span class="term-info">[agent] Calling search_findings(sort_by=reachability)...</span>
+<span class="term-info">[agent] Calling get_finding_details(CVE-2021-44228)...</span>
+<span class="term-info">[agent] Calling get_call_path(CVE-2021-44228)...</span>
+
+<span class="term-success">The most exploitable finding is CVE-2021-44228 (Log4Shell, critical 10.0).</span>
+<span class="term-success">log4j-core 2.14.1 is REACHABLE from your code:</span>
+
+<span class="term-info">  POST /api/orders</span>
+<span class="term-info">    -&gt; OrderController.createOrder()</span>
+<span class="term-info">      -&gt; OrderService.validatePayment()</span>
+<span class="term-info">        -&gt; Logger.error(paymentCtx)</span>
+<span class="term-error">          -&gt; JndiLookup.lookup()          &lt;- vulnerable function</span>
+
+<span class="term-info">Attacker-controlled order data reaches a log statement that performs the JNDI</span>
+<span class="term-info">lookup. Recommended fix: log4j-core 2.17.1, or an Endor Patch backport if you</span>
+<span class="term-info">cannot take the upgrade.</span></div>
+            <div class="lab-callout tip">
+                <strong>What just happened</strong>
+                The agent used the MCP tools to pull the same call-path evidence a human triager uses in the dashboard. No pasting of scan exports, no guessing — the triage conversation is grounded in reachability analysis.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Asked the agent for the most exploitable finding</li>
+                <li><span class="check-icon">&#10003;</span> Verified the answer cited a reachable call path, not just severity</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Ask the Agent to Fix It — and Prove It</h3>
+            <p>Now the loop that makes agents genuinely useful: fix, verify, and ship — all in one pass:</p>
+            <div class="lab-code-block"><span class="comment"># Prompt</span>
+Fix CVE-2021-44228 and verify the fix with a scan.</div>
+            <div class="lab-terminal"><span class="term-info">&gt; Fix CVE-2021-44228 and verify the fix with a scan.</span>
+
+<span class="term-info">[agent] Editing pom.xml: log4j.version 2.14.1 -&gt; 2.17.1</span>
+<span class="term-info">[agent] Running: mvn -q -DskipTests compile ... ok</span>
+<span class="term-info">[agent] Running: endorctl scan</span>
+<span class="term-success">[agent]   Critical: 2 (0 reachable) — CVE-2021-44228 resolved</span>
+<span class="term-info">[agent] Creating branch fix/log4shell and opening PR...</span>
+<span class="term-success">https://github.com/acme-financial/checkout-service/pull/63</span></div>
+            <p>The agent edited the dependency, compiled, <em>ran endorctl to prove the finding was gone</em>, and opened a PR with the evidence. To make this behavior consistent, put your remediation policy where agents read it — <code>AGENTS.md</code> or <code>CLAUDE.md</code> in the repository root:</p>
+            <div class="lab-code-block"><span class="comment"># AGENTS.md (excerpt)</span>
+- Prefer Endor Patch backports over major dependency upgrades
+- Change at most one dependency per PR
+- Always run `endorctl scan` after a fix and include the summary in the PR body</div>
+            <div class="lab-callout warning">
+                <strong>Safe pattern</strong>
+                Fix + verify in one loop is the safe pattern: the agent proves the fix with a scan before any human reviews it. A PR that arrives with "verified: 0 reachable criticals" in the description changes the review conversation entirely.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Had the agent apply the fix and run a verification scan</li>
+                <li><span class="check-icon">&#10003;</span> Added remediation guidance to <code>AGENTS.md</code> or <code>CLAUDE.md</code></li>
+                <li><span class="check-icon">&#10003;</span> Reviewed the PR the agent opened with scan evidence</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Observe Governance: AURI</h3>
+            <p>Agents with credentials need oversight. In the dashboard, open <strong>Coding Agent Governance (AURI)</strong>: it inventories every agent, model, MCP server, and skill in use across your organization — including the session you just ran. Find your agent session and inspect what it did.</p>
+            <p>Now watch policy in action. In the PR, ask the agent to publish the fixed artifact to the internal registry. Publishing is sensitive, so the governance policy for <strong>publish artifacts</strong> is set to <strong>ask-a-human</strong>:</p>
+            <div class="lab-terminal"><span class="term-info">&gt; Publish the fixed artifact to the internal registry.</span>
+
+<span class="term-info">[agent] I can publish the artifact: mvn deploy -DskipTests</span>
+<span class="term-warn">[governance] Action requires human approval</span>
+<span class="term-warn">[governance] Policy: publish-artifacts = ask-a-human</span>
+<span class="term-warn">[governance] Waiting for approval from #appsec ...</span>
+
+<span class="term-success">[governance] Approved by learner@endorlabs.com (12:41 UTC)</span>
+<span class="term-success">[governance] Action logged to the audit trail with agent, model, and</span>
+<span class="term-success">             MCP server attribution.</span></div>
+            <p>Three outcomes are possible for every action type: <strong>allow</strong> (proceed silently), <strong>block</strong> (refuse, with the policy name), and <strong>ask-a-human</strong> (pause for approval). Had the policy been <code>block</code>, the agent would have been refused outright — and the attempt would still be in the audit trail.</p>
+            <div class="lab-callout tip">
+                <strong>Govern like humans</strong>
+                Treat agent actions the way you treat human actions: inventory them (AURI), constrain them (allow/block/ask-a-human), and evidence them (audit trail). The context agents read from <code>AGENTS.md</code>/<code>CLAUDE.md</code> makes governance tractable.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Found your agent session in the AURI inventory</li>
+                <li><span class="check-icon">&#10003;</span> Triggered an ask-a-human prompt and approved it</li>
+                <li><span class="check-icon">&#10003;</span> Located the audit entry recording who approved what</li>
+            </ul>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="lab-step" data-step="6">
+            <div class="lab-step-number">6</div>
+            <h3>Scale with Agent Kit and the Agents Hub</h3>
+            <p>You wired one agent. Your team runs several. Two pieces scale this safely:</p>
+            <ul>
+                <li><strong>Agent Kit</strong> — prewired agent setups for Claude Code, Cursor, Codex, Gemini CLI, and Antigravity that already know the Endor Labs triage-and-fix loop. Install the kit for your editor from the Endor Labs dashboard.</li>
+                <li><strong>Agents Hub</strong> — browse agents across the organization, manage delegated credentials, and review agent activity with trust and attribution.</li>
+            </ul>
+            <p>Once the kit is installed, the loop you ran manually becomes routine:</p>
+            <div class="lab-terminal"><span class="term-info">&gt; Work the reachable backlog in checkout-service and propose fixes.</span>
+
+<span class="term-success">[agent] 6 reachable findings. Proposing fixes for the 2 criticals:</span>
+<span class="term-info">  - CVE-2021-44228 (log4j-core 2.14.1): upgrade to 2.17.1</span>
+<span class="term-info">    PR #64 opened — endorctl scan: 0 reachable criticals</span>
+<span class="term-info">  - CVE-2022-1471 (snakeyaml 1.29): Endor Patch backport proposed</span>
+<span class="term-info">    PR #65 opened — pending governance approval for the patch build</span>
+<span class="term-success">All actions recorded in Agents Hub with trust and attribution.</span></div>
+            <div class="lab-callout tip">
+                <strong>Challenge wrap-up</strong>
+                You connected agents to real security data, let one fix a reachable critical with proof, governed a sensitive action through ask-a-human, and set up the org-wide visibility to do this at team scale — free for developers.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Installed Agent Kit for one editor</li>
+                <li><span class="check-icon">&#10003;</span> Browsed the Agents Hub and located your agent's activity</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed delegated credentials are managed per agent</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">Which command starts the Endor Labs MCP server?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false"><code>npx -y endorctl mcp start</code></li>
+                <li class="lab-quiz-option" data-correct="true"><code>npx -y endorctl ai-tools mcp-server</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl mcp-server --start</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>npx -y @endor/labs-mcp run</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">Which command registers the server in Claude Code?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false"><code>claude install endor-cli-tools</code></li>
+                <li class="lab-quiz-option" data-correct="true"><code>claude mcp add endor-cli-tools -- npx -y endorctl ai-tools mcp-server</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>claude mcp connect endor-cli-tools</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>endorctl register claude</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">What does AURI inventory for governance?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Only the MCP servers in use</li>
+                <li class="lab-quiz-option" data-correct="false">Only the models your agents run</li>
+                <li class="lab-quiz-option" data-correct="true">Agents, models, MCP servers, and skills in use across the organization</li>
+                <li class="lab-quiz-option" data-correct="false">Repository commits and pull requests</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">A governance policy set to <strong>ask-a-human</strong> means the agent:</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">Performs the action and files a report afterward</li>
+                <li class="lab-quiz-option" data-correct="false">Is permanently blocked from that action</li>
+                <li class="lab-quiz-option" data-correct="true">Pauses and requests human approval first, and the decision lands in the audit trail</li>
+                <li class="lab-quiz-option" data-correct="false">Asks the model to double-check itself, then proceeds</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've connected the Endor Labs MCP server to a real agent, triaged and fixed a reachable finding with scan-backed proof, governed a sensitive action through ask-a-human, and set up Agents Hub visibility for the whole team.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="endorctl-first-scan.html" class="btn btn-primary">Next Lab: Your First Endor Labs Scan</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 6;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('mcp-agent-kit-setup', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

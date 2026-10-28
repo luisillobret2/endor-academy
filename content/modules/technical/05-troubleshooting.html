@@ -1,0 +1,200 @@
+---
+title: Troubleshooting &amp; Support - Endor Academy
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Troubleshooting &amp; Support</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Troubleshooting &amp; Support</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Triage Discipline: The First Five Checks</li>
+                    <li>endorctl Exit Codes &amp; CLI Diagnostics</li>
+                    <li>Network, Proxy &amp; Firewall Rules</li>
+                    <li>Scan Profiles, Scoping, API Key Hygiene &amp; Escalation</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Triage Discipline: The First Five Checks</h2>
+                <p>Most field issues resolve in the first five minutes if you check the same five things in the same order. Work the list before you theorize, and record the answer for each check &mdash; the notes become the support ticket if escalation is needed.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Authentication</strong> &mdash; is the token or key valid, unexpired, and scoped to the namespace holding the project?</li>
+                    <li><strong>Reachability from the runner</strong> &mdash; can the build agent reach the platform endpoints, directly or through the configured proxy?</li>
+                    <li><strong>Artifact resolution</strong> &mdash; do private registry credentials resolve every dependency, including git-based ones?</li>
+                    <li><strong>Scan profile</strong> &mdash; does the profile cover the scan types and paths the customer expects, or did toolchain detection create something narrower?</li>
+                    <li><strong>Scope</strong> &mdash; is the scan pointed at the repository root rather than a subdirectory, and is the working directory what you think it is?</li>
+                </ol>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Reproduce with the smallest possible scan before escalating. A single-repository scan that fails deterministically is worth more than a dozen reports from a monorepo that fails intermittently. Capture the exact command, the working directory, and the exit code.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>endorctl Exit Codes &amp; CLI Diagnostics</h2>
+                <p>In a policy-gated pipeline, a non-zero exit code is often the product working as designed. Endor Labs documents endorctl exit codes so you can distinguish a policy violation from an authentication, resolution, or connectivity failure. Read the documented table before assuming a bug.</p>
+
+                <ul>
+                    <li><strong>Success</strong> &mdash; the scan completed with no gating violations; confirm findings landed in the project.</li>
+                    <li><strong>Policy violation</strong> &mdash; the scan succeeded and a gating policy blocked the build. This is the intended gate, not an outage.</li>
+                    <li><strong>Authentication</strong> &mdash; token invalid, expired, or scoped to the wrong namespace. Re-activate the token or switch to keyless OIDC.</li>
+                    <li><strong>Resolution / scan</strong> &mdash; dependencies or build inputs could not be resolved. Check registry credentials, proxies, and manifest paths.</li>
+                    <li><strong>Usage / configuration</strong> &mdash; bad flag, missing path, or malformed <code>scanprofile.yaml</code>. Re-run with <code>--help</code> and validate the profile file.</li>
+                </ul>
+
+                <pre><code># Confirm version and authentication context before deeper debugging
+endorctl --version
+endorctl activate-token --token "$ENDOR_API_KEY"
+
+# Re-run the failing scan exactly as CI does, from the repository root
+endorctl scan --path .
+
+# Always confirm current flags and exit-code behaviour against the docs
+endorctl scan --help</code></pre>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Never tell a customer to disable a policy gate to make a red pipeline green. If a gate blocks unexpectedly, review the policy and the finding together. Suppressing the gate hides the exact signal the platform was bought to deliver.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Network, Proxy &amp; Firewall Rules</h2>
+                <p>Connectivity problems look like product problems. Customers behind restricted egress need explicit allow rules, and Endor Labs publishes the firewall and proxy requirements to make that review fast.</p>
+
+                <ul>
+                    <li><strong>Egress allow list</strong> &mdash; apply the published firewall and proxy rules for the endpoints endorctl and the platform components require. Restricting egress too aggressively breaks dependency resolution before it breaks scanning.</li>
+                    <li><strong>Proxy configuration</strong> &mdash; set the proxy variables the CLI honours, and configure Endor Outpost with the same proxy path so both sides of the connection agree.</li>
+                    <li><strong>TLS inspection</strong> &mdash; if the customer terminates TLS inline, confirm the internal CA is trusted by the runner and by the container image used in CI.</li>
+                    <li><strong>Outpost placement</strong> &mdash; deploy Outpost in a subnet that can reach the platform endpoints and the customer&rsquo;s registries, then verify with a single scoped scan.</li>
+                </ul>
+
+                <p>Ask the network team for one reproducible test: a single repository scan from the exact runner that fails. Ambiguous reports such as &ldquo;the scanner does not work&rdquo; cost days; a failing command with an exit code costs minutes.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Scan Profiles, Scoping, API Key Hygiene &amp; Escalation</h2>
+                <p>Configuration drift, not defects, causes most remaining issues. Two habits prevent it: keep profiles and policies in version control, and treat API keys as credentials with an owner and an expiry.</p>
+
+                <h3>Symptom, Cause, Fix</h3>
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Symptom</th>
+                                <th>Likely cause</th>
+                                <th>Fix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Scan finds far fewer dependencies than the build uses</td>
+                                <td>Private registry or git-based dependencies are not resolving</td>
+                                <td>Add registry credentials or mTLS, then re-scan and compare counts</td>
+                            </tr>
+                            <tr>
+                                <td>No SAST or secrets findings at all</td>
+                                <td>Profile created by toolchain detection does not include those scan types</td>
+                                <td>Extend <code>scanprofile.yaml</code> and re-run the scan</td>
+                            </tr>
+                            <tr>
+                                <td>Pipeline fails intermittently on the scan step</td>
+                                <td>Timeout on a large monorepo, or proxy rules dropping long connections</td>
+                                <td>Scope the scan, raise the job timeout, and confirm proxy idle limits</td>
+                            </tr>
+                            <tr>
+                                <td>Automation stops working without any change</td>
+                                <td>API key rotated, expired, or scoped to a different namespace</td>
+                                <td>Re-issue a namespace-scoped key and update the CI secret</td>
+                            </tr>
+                            <tr>
+                                <td>Reachability verdicts look thin</td>
+                                <td>Approximate or binary artifact scan used where source was available</td>
+                                <td>Scan from source with a full profile to build the call graph</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3>When to Escalate to Endor Labs Support</h3>
+                <p>Escalate once the five triage checks are done and the issue reproduces with a minimal command. Include the endorctl version, the exact command and working directory, the exit code, sanitized scan output, the affected namespace and project, and the business impact. Never send API keys, secrets, or customer source in a ticket.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Rotate keys on a calendar, not on an incident. A quarterly rotation tied to the customer&rsquo;s own change process turns key hygiene into a non-event instead of a pipeline outage.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> A CI job fails only when a policy-gated scan finds violations. What is the most likely explanation?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The CLI is corrupted and needs reinstalling</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> The documented policy-violation exit code is being returned as designed</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> The network is dropping the scan request</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Reachability analysis is unavailable</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> A scan completes successfully but misses most private dependencies. What should you check first?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Private registry credentials and resolution of git-based dependencies</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Whether the Package Firewall is enabled</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Whether the AI SAST scan ran</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> The customer&rsquo;s SBOM export schedule</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> What belongs in a support escalation to Endor Labs?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> The customer&rsquo;s API key and source repository</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> A verbal description of the problem with no logs</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> The endorctl version, exact command, exit code, and sanitized output</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> A request to disable the failing policy gate</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/container-scanning.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: Container Scanning<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="04-advanced-integrations.html" class="btn btn-secondary">&#8592; Previous: Advanced Integrations</a>
+                    <a href="06-security-architecture-review.html" class="btn btn-primary">Next: Security Architecture Review &#8594;</a>
+                </div>
+            </div>

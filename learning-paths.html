@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="img/endor-logo.png">
+    <link rel="apple-touch-icon" href="img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <!-- seo -->
+    <meta name="description" content="Browse 5 curated learning tracks across foundations, SCA &amp; reachability, developer workflows, sales, and technical enablement on the Endor Labs partner academy.">
+    <link rel="canonical" href="https://luisillobret2.github.io/endor-academy/learning-paths.html">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Endor Academy">
+    <meta property="og:title" content="Learning Paths - Endor Academy">
+    <meta property="og:description" content="Browse 5 curated learning tracks across foundations, SCA &amp; reachability, developer workflows, sales, and technical enablement on the Endor Labs partner academy.">
+    <meta property="og:url" content="https://luisillobret2.github.io/endor-academy/learning-paths.html">
+    <meta property="og:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Learning Paths - Endor Academy">
+    <meta name="twitter:description" content="Browse 5 curated learning tracks across foundations, SCA &amp; reachability, developer workflows, sales, and technical enablement on the Endor Labs partner academy.">
+    <meta name="twitter:image" content="https://luisillobret2.github.io/endor-academy/img/endor-logo.png">
+    <title>Learning Paths - Endor Academy</title>
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <section class="hero" style="padding: 36px 0;">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Learning <span class="accent">Paths</span></h1>
+                <p>Progressive learning journeys from Beginner to Expert. Choose by role, product, or skill level.</p>
+            </div>
+        </div>
+    </section>
+
+    <main class="page-content" id="main-content">
+        <div class="container">
+
+            <!-- Filters -->
+            <div class="section">
+                <div class="tabs" style="margin-bottom: 16px;">
+                    <button class="tab active" data-tab="tab-all">All Paths</button>
+                    <button class="tab" data-tab="tab-role">By Role</button>
+                    <button class="tab" data-tab="tab-product">By Product</button>
+                    <button class="tab" data-tab="tab-level">By Level</button>
+                </div>
+
+                <div class="filter-bar" data-target="paths-grid">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="beginner">Beginner</button>
+                    <button class="filter-btn" data-filter="intermediate">Intermediate</button>
+                    <button class="filter-btn" data-filter="expert">Expert</button>
+                    <button class="filter-btn" data-filter="sales">Sales</button>
+                    <button class="filter-btn" data-filter="technical">Technical</button>
+                    <button class="filter-btn" data-filter="product">Product</button>
+                </div>
+
+                <div id="paths-grid" class="grid-3">
+
+                    <!-- Foundation -->
+                    <div class="path-card" data-category="beginner">
+                        <div class="path-card-header">
+                            <div class="path-card-icon" style="background: rgba(46, 204, 113, 0.15); color: #2ecc71;">&#127919;</div>
+                            <span class="badge badge-green">Level 1</span>
+                        </div>
+                        <h3>Foundation Track</h3>
+                        <p>Application security fundamentals, supply chain security, the Endor Labs platform, and compliance. Required for all partners.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 2.5 hrs</span>
+                            <span>&#128218; 5 modules</span>
+                            <span>&#127942; 500 XP</span>
+                        </div>
+                        <div class="progress-bar mb-8"><div class="fill" style="width: 100%;"></div></div>
+                        <div class="path-card-footer">
+                            <span class="badge badge-green">Completed</span>
+                            <a href="modules/foundation/01-appsec-fundamentals.html" class="btn btn-secondary btn-sm">Review</a>
+                        </div>
+                    </div>
+
+                    <!-- SCA & Reachability -->
+                    <div class="path-card" data-category="intermediate,product,technical">
+                        <div class="path-card-header">
+                            <div class="path-card-icon" style="background: rgba(4, 120, 87, 0.1); color: #047857;">&#128737;</div>
+                            <span class="badge badge-blue">Level 2</span>
+                        </div>
+                        <h3>SCA &amp; Reachability Deep Dive</h3>
+                        <p>Master reachability-based SCA: call graphs, prioritization with Endor Scores, remediation with Endor Patches, SBOM &amp; VEX, policies, and scale.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 4.5 hrs</span>
+                            <span>&#128218; 8 modules</span>
+                            <span>&#127942; 1,600 XP</span>
+                        </div>
+                        <div class="progress-bar mb-8"><div class="fill" style="width: 0%;"></div></div>
+                        <div class="path-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="modules/sca/01-sca-overview.html" class="btn btn-primary btn-sm">Start</a>
+                        </div>
+                    </div>
+
+                    <!-- Developer -->
+                    <div class="path-card" data-category="intermediate,product,technical">
+                        <div class="path-card-header">
+                            <div class="path-card-icon" style="background: rgba(85, 198, 194, 0.12); color: #034D4C;">&#128270;</div>
+                            <span class="badge badge-blue">Level 2</span>
+                        </div>
+                        <h3>Developer Track</h3>
+                        <p>Get productive with endorctl, IDE &amp; MCP integration with coding agents, automated dependency updates, custom policies, and secure AI coding.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 3.75 hrs</span>
+                            <span>&#128218; 7 modules</span>
+                            <span>&#127942; 1,250 XP</span>
+                        </div>
+                        <div class="progress-bar mb-8"><div class="fill" style="width: 0%;"></div></div>
+                        <div class="path-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="modules/developer/01-developer-quickstart.html" class="btn btn-primary btn-sm">Start</a>
+                        </div>
+                    </div>
+
+                    <!-- Sales -->
+                    <div class="path-card" data-category="intermediate,sales">
+                        <div class="path-card-header">
+                            <div class="path-card-icon" style="background: rgba(230, 126, 34, 0.15); color: #e67e22;">&#128176;</div>
+                            <span class="badge badge-orange">Sales</span>
+                        </div>
+                        <h3>Sales Enablement</h3>
+                        <p>Master the Endor Labs pitch, competitive positioning and battlecards, objection handling, demos and POVs, pricing, and the partner program.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 4.75 hrs</span>
+                            <span>&#128218; 9 modules</span>
+                            <span>&#127942; 1,600 XP</span>
+                        </div>
+                        <div class="progress-bar mb-8"><div class="fill" style="width: 0%;"></div></div>
+                        <div class="path-card-footer">
+                            <span class="text-sm text-muted">Not started</span>
+                            <a href="modules/sales/01-selling-endor-labs.html" class="btn btn-primary btn-sm">Start</a>
+                        </div>
+                    </div>
+
+                    <!-- Technical SE -->
+                    <div class="path-card" data-category="expert,technical">
+                        <div class="path-card-header">
+                            <div class="path-card-icon" style="background: rgba(155, 89, 182, 0.15); color: #9b59b6;">&#128295;</div>
+                            <span class="badge badge-purple">Level 3</span>
+                        </div>
+                        <h3>Technical SE Track</h3>
+                        <p>Architecture and deployment deep dive, demo mastery, POC management, advanced integrations, troubleshooting, workshops, and migrations.</p>
+                        <div class="path-card-meta">
+                            <span>&#128338; 4.75 hrs</span>
+                            <span>&#128218; 8 modules</span>
+                            <span>&#127942; 1,500 XP</span>
+                        </div>
+                        <div class="progress-bar mb-8"><div class="fill" style="width: 0%;"></div></div>
+                        <div class="path-card-footer">
+                            <span class="text-sm text-muted">Recommended: Professional Cert</span>
+                            <a href="modules/technical/01-technical-deep-dive.html" class="btn btn-primary btn-sm">Start</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="js/layout.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/homepage.js"></script>
+    <script src="js/leaderboard.js"></script>
+    <script src="js/cert-recommendations.js"></script>
+    <script src="js/badges.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

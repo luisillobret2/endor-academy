@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Software Supply Chain Security - Endor Academy</title>
+    <meta name="description" content="Understand how modern software supply chain attacks work - typosquatting, dependency confusion, compromised packages, and stolen secrets - and how Endor Labs controls stop them.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Foundation Track</span> &rsaquo; <span>Software Supply Chain Security</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Software Supply Chain Security</h1>
+                <div class="module-meta">
+                    <span>&#128338; 25 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 100 XP</span>
+                    <span class="level-badge beginner">Level 1 - Beginner</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The Open-Source Dependency Landscape</li>
+                    <li>How Supply Chain Attacks Actually Work</li>
+                    <li>Controls That Stop Attacks Before They Land</li>
+                    <li>SBOM and VEX: Evidence Across the Chain</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The Open-Source Dependency Landscape</h2>
+                <p>Modern applications are assembled from open-source components. When a developer adds one package from npm, PyPI, Maven, or NuGet, the resolver typically pulls in dozens of <strong>transitive dependencies</strong> &mdash; libraries the team never chose and rarely reviews, but which ship inside the product and run with the same privileges as first-party code.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Direct vs. Transitive Dependencies</h4>
+                    <p>A <strong>direct dependency</strong> is a package your code explicitly imports. A <strong>transitive dependency</strong> is a package required by one of your direct dependencies. Log4Shell (CVE-2021-44228) was a transitive dependency for most affected organizations: they never imported Log4j directly, yet it was bundled deep in their dependency trees and internet-facing.</p>
+                </div>
+
+                <p>Visibility is the prerequisite for every control that follows. Endor Labs SCA resolves the full dependency graph from manifest and lockfiles, supports monorepos and Bazel builds alongside binary artifact scans, and applies function-level reachability across 40+ languages. It also scores each package with <strong>Endor Scores</strong> covering activity, popularity, security, and code quality &mdash; context that helps teams judge whether a dependency is safe to depend on in the first place.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>How Supply Chain Attacks Actually Work</h2>
+                <p>Attackers target the supply chain because a single compromised package can reach thousands of downstream organizations at once. The most common vectors, and the Endor Labs control that addresses each one:</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Attack Vector</th>
+                                <th>How It Works</th>
+                                <th>Endor Labs Control</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Typosquatting</strong></td>
+                                <td>Publishing a malicious package whose name is one character off a popular library (for example <code>lodas</code> for <code>lodash</code>)</td>
+                                <td>Package Firewall blocks known-malicious packages at install time</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Dependency Confusion</strong></td>
+                                <td>Registering a public package under an internal package name so the resolver prefers the public, malicious version</td>
+                                <td>Package Firewall plus policy controls over package sources</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Compromised Packages</strong></td>
+                                <td>Taking over a maintainer account or a trusted project and publishing a malicious release of a legitimate package</td>
+                                <td>Malicious package detection with reachability-based triage</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Stolen Secrets</strong></td>
+                                <td>Scraping committed credentials and tokens to pivot into cloud accounts and CI/CD systems</td>
+                                <td>Secrets detection caught before the commit, one policy from laptop to pipeline</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Unpatched Dependencies</strong></td>
+                                <td>Exploiting known CVEs in dependencies that were never upgraded because the update queue was too noisy</td>
+                                <td>SCA with reachability, upgrade impact analysis, and automated pull requests</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>These are not theoretical. The 2018 <strong>event-stream</strong> incident showed a popular package handed to a new maintainer that added a malicious dependency; the 2021 <strong>Codecov</strong> breach modified a CI uploader script to exfiltrate environment variables; the <strong>ua-parser-js</strong> hijack published malicious versions after an account takeover; <strong>SolarWinds</strong> compromised a build pipeline; and <strong>XZ Utils</strong> in 2024 showed a patient, multi-year effort to plant a backdoor in a compression library. Log4Shell remains the clearest lesson that reachability, not raw CVE counts, should drive urgency.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Controls That Stop Attacks Before They Land</h2>
+                <p>Supply chain defense is a sequence, and each step removes a class of risk before it reaches a developer or a build:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Inventory</strong> &mdash; A single integration discovers dependencies, vulnerabilities, secrets, and AI models across the codebase, so the organization finally knows what it actually ships.</li>
+                    <li><strong>Block at install time</strong> &mdash; Package Firewall stops known-malicious packages before they reach developer machines or CI, covering typosquatting, dependency confusion, and compromised packages.</li>
+                    <li><strong>Prevent secret leakage</strong> &mdash; Secrets detection flags credentials before they are committed, using built-in rules plus custom patterns and one policy that applies from the laptop through the pipeline.</li>
+                    <li><strong>Triage by reachability</strong> &mdash; Function-level reachability keeps CVEs in code the application never calls out of the backlog, so the remaining findings are the ones worth a sprint.</li>
+                    <li><strong>Remediate automatically</strong> &mdash; Upgrade impact analysis predicts breakage, Endor Patches backport fixes for Java and Python, and automated pull requests put the fix in the developer&rsquo;s workflow.</li>
+                </ol>
+
+                <div class="key-concept">
+                    <h4>&#128161; Why Package Firewall Changes the Conversation</h4>
+                    <p>Most tools tell you after the fact that a malicious package was downloaded. Package Firewall enforces policy at install time, so a typosquatted or hijacked package never reaches a developer machine or a CI runner. For partners, this is the fastest, most visceral demonstration in the platform &mdash; a block that happens in front of the customer.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Supply chain security is the easiest door-opener in the Endor Labs portfolio. It is a board-level topic, it does not require the customer to reorganize a security team, and every control maps to a concrete attack the customer has already read about in the news.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>SBOM and VEX: Evidence Across the Chain</h2>
+                <p>An <strong>SBOM (Software Bill of Materials)</strong> is a complete inventory of the components in a software product, with versions, licenses, and identifiers. Endor Labs exports SBOMs in <strong>CycloneDX</strong> and <strong>SPDX</strong>, supports SBOM import, and pairs exports with <strong>VEX (Vulnerability Exploitability eXchange)</strong> so a downstream consumer can see whether a listed CVE is actually exploitable in the product rather than merely present.</p>
+
+                <ul>
+                    <li><strong>Traceability</strong> &mdash; when the next Log4Shell lands, the customer can answer &ldquo;which products contain it?&rdquo; in minutes instead of weeks</li>
+                    <li><strong>Regulatory readiness</strong> &mdash; SBOMs are the deliverable behind the EU Cyber Resilience Act and US Executive Order 14028 (covered in depth in the Compliance module)</li>
+                    <li><strong>Evidence in the pipeline</strong> &mdash; policies can require an SBOM and enforce findings policies on OSS, license, container, secrets, and GitHub Action findings before a release is approved</li>
+                </ul>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What is a transitive dependency?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> A dependency you explicitly import in your code</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> A dependency required by one of your direct dependencies</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> A development-only dependency never shipped to production</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> A dependency that upgrades itself automatically</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 2:</strong> Which Endor Labs capability blocks known-malicious packages at install time, before they reach developer machines or CI?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Reachability analysis</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Endor Scores</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Package Firewall</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> VEX export</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 3:</strong> What does an SBOM provide?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> A complete inventory of the components in a software product</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> A runtime performance profile of deployed software</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> A source code review report produced by humans</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> A build manifest for CI/CD pipelines only</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/package-firewall-setup.html"><span class="resource-icon">&#128737;</span><span>Lab: Package Firewall Configuration<span class="resource-meta">Block malicious installs</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="100">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="01-appsec-fundamentals.html" class="btn btn-secondary">&#8592; Previous</a>
+                    <a href="03-endor-platform-overview.html" class="btn btn-primary">Next: Endor Labs Platform Overview &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

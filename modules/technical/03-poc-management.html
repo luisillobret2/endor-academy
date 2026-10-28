@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>POC &amp; Trial Management - Endor Academy</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>POC &amp; Trial Management</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>POC &amp; Trial Management</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The POC Charter: Scope, Success Criteria &amp; Stakeholders</li>
+                    <li>The 2-4 Week Plan, Week by Week</li>
+                    <li>Evidence Collection &amp; POV Metrics</li>
+                    <li>Closing the POC &amp; Avoiding Anti-Patterns</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The POC Charter: Scope, Success Criteria &amp; Stakeholders</h2>
+                <p>A proof of value that ends without a decision usually began without a charter. Write one page and get it acknowledged in writing before the first scan: scope, success criteria, stakeholders, and the date of the readout.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">&#127919;</div>
+                        <h4>Success criteria</h4>
+                        <p>Three to five measurable outcomes agreed with the economic buyer &mdash; noise-reduction percentage, reachable-finding coverage, MTTR improvement, and PR scan adoption.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128230;</div>
+                        <h4>Scope</h4>
+                        <p>Three to five representative repositories spanning the customer&rsquo;s real languages, one CI/CD pipeline, and one SCM. Nothing else is in scope.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128101;</div>
+                        <h4>Stakeholders</h4>
+                        <p>A security champion, an engineering lead, two to three participating developers, and a named executive sponsor who owns the readout.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">&#128197;</div>
+                        <h4>Timeline</h4>
+                        <p>A typical POV runs two to four weeks. Shorter for a single team, longer only when procurement or a security review gates the start.</p>
+                    </div>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Reachability is the criterion that resonates with noise-weary teams. When a prospect says &ldquo;our current tool buries us,&rdquo; propose a measured comparison: total findings versus reachable findings in the same repositories. That single number carries the business case.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>The 2-4 Week Plan, Week by Week</h2>
+                <p>Publish the plan in the charter so the customer can hold you to it. Each week ends in a checkpoint with a written note.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Week</th>
+                                <th>Focus</th>
+                                <th>Exit criteria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Week 1</strong></td>
+                                <td>Provision the organization, connect the SCM app, configure SSO or keyless OIDC, scan the in-scope repositories</td>
+                                <td>All in-scope projects scanned with a working scan profile</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Week 2</strong></td>
+                                <td>Triage session with the security champion; agree dismissals, exception policy templates, and reachability thresholds</td>
+                                <td>Baseline noise-reduction and reachable-finding numbers captured</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Week 3</strong></td>
+                                <td>Developer workflow: PR scans, inline comments, upgrade impact analysis, automated pull requests, and one Endor Patch</td>
+                                <td>At least one merged remediation the customer can point to</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Week 4</strong></td>
+                                <td>Readout: results against criteria, developer feedback, and a phased rollout plan</td>
+                                <td>Documented recommendation and commercial next step</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Book the readout when you book the kickoff. A POV without a scheduled readout drifts into an unpaid pilot. If the customer cannot commit a date, the deal is not ready for a POV.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Evidence Collection &amp; POV Metrics</h2>
+                <p>Collect evidence continuously rather than reconstructing it at the end. Four metrics do most of the work, and each maps to a stakeholder who signs the deal.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Noise reduction</strong> &mdash; total findings versus reachable findings across the same repositories, expressed as a percentage.</li>
+                    <li><strong>Reachable-finding coverage</strong> &mdash; how many genuinely exploitable findings the customer had not seen, especially those hidden in transitive dependencies.</li>
+                    <li><strong>MTTR</strong> &mdash; median time from finding to merged fix, measured on the POV repositories before and after the workflow change.</li>
+                    <li><strong>PR scan adoption</strong> &mdash; percentage of pull requests in the POV repositories that received an Endor Labs review comment or gate.</li>
+                </ol>
+
+                <p>Support the numbers with artifacts: SBOM and VEX exports for the security team, screenshots of a blocked malicious install for the platform team, and one or two direct developer quotes for the executive sponsor. Export the SBOM and VEX bundle at the end of week 2 so compliance stakeholders can review it while engineering keeps testing.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Closing the POC &amp; Avoiding Anti-Patterns</h2>
+                <p>Close in the same structure you opened: criterion, result, evidence, recommendation. Then convert the phased rollout plan into the commercial proposal.</p>
+
+                <ul>
+                    <li><strong>Recap the criteria</strong> &mdash; one slide per criterion with the measured result.</li>
+                    <li><strong>Quantify the delta</strong> &mdash; for example, &ldquo;1,240 findings, 210 reachable, 83% noise reduction across four repositories.&rdquo;</li>
+                    <li><strong>Bring the developers</strong> &mdash; have a participating engineer describe the workflow in their own words.</li>
+                    <li><strong>Project to the estate</strong> &mdash; extrapolate from in-scope repositories to the full organization with the customer, not at them.</li>
+                    <li><strong>Present the rollout</strong> &mdash; team-by-team sequence, integration order, and the metrics that will confirm success.</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Anti-Patterns That Kill POVs</h4>
+                    <p><strong>Boiling the ocean:</strong> onboarding hundreds of repositories so nobody can review the results. <strong>Testing unreachable CVEs:</strong> choosing flagship findings that reachability correctly deprioritizes, which undermines the value story. <strong>No baseline:</strong> running Endor Labs alone, so there is no comparison against the incumbent. <strong>Developer-free POV:</strong> testing without the people who must adopt the workflow. <strong>Endless extension:</strong> granting week five without new criteria.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> What must be agreed and documented before the first POC scan?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The final contract price</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Measurable success criteria, scope, stakeholders, and the readout date</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> A commitment to replace every existing tool immediately</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> The number of licenses to purchase</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> What is the typical duration of an Endor Labs proof of value?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Two to four weeks</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Three to six months</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> One or two days</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> One year</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> Which POV anti-pattern most directly undermines the reachability value story?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Scanning three to five representative repositories</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Capturing a baseline from the incumbent tool</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Choosing flagship findings that turn out to be unreachable</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Scheduling the readout during the kickoff</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/sbom-vex-export.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: SBOM &amp; VEX Export<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="02-demo-mastery.html" class="btn btn-secondary">&#8592; Previous: Demo Mastery &amp; Lab Setup</a>
+                    <a href="04-advanced-integrations.html" class="btn btn-primary">Next: Advanced Integrations &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+---
+title: Advanced Integrations - Endor Academy
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Advanced Integrations</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Advanced Integrations</h1>
+                <div class="module-meta">
+                    <span>&#128338; 40 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Ticketing &amp; ChatOps: Jira, Slack, Email, Webhooks</li>
+                    <li>Data Exporters &amp; Security Platform Feeds</li>
+                    <li>Private Package Managers &amp; Endor Patches Infrastructure</li>
+                    <li>API Automation &amp; SCM App Management</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Ticketing &amp; ChatOps: Jira, Slack, Email, Webhooks</h2>
+                <p>Integrations decide whether findings reach humans. Sequence them by effort and payoff: SCM app first for scanning, Slack or email next for visibility, Jira for ownership, then webhooks for anything bespoke.</p>
+
+                <ul>
+                    <li><strong>Jira</strong> &mdash; create issues for findings that need an owner and an SLA; map reachable critical findings to the highest priority and let exception policies suppress the rest.</li>
+                    <li><strong>Slack &amp; email</strong> &mdash; route notifications to the channel or list that owns the project; use digests for volume and direct alerts only for reachable critical findings.</li>
+                    <li><strong>Webhooks</strong> &mdash; push findings into any internal system; confirm the payload schema against the API docs before writing field mappings into production code.</li>
+                    <li><strong>Pull request comments</strong> &mdash; PR scans comment inline and can block a pull request. This is the integration developers actually read, so enable it early.</li>
+                </ul>
+
+                <h3>Webhook-to-Jira Recipe</h3>
+                <p>Stand up a small receiver, verify the event schema, then map severity to issue type and reachability to priority. Keep the receiver stateless so it can be retried safely.</p>
+
+                <pre><code># 1. Create the webhook in the Endor Labs UI and point it at your receiver
+# 2. Validate the payload schema against the Endor Labs API documentation
+# 3. Map fields: severity -&gt; issue type, reachability -&gt; priority
+# 4. Always return HTTP 200 quickly and process asynchronously
+
+curl -X POST "https://jira.example.com/rest/api/2/issue" \
+  -H "Authorization: Bearer $JIRA_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"fields":{"project":{"key":"SEC"},"issuetype":{"name":"Task"}}}'</code></pre>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Never let a noisy integration undermine a good rollout. Start with notifications only, measure the volume for a week, then add ticketing with reachability-based filters. An integration that files 800 tickets on day one gets switched off by day three.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Data Exporters &amp; Security Platform Feeds</h2>
+                <p>Enterprise security teams want Endor Labs data in the tools they already operate. Exports and feeds remove the manual reporting step from every review cycle.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Target</th>
+                                <th>What it gives the customer</th>
+                                <th>Notes for the SE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Amazon S3</strong></td>
+                                <td>Scheduled export of findings and inventory into customer-owned storage</td>
+                                <td>Preferred when data residency or warehouse analysis matters</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitHub Advanced Security</strong></td>
+                                <td>Data exporter that surfaces Endor Labs results alongside GitHub-native findings</td>
+                                <td>Useful when developers live entirely in GitHub</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Wiz</strong></td>
+                                <td>Correlate application findings with cloud and workload context</td>
+                                <td>Position as complementary coverage, not overlap</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Microsoft Defender for Cloud</strong></td>
+                                <td>Feed application risk into the cloud security posture workflow</td>
+                                <td>Common requirement in Azure-first enterprises</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p>For audits, pair an export with an SBOM and VEX bundle in CycloneDX or SPDX. The VEX statements explain why specific findings are not exploitable, which is exactly the evidence auditors and compliance platforms such as Vanta ask for.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Private Package Managers &amp; Endor Patches Infrastructure</h2>
+                <p>Enterprises rarely pull dependencies straight from public registries. Endor Labs integrates with private package managers so scans resolve the same artifacts the build actually consumes, including git-based dependencies and registries that require mTLS.</p>
+
+                <ul>
+                    <li><strong>Ecosystems</strong> &mdash; Maven, Gradle, npm, PyPI, NuGet, RubyGems, Swift, Packagist, and Conan.</li>
+                    <li><strong>Cloud registries</strong> &mdash; AWS CodeArtifact and Google Artifact Registry, alongside self-hosted Artifactory and Nexus instances.</li>
+                    <li><strong>Authentication</strong> &mdash; token-based access or mutual TLS (mTLS) for registries that require client certificate authentication.</li>
+                    <li><strong>Git-based dependencies</strong> &mdash; resolve dependencies declared as git references so private forks and pinned commits are scanned like any other package.</li>
+                </ul>
+
+                <h3>Endor Patches Delivery</h3>
+                <p>Endor Patches backport fixes for Java and Python packages when no upstream release exists. Patch Factory produces the patched artifact, and delivery integrates with <strong>JFrog Artifactory</strong> and <strong>Sonatype Nexus</strong> so the customer&rsquo;s build resolves the patched version from their own registry. Patch transparency matters here: every patch is traceable to the advisory it addresses, which is what gets security review approval.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Private registry credentials are the most common cause of an incomplete first scan. Confirm registry access before the POC kickoff, and prefer mTLS or a scoped service account over a personal token. Incomplete resolution silently weakens reachability verdicts.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>API Automation &amp; SCM App Management</h2>
+                <p>Everything the UI does is available for automation, which is how large customers avoid manual toil across hundreds of projects.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Manage SCM apps centrally</strong> &mdash; install the app once per organization for GitHub, GitLab, or Bitbucket Cloud, then add repositories as scan targets rather than installing per repo.</li>
+                    <li><strong>Automate scan profiles</strong> &mdash; keep <code>scanprofile.yaml</code> in the repository so profile changes are reviewed like code instead of clicked in a UI.</li>
+                    <li><strong>Drive policy as code</strong> &mdash; create finding, exception, remediation, and action policies through the API so policy sets are versioned and reproducible across namespaces.</li>
+                    <li><strong>Scope keys per namespace</strong> &mdash; give each business unit an API key limited to its namespace; use keyless OIDC where the CI platform supports it.</li>
+                    <li><strong>Export on a schedule</strong> &mdash; automate SBOM and findings exports so reporting does not depend on a human remembering.</li>
+                </ol>
+
+                <pre><code># Keep profile and policy changes reviewable, and confirm the auth context
+endorctl scan --path . --scan-profile ./scanprofile.yaml
+endorctl activate-token --token "$ENDOR_API_KEY"</code></pre>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>When a customer asks for a custom integration, ask what decision the integration supports. Most requests resolve to a notification, an export, or a policy gate &mdash; three things the platform already does without custom code.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> Which integration lets a customer consume Endor Labs findings into storage they own on a schedule?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The Amazon S3 data exporter</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> The IDE plugin</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> The Package Firewall</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> The leaderboard widget</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> Endor Patches integrate with which artifact repositories for patch delivery?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Docker Hub and Quay</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> JFrog Artifactory and Sonatype Nexus</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> npm and PyPI public registries</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> GitHub Releases only</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> Why is mTLS useful when integrating a private package manager?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> It makes scans run faster</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> It replaces the need for a scan profile</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> It authenticates the scanner to the registry over a mutually verified channel</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> It enables SAST on binary artifacts</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/github-actions-integration.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: GitHub Actions Integration<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="03-poc-management.html" class="btn btn-secondary">&#8592; Previous: POC &amp; Trial Management</a>
+                    <a href="05-troubleshooting.html" class="btn btn-primary">Next: Troubleshooting &amp; Support &#8594;</a>
+                </div>
+            </div>

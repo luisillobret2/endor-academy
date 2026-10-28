@@ -1,0 +1,192 @@
+---
+title: Application Security Fundamentals - Endor Academy
+description: Learn what application security covers, why alert noise stalls AppSec programs, and how the Endor Labs Agentic Application Security Platform fits into a partner-led security conversation.
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Foundation Track</span> &rsaquo; <span>Application Security Fundamentals</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Application Security Fundamentals</h1>
+                <div class="module-meta">
+                    <span>&#128338; 30 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 100 XP</span>
+                    <span class="level-badge beginner">Level 1 - Beginner</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>What Application Security Covers</li>
+                    <li>Why Alert Noise Stalls AppSec Programs</li>
+                    <li>The Modern Application Attack Surface</li>
+                    <li>How Endor Labs Fits: Scan, Triage, Remediate</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>What Application Security Covers</h2>
+                <p>Application security (AppSec) is the practice of finding, fixing, and preventing vulnerabilities in the software an organization builds and ships. That scope has widened considerably: it now covers source code written by humans and AI assistants, open-source dependencies pulled in transitively, credentials committed to repositories, container images, and the coding agents and AI models that increasingly sit inside the development workflow.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Shift-Left Security</h4>
+                    <p>&ldquo;Shift left&rdquo; means moving security earlier in the software development lifecycle instead of treating it as a gate before release. A flaw caught in the IDE or a pull request costs minutes to fix; the same flaw found in production costs an incident response, a hotfix, and often a customer notification. The constraint is not detection &mdash; modern scanners find plenty. The constraint is giving developers a finding they can act on without stopping their sprint.</p>
+                </div>
+
+                <p>Most AppSec programs are assembled from several disciplines, each historically sold as a separate product. Endor Labs delivers them as one platform:</p>
+
+                <ul>
+                    <li><strong>Software Composition Analysis (SCA)</strong> &mdash; known CVEs and malicious code in direct and transitive dependencies, prioritized by function-level reachability across 40+ languages</li>
+                    <li><strong>Static Analysis (SAST)</strong> &mdash; flaws in first-party code, covered by rule-based SAST plus AI SAST agent-based dataflow analysis</li>
+                    <li><strong>Secrets Detection</strong> &mdash; API keys and tokens committed to repositories, caught before the commit with one policy from laptop to pipeline</li>
+                    <li><strong>Supply Chain Defense</strong> &mdash; typosquatting, dependency confusion, and compromised releases, blocked by Package Firewall and malicious package detection</li>
+                    <li><strong>Container Security</strong> &mdash; vulnerable packages in images and base images, filtered by reachability from code to image</li>
+                    <li><strong>AI and Agent Governance</strong> &mdash; coding agents, models, and MCP servers, governed by Coding Agent Governance (AURI) and AI Model Discovery</li>
+                </ul>
+
+                <p>Endor Labs positions this as an <strong>Agentic Application Security Platform</strong> &mdash; one integration, one policy model, one workflow from the first scan to the merged fix. The company tagline partners should know is <strong>&ldquo;Code without compromise.&rdquo;</strong></p>
+            </section>
+
+            <section class="module-section">
+                <h2>Why Alert Noise Stalls AppSec Programs</h2>
+                <p>The defining problem in application security is not a shortage of findings. It is that the overwhelming majority of findings do not represent exploitable risk. Traditional SCA tools report every CVE present anywhere in the dependency tree, and studies consistently show that only <strong>10-20% of reported CVEs are actually reachable</strong> in a given application.</p>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">10-20%</div>
+                        <div class="stat-label">of reported CVEs are typically reachable in an application</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">97%</div>
+                        <div class="stat-label">noise reduction reported by Zebra Technologies with Endor Labs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">70%</div>
+                        <div class="stat-label">faster mean time to remediate at Egnyte</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">80-90%</div>
+                        <div class="stat-label">of a modern application is open-source code</div>
+                    </div>
+                </div>
+
+                <p>When a backlog is 90% noise, three things happen: developers stop trusting the scanner, security teams lose the ability to report real progress, and genuinely urgent vulnerabilities sit in a queue behind findings that could never be triggered. Every Endor Labs conversation should start from this problem, because it is the problem the platform was built to solve.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Lead with noise reduction, not feature counts. Ask a prospect how many open findings they currently carry and how many they believe are real. Then explain that Endor Labs decides reachability <em>before</em> a finding reaches the backlog, rather than asking a human to triage it afterwards.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>The Modern Application Attack Surface</h2>
+                <p>Four shifts have expanded the attack surface faster than most programs have adapted:</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128230;</div>
+                        <h4>Deep Dependency Trees</h4>
+                        <p>A single direct dependency can pull in dozens of transitive packages that developers never chose and rarely inspect. Most organizations cannot answer &ldquo;which services use this library?&rdquo; without tooling.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128273;</div>
+                        <h4>Secrets in Repositories</h4>
+                        <p>Cloud credentials and API tokens committed by accident are the fastest path from a public repository to an attacker-controlled account. Once pushed, a secret is compromised even if the commit is later reverted.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#9760;</div>
+                        <h4>Malicious Packages</h4>
+                        <p>Public registries accept new package versions within minutes, which gives attackers a window to publish typosquats, hijacked releases, and dependency-confusion packages before anyone notices.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#129302;</div>
+                        <h4>AI-Generated Code and Agents</h4>
+                        <p>AI assistants produce code at a pace that manual review cannot match, and coding agents can run commands, install packages, and touch repositories. Both need policy, not just detection.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>How Endor Labs Fits: Scan, Triage, Remediate</h2>
+                <p>The platform teaches one workflow, and partners should use the same three words in every conversation:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Scan</strong> &mdash; A single integration discovers dependencies, vulnerabilities, secrets, and AI models across the codebase, with no per-language setup and no separate agent per scanner.</li>
+                    <li><strong>Triage</strong> &mdash; Reachability analysis and risk scoring determine which findings actually impact the application, so teams focus on the reachable, exploitable, and business-relevant issues first.</li>
+                    <li><strong>Remediate</strong> &mdash; AI-powered remediation, upgrade impact analysis, and automated patching produce fixes: Endor Patches backport security fixes for Java and Python, and pull requests are raised where developers already work. The promise is <em>fix, not just find</em>.</li>
+                </ol>
+
+                <p>A typical customer journey maps to three phases:</p>
+                <ul>
+                    <li><strong>Day 0 &mdash; Onboard:</strong> connect repositories and run the first scan to establish a baseline of dependencies, vulnerabilities, and secrets.</li>
+                    <li><strong>Day 1 &mdash; Prioritize:</strong> work the reachable vulnerabilities first and put policies in place so routine triage decisions are automated.</li>
+                    <li><strong>Day 2+ &mdash; Optimize:</strong> embed scanning in CI/CD, push findings into developer workflows, and maintain a continuous baseline as code changes.</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>The unified platform is the commercial story: one vendor, one integration, and one policy model instead of four overlapping point tools. Position Endor Labs as the platform that replaces the noise-generating scanners a customer already owns, not as another alert source added alongside them.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> Which discipline identifies known CVEs in open-source dependencies?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Software Composition Analysis (SCA)</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Static Application Security Testing (SAST)</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Dynamic Application Security Testing (DAST)</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Web Application Firewall (WAF)</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> What does &ldquo;shift-left security&rdquo; mean?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Moving security testing into production monitoring</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Integrating security earlier in the development lifecycle</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Delegating security decisions to a central review board</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Running scans only before major releases</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 3:</strong> What is the biggest day-to-day problem AppSec teams report?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Too few scanning tools available</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> An overwhelming volume of findings that do not represent real risk</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> A shortage of published CVEs to track</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Lack of source control systems</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/endorctl-first-scan.html"><span class="resource-icon">&#128736;</span><span>Lab: Your First Endor Labs Scan<span class="resource-meta">Run endorctl against a sample repo</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="100">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="02-supply-chain-security.html" class="btn btn-primary">Next: Software Supply Chain Security &#8594;</a>
+                </div>
+            </div>

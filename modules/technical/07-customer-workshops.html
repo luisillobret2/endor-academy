@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Customer Workshop Facilitation - Endor Academy</title>
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Technical SE Track</span> &rsaquo; <span>Customer Workshop Facilitation</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Customer Workshop Facilitation</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 150 XP</span>
+                    <span class="level-badge expert">Level 3 - Advanced</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The 90-Minute Workshop Agenda</li>
+                    <li>Running the Live Scan &amp; Reachability Triage Exercise</li>
+                    <li>The AI &amp; Agent Governance Session</li>
+                    <li>Facilitation Tips &amp; Follow-Up Materials</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The 90-Minute Workshop Agenda</h2>
+                <p>A workshop is not a demo with a longer calendar invite. The customer&rsquo;s engineers do the work on their own repository, and the session ends with a decision. Ninety minutes is enough if the agenda protects the hands-on blocks and cuts the slide time.</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Segment</th>
+                                <th>Output</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>0&ndash;10 min</strong></td>
+                                <td>Intro: who is in the room, what we will decide, and the one outcome that matters</td>
+                                <td>Agreed objective written on screen</td>
+                            </tr>
+                            <tr>
+                                <td><strong>10&ndash;30 min</strong></td>
+                                <td>Live scan of a repository they chose, connected through the SCM app with toolchain detection building the scan profile</td>
+                                <td>Their code scanned, first findings visible</td>
+                            </tr>
+                            <tr>
+                                <td><strong>30&ndash;55 min</strong></td>
+                                <td>Reachability triage exercise: small groups work the top findings and record call-path evidence</td>
+                                <td>Reachable versus unreachable list with reasons</td>
+                            </tr>
+                            <tr>
+                                <td><strong>55&ndash;75 min</strong></td>
+                                <td>Remediation planning: upgrade impact analysis, an automated pull request, and an Endor Patch where no upstream fix exists</td>
+                                <td>Named owners and a first fix in flight</td>
+                            </tr>
+                            <tr>
+                                <td><strong>75&ndash;90 min</strong></td>
+                                <td>AI and agent governance session, then decisions and next steps</td>
+                                <td>Agent policy decisions and a dated follow-up</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Send the agenda and a pre-read one business day ahead, including which repository will be scanned and who needs access. Ask the customer to nominate a repository that is small enough to scan live and important enough that the results matter.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Running the Live Scan &amp; Reachability Triage Exercise</h2>
+                <p>The live scan segment is where trust is earned or lost. Prepare in advance, narrate what the platform is doing, and let the customer&rsquo;s engineer drive the keyboard where possible.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Confirm access before the session</strong> &mdash; SCM app installed, repository visible, and a scan profile that covers the languages in the room.</li>
+                    <li><strong>Narrate toolchain detection</strong> &mdash; show how the platform identified the languages and generated the profile, so the result is explainable rather than magical.</li>
+                    <li><strong>Split into pairs for triage</strong> &mdash; each pair takes three to five critical findings and decides reachable or unreachable using the call-path evidence.</li>
+                    <li><strong>Capture dismissals in the product</strong> &mdash; record reasons as they are agreed, so the exercise produces a real triage state instead of a whiteboard note.</li>
+                    <li><strong>Review the noise delta together</strong> &mdash; compare total findings against reachable findings and let the customer state the reduction themselves.</li>
+                </ol>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Never triage the customer&rsquo;s findings for them. The moment you classify a finding without the call path, you become the tool. Hand over the evidence, ask which finding they would fix first, and let their engineers own the verdict.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>The AI &amp; Agent Governance Session</h2>
+                <p>Close with the topic most customers have not governed yet. Run it as a short working session, not a feature tour: inventory first, policy second.</p>
+
+                <ul>
+                    <li><strong>Inventory</strong> &mdash; list the agents, models, MCP servers, and skills in use. Ask who approved each one and where its context files such as <code>AGENTS.md</code> and <code>CLAUDE.md</code> live.</li>
+                    <li><strong>Decide policy</strong> &mdash; agree which capabilities are allowed, blocked, or require a human decision, and who reviews ask-a-human requests.</li>
+                    <li><strong>Trace accountability</strong> &mdash; walk through the audit trail and Agents Hub trust and attribution so the customer can answer &ldquo;which agent did this?&rdquo;</li>
+                    <li><strong>Cover install-time risk</strong> &mdash; show Package Firewall blocking a malicious package so the group sees the control that acts before any scan.</li>
+                    <li><strong>Extend to the IDE</strong> &mdash; demonstrate the MCP server through <code>npx -y endorctl ai-tools mcp-server</code> in the editors the team already uses.</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Pro Tip</h4>
+                    <p>Ask the room a single question to open this block: &ldquo;Who can tell me which agents have credentials to your repositories right now?&rdquo; Silence is the gap statement, and it lands harder than any slide.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Facilitation Tips &amp; Follow-Up Materials</h2>
+                <p>Facilitation is a discipline of restraint: ask more than you tell, keep the clock visible, and write down decisions in the customer&rsquo;s words.</p>
+
+                <ul>
+                    <li><strong>Start with a question, not a slide.</strong> &ldquo;What would make these ninety minutes worthwhile?&rdquo; then shape the agenda live.</li>
+                    <li><strong>Protect the hands-on blocks.</strong> If time slips, cut your own narration, never the exercise.</li>
+                    <li><strong>Invite the quiet participants.</strong> Security, platform, and compliance attendees all need a moment to speak, or their constraints surface after the meeting as blockers.</li>
+                    <li><strong>Stay neutral about incumbents.</strong> Position Endor Labs as the consolidation path, not a verdict on the tool the room bought.</li>
+                    <li><strong>Capture visibly.</strong> Keep a shared document open and let participants watch their input become the action list.</li>
+                </ul>
+
+                <h3>Follow-Up Package</h3>
+                <p>Send the summary within 24 hours: participants and objective, findings scanned, the reachable versus unreachable result, decisions made, action items with owners and dates, and the artifacts the session produced. Attach the SBOM and VEX export if compliance was in the room, and include the next meeting invite in the same message.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>Do not let the workshop end without a dated next step. A workshop that closes with &ldquo;we will circle back&rdquo; costs the customer a day and costs you the momentum. Book the readout or the architecture review before anyone leaves the call.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 1:</strong> Which segments should receive the largest share of a 90-minute workshop?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> The introduction and product overview</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> The live scan and the reachability triage exercise</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Pricing and packaging</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> The product roadmap</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 2:</strong> What is the purpose of the AI and agent governance block?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> Inventory agents, models, and MCP servers, then agree allow, block, or ask-a-human decisions</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> Demonstrate the model training pipeline</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> Replace the customer&rsquo;s identity provider</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> Retire the reachability workflow</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> Which follow-up practice preserves momentum after a workshop?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Waiting for the customer to request the next meeting</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Sending the recording to the whole company</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Sending a written summary with decisions, owners, and dates within 24 hours, with the next meeting booked</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Scheduling a demo for a different team instead</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/mcp-agent-kit-setup.html"><span class="resource-icon">&#128736;&#65039;</span><span>Lab: MCP &amp; Agent Kit Setup<span class="resource-meta">Hands-on lab</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="150">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="06-security-architecture-review.html" class="btn btn-secondary">&#8592; Previous: Security Architecture Review</a>
+                    <a href="08-migration-strategies.html" class="btn btn-primary">Next: Migration &amp; Consolidation Strategies &#8594;</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

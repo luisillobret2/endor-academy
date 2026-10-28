@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Policy Enforcement &amp; Governance - Endor Academy</title>
+    <meta name="description" content="Configure Endor Labs finding, license, exception, remediation, and action policies, enforce them in pull request scans, and govern SCA across namespaces with RBAC and SSO.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>Policy Enforcement &amp; Governance</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Policy Enforcement &amp; Governance</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 4 sections</span>
+                    <span>&#11088; 200 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>Policy Types in Endor Labs</li>
+                    <li>Enforcing Policies in Pull Requests</li>
+                    <li>Governance Across the Organization</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>Policy Types in Endor Labs</h2>
+                <p>Policies turn an organization&rsquo;s risk appetite into automated decisions. Endor Labs provides four policy families, each enforcing a different part of the program:</p>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Policy Family</th>
+                                <th>What It Governs</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Finding policies</strong></td>
+                                <td>What counts as an unacceptable finding &mdash; covering OSS vulnerabilities, licenses, SAST, secrets, containers, RSPM, and GitHub Action findings</td>
+                                <td>Block critical, reachable OSS vulnerabilities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Exception policies</strong></td>
+                                <td>How risk is formally accepted, with templates and expiry dates</td>
+                                <td>Time-boxed exception for an unreachable CVE</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Remediation policies</strong></td>
+                                <td>How quickly findings must be fixed by severity</td>
+                                <td>Critical findings resolved within 7 days</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Action policies</strong></td>
+                                <td>Automated responses when findings or exceptions match rules</td>
+                                <td>Notify the owner and open a ticket</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="key-concept">
+                    <h4>&#128161; Scope Policies to Reality</h4>
+                    <p>The strongest finding policies combine criteria &mdash; severity, reachability, fix availability &mdash; so enforcement targets what is real. A policy that blocks <em>any</em> CVE in the tree recreates the noise problem inside CI and turns developers against the program. A policy that blocks <em>reachable, critical</em> CVEs is something every rational engineer supports.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Enforcing Policies in Pull Requests</h2>
+                <p>Enforcement happens where developers already work. Endor Labs PR scans run in CI integrations such as GitHub Actions, Jenkins, GitLab, and Azure DevOps; every pull request is scanned, and findings surface directly as <strong>PR comments</strong> &mdash; with reachability status and fix guidance, so the developer sees what changed and what to do about it. When a policy is violated, the check fails and the PR is <strong>blocked</strong> until the finding is fixed or an exception is approved.</p>
+
+                <ol class="steps-list">
+                    <li><strong>Define the policy</strong> &mdash; set criteria in the Endor Labs platform (severity, reachability, license, fix availability) and scope it to projects or the organization</li>
+                    <li><strong>Start in observation mode</strong> &mdash; run PR scans that comment but do not block, so teams see what would have failed</li>
+                    <li><strong>Tune with data</strong> &mdash; adjust thresholds based on what the observation period revealed; this is where reachability earns trust by keeping the blocked set small</li>
+                    <li><strong>Switch to blocking</strong> &mdash; enable enforcement so new risk cannot merge; existing debt is handled through remediation policies and exceptions</li>
+                    <li><strong>Review exceptions</strong> &mdash; track accepted risks, expirations, and justifications as part of normal governance</li>
+                </ol>
+
+                <div class="key-concept">
+                    <h4>&#128161; Why the Observe-First Rollout Works</h4>
+                    <p>Blocking on day one, before teams trust the findings, generates friction and appeals. Observing first proves the precision &mdash; developers see the tool block only reachable, material issues &mdash; so by the time enforcement starts, the checks are treated as legitimate. Partners should always recommend this sequencing.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Governance Across the Organization</h2>
+                <p>Policy only scales when it maps to how the company actually operates. Endor Labs governance building blocks:</p>
+                <ul>
+                    <li><strong>Namespaces</strong> &mdash; organize projects to mirror the org structure, so policies, ownership, and visibility follow business units and teams</li>
+                    <li><strong>RBAC</strong> &mdash; role-based access control ensures developers see their projects, security teams see the program, and executives see the trends</li>
+                    <li><strong>SSO</strong> &mdash; SAML and OIDC single sign-on with providers such as Okta and Microsoft Entra ID</li>
+                    <li><strong>Audit trail</strong> &mdash; every policy change, exception approval, and enforcement action is recorded &mdash; the evidence auditors and assessors ask for</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners: Sell Governance, Not Gatekeeping</h4>
+                    <p>CISOs do not buy more roadblocks &mdash; they buy control and evidence. Frame Endor Labs policy enforcement as the mechanism that makes security decisions <strong>consistent, visible, and defensible</strong>: rules defined centrally, enforced automatically in every PR, exceptions documented with expiry, and an audit trail to show for it. That framing, plus reachability keeping blocked sets small, wins the governance conversation.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 1:</strong> Which of these is NOT covered by Endor Labs finding policies?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Open-source vulnerabilities</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> License obligations</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Secrets in code</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Employee expense reports</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> Why do Endor Labs exception policies include templates and expiry dates?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> To make policies execute faster</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> So risk acceptance is documented, justified, and revisited rather than living forever</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> To prevent all merges during an audit</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> To hide exceptions from leadership</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 3:</strong> How does Endor Labs block a pull request that introduces a reachable critical vulnerability?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> The CI check fails via integrations such as GitHub Actions or Jenkins, so the PR cannot merge</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> By emailing the developer&rsquo;s manager</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> By deleting the feature branch</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Policies are advisory only and never block</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/package-firewall-setup.html"><span class="resource-icon">&#128737;&#65039;</span><span>Package Firewall Setup<span class="resource-meta">Practice allow, block, and ask-human policies</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="200">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="06-sbom-reporting.html" class="btn btn-secondary">&#8592; Previous: SBOM, VEX &amp; Reporting</a>
+                    <a href="08-enterprise-scaling.html" class="btn btn-primary">Next: Enterprise SCA at Scale &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

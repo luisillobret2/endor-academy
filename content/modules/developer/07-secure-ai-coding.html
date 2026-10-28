@@ -1,0 +1,167 @@
+---
+title: Secure AI Coding &amp; Agent Governance - Endor Academy
+description: Govern AI coding with Endor Labs AURI - inventory every agent, model, and MCP server, keep agents on safe rails, review PRs for architectural risk, and audit every agent action.
+---
+            <div class="module-breadcrumb">
+                <a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>Developer Track</span> &rsaquo; <span>Secure AI Coding &amp; Agent Governance</span>
+            </div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Secure AI Coding &amp; Agent Governance</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 250 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>AI Coding Needs Governance, Not Gatekeeping</li>
+                    <li>Design: Inventory Every Agent, Model, and MCP Server</li>
+                    <li>Develop: Keep Agents on Safe Rails</li>
+                    <li>Review and Deploy: PR Reviews, Policies, and Audit Trails</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>AI Coding Needs Governance, Not Gatekeeping</h2>
+                <p>Coding agents are no longer autocomplete. Cursor, Claude Code, Codex, and their peers edit files, run commands, install packages, and call external tools through MCP servers. Every one of those actions is a security decision &mdash; made at machine speed, at a volume human review cannot match.</p>
+
+                <p>Endor Labs&rsquo; answer is <strong>AURI</strong>, its agentic application security capabilities: secure the agents themselves, put the agents to work on security, and govern every action in between. The governance pillar &mdash; <strong>Coding Agent Governance</strong> &mdash; inventories what exists and enforces policy at the moment of action. And the developer-facing piece is free: <strong>AURI for developers is free forever</strong>, so adoption spreads developer-first.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Design &rarr; Develop &rarr; Review &rarr; Deploy</h4>
+                    <p>This module walks the AURI story the way partners should tell it: <strong>Design</strong> (know every agent in the org), <strong>Develop</strong> (agents write code with security tools built in), <strong>Review</strong> (agents check every PR for architectural risk), and <strong>Deploy</strong> (policies and audit trails govern what actually ships).</p>
+                </div>
+
+                <p>Timing is the reason this is one of the highest-XP modules in the Developer Track: every customer you meet is adopting AI coding <em>right now</em>, and their security teams are asking questions almost nobody answers well yet.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Design: Inventory Every Agent, Model, and MCP Server</h2>
+                <p>You cannot govern what you cannot see. The first AURI move is an inventory: Coding Agent Governance discovers <strong>every coding agent, model, MCP server, and skill</strong> in use across the organization &mdash; including the ones nobody told security about.</p>
+
+                <p>Then it does something subtler: it <strong>learns the application&rsquo;s architecture</strong> from the context files agents and teams already maintain &mdash; <code>AGENTS.md</code>, <code>CLAUDE.md</code>, and design documents &mdash; so its decisions reflect how the application is actually built, not a generic rulebook.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #047857;">&#128202;</div>
+                        <h4>Complete Inventory</h4>
+                        <p>Every agent, model, MCP server, and skill &mdash; across the whole org, not just the sanctioned list.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #3498db;">&#129504;</div>
+                        <h4>Context-Aware</h4>
+                        <p>Learns architecture from <code>AGENTS.md</code>, <code>CLAUDE.md</code>, and design docs &mdash; policy applied with understanding.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon" style="color: #f39c12;">&#128301;</div>
+                        <h4>Agents Hub</h4>
+                        <p>Browse every agent, its delegated credentials, its activity, and its trust and attribution record.</p>
+                    </div>
+                </div>
+
+                <p>The <strong>Agents Hub</strong> is where the inventory becomes operational: which agents exist, what credentials they hold, what they have actually done, and who is accountable for it. When an auditor asks &ldquo;which AI systems touch this codebase, and what did they do?&rdquo; &mdash; this is the answer.</p>
+            </section>
+
+            <section class="module-section">
+                <h2>Develop: Keep Agents on Safe Rails</h2>
+                <p>Agents that write code need security capabilities built in, not bolted on. Through the Endor Labs <strong>MCP server</strong> (see the IDE, MCP &amp; Coding Agents module), an agent can:</p>
+
+                <ul>
+                    <li><strong>Find and fix vulnerabilities</strong> &mdash; with reachability context, so it fixes what is exploitable and skips unreachable noise</li>
+                    <li><strong>Detect secrets before commit</strong> &mdash; the same detection rules that run in the pipeline, in the editor</li>
+                    <li><strong>Block malicious packages</strong> &mdash; the Package Firewall checks installs against malicious-package intelligence: typosquatting, dependency confusion, and compromised releases &mdash; protecting agents and developers alike</li>
+                </ul>
+
+                <p>For teams that want more than ad-hoc prompting, the <strong>Endor Labs Agent Kit</strong> ships pre-built agent workflows for Claude Code, Cursor, OpenAI Codex, Gemini CLI, Google Antigravity CLI, and the Cursor SDK. The workflows are portable, shared like code, and built on the safety model that makes autonomy acceptable: <strong>approval-gated, read-only-by-default actions</strong>.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; The Agent Is Now Your Remediation Engineer</h4>
+                    <p>With reachability context and security tools, an agent stops being a risk to govern and starts being a remediation engine: it works the findings that matter, proposes the fix, and hands you a diff &mdash; you review, approve, and move on.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Review and Deploy: PR Reviews, Policies, and Audit Trails</h2>
+                <p><strong>Review:</strong> with AI SAST PR scans, agents review <em>every</em> pull request for architectural risk &mdash; not just pattern matches. The difference is qualitative: an agent that understands the design can flag an <strong>endpoint added without authentication</strong>, an <strong>OAuth state parameter removed</strong> from a login flow, or <strong>new PII collection</strong> introduced into a data path. Findings land as PR comments, and AI context rules let teams teach the reviewers their architecture.</p>
+
+                <p><strong>Deploy:</strong> at the moment an agent acts, Coding Agent Governance enforces policy in real time. Every action resolves to one of three outcomes:</p>
+
+                <ul>
+                    <li><strong>Allow</strong> &mdash; the action is safe; it proceeds and is logged</li>
+                    <li><strong>Block</strong> &mdash; the action never runs; the attempt is logged</li>
+                    <li><strong>Ask-a-human</strong> &mdash; the agent pauses and a person decides, with full context</li>
+                </ul>
+
+                <p>Risky or irreversible actions sit behind approval-gated triage workflows, and a <strong>full audit trail</strong> records every agent action &mdash; who, what, when, and under whose authority &mdash; for review, incident response, and compliance.</p>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners</h4>
+                    <p>This is the 2026 conversation. &ldquo;How do we adopt AI coding safely?&rdquo; is being asked in every boardroom, and the complete answer &mdash; inventory (Design), safe rails (Develop), architectural PR review (Review), and moment-of-action policy with audit trails (Deploy) &mdash; is exactly the AURI story. No competitor ties all four stages into one platform with an agent inventory behind it. Lead with it, and bring the MCP Server &amp; Agent Kit lab to leave something behind.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 1:</strong> What does Coding Agent Governance inventory?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> Only the coding agents approved by the security team</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> Source code repositories and their dependencies</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> Every coding agent, model, MCP server, and skill in the organization</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Cloud identities and their service accounts</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> Which of these is an example of architectural risk an AI SAST PR review would flag?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> A dependency two patch versions behind</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> An endpoint added without authentication, or an OAuth state parameter removed from a flow</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> A unit test with low coverage</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> A README file with outdated instructions</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="ZA==">
+                        <p><strong>Question 3:</strong> At the moment an agent takes a risky action, which policy outcomes can apply?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> Quarantine, encrypt, or archive</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> Merge, revert, or fast-forward</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Log, alert, or escalate</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> Allow, block, or ask-a-human &mdash; each logged in the audit trail</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/mcp-agent-kit-setup.html"><span class="resource-icon">&#128736;</span><span>Lab: MCP Server &amp; Agent Kit Setup<span class="resource-meta">Agents fixing findings under policy</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="250">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="06-api-integration.html" class="btn btn-secondary">&#8592; Previous: API &amp; Webhooks</a>
+                <a href="../../certifications.html" class="btn btn-primary">View Certifications &#8594;</a>
+                    </div>
+            </div>

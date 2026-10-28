@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- favicon -->
+    <link rel="icon" type="image/svg+xml" href="../../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <title>Remediation &amp; Endor Patches - Endor Academy</title>
+    <meta name="description" content="Master the Endor Labs remediation workflow - upgrade impact analysis, automated pull requests, and Endor Patches that backport security fixes for Java and Python when no upstream fix exists.">
+    <link rel="stylesheet" href="../../css/fonts.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/module.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="module-layout">
+        <aside class="module-sidebar"></aside>
+
+        <main class="module-content" id="main-content">
+            <div class="module-breadcrumb"><a href="../../learning-paths.html">Learning Paths</a> &rsaquo; <span>SCA &amp; Reachability Deep Dive</span> &rsaquo; <span>Remediation &amp; Endor Patches</span></div>
+
+            <div class="module-header">
+                <div class="module-badge not-started-badge">Not Started</div>
+                <h1>Remediation &amp; Endor Patches</h1>
+                <div class="module-meta">
+                    <span>&#128338; 35 min</span>
+                    <span>&#128218; 5 sections</span>
+                    <span>&#11088; 250 XP</span>
+                    <span class="level-badge intermediate">Level 2 - Intermediate</span>
+                </div>
+            </div>
+
+            <div class="module-objectives">
+                <h4>&#127919; Learning Objectives</h4>
+                <p>In this module you will cover:</p>
+                <ul>
+                    <li>The Endor Labs Remediation Workflow</li>
+                    <li>Upgrade Impact Analysis and Automated Pull Requests</li>
+                    <li>Endor Patches for Java and Python</li>
+                    <li>Choosing Between Upgrading, Patching, and Accepting Risk</li>
+                </ul>
+            </div>
+
+            <section class="module-section">
+                <h2>The Endor Labs Remediation Workflow</h2>
+                <p>Reachability shrinks the backlog; remediation closes it. The Endor Labs workflow takes a reachable finding from discovery to a verified fix without leaving the developer&rsquo;s normal routine:</p>
+
+                <ol class="steps-list">
+                    <li><strong>Triage</strong> &mdash; start from reachable findings, ranked by severity, exploitation likelihood, and the package&rsquo;s Endor Score (Module 04)</li>
+                    <li><strong>Choose a strategy</strong> &mdash; upgrade, patch, replace the dependency, or accept the risk with a documented exception</li>
+                    <li><strong>Implement</strong> &mdash; take the upgrade with impact analysis, merge an automated fix pull request, or apply an Endor Patch</li>
+                    <li><strong>Verify</strong> &mdash; PR scans re-check the change before merge, confirming the vulnerable call path is gone and nothing new came in</li>
+                </ol>
+
+                <div class="vuln-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Strategy</th>
+                                <th>When to Use It</th>
+                                <th>Endor Labs Support</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Upgrade</strong></td>
+                                <td>A fixed version exists and the change is acceptable</td>
+                                <td>Upgrade impact analysis plus automated fix pull requests</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Patch</strong></td>
+                                <td>No fixed upstream release exists (Java and Python today)</td>
+                                <td>Endor Patches &mdash; the fix backported to your current version</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Replace or remove</strong></td>
+                                <td>The package is abandoned, or the code using it is unnecessary</td>
+                                <td>Endor Scores identify healthier alternatives; reachability shows what is actually used</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Accept</strong></td>
+                                <td>The finding is unreachable or the risk is otherwise tolerable</td>
+                                <td>Exception policies with templates, justification, and expiry (Module 07)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Upgrade Impact Analysis and Automated Pull Requests</h2>
+                <p>The fear that stalls remediation is not the vulnerability &mdash; it is the upgrade. Teams hesitate because they cannot see what a version bump will touch: which call paths change, which other components are affected, and whether the upgrade breaks anything. <strong>Upgrade impact analysis</strong> answers that before anyone commits: it shows what an upgrade touches, so engineers make the change with their eyes open instead of discovering the blast radius in production.</p>
+                <p>For fixes that are safe to take, Endor Labs opens <strong>automated pull requests</strong> that apply the remediation directly. Developers review the PR in their normal workflow &mdash; the same place they review every other change &mdash; and PR scans post comments with the finding context so the fix is verified before merge. No new tool to learn, no ticket ping-pong, no context switching.</p>
+
+                <div class="key-concept">
+                    <h4>&#128161; Why This Combination Wins</h4>
+                    <p>Impact analysis removes the fear of upgrading; automated PRs remove the toil of doing it. Together they turn &ldquo;we know about the vulnerability&rdquo; into &ldquo;the fix is merged&rdquo; in hours rather than quarters &mdash; and Egnyte, an Endor Labs customer, reported remediation roughly <strong>70% faster</strong> (mean time to remediate) as a result of working this way.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Endor Patches: Backported Security Fixes</h2>
+                <p>The hardest remediation case is a critical, reachable CVE with <strong>no fixed upstream version</strong> &mdash; the maintainers have not released a fix, or your application cannot absorb the upgrade that contains it. This is where <strong>Endor Patches</strong> come in: Endor Labs backports the security fix to the package version you already use, so you get the protection without the upgrade project.</p>
+                <p>What to know about Endor Patches:</p>
+                <ul>
+                    <li><strong>Languages</strong> &mdash; Endor Patches are available for <strong>Java and Python</strong> today</li>
+                    <li><strong>Patch Factory</strong> &mdash; the production process behind the patches, built for scale and correctness</li>
+                    <li><strong>Transparency</strong> &mdash; patch transparency means you can see exactly what a patch changes in the package, so a backported fix is never a black box</li>
+                    <li><strong>Artifact repository integration</strong> &mdash; patches flow through your existing infrastructure via <strong>JFrog Artifactory</strong> and <strong>Sonatype Nexus</strong> integration, so builds pick them up from the repositories you already trust</li>
+                    <li><strong>Auto-patching</strong> &mdash; patching can happen automatically, keeping protected versions in place until an upstream fix arrives and a normal upgrade makes sense</li>
+                </ul>
+
+                <div class="key-concept">
+                    <h4>&#128161; Continuity Over Heroics</h4>
+                    <p>The traditional answer to &ldquo;no upstream fix&rdquo; is an emergency upgrade project or an indefinite acceptance of risk. Endor Patches offer a third path: stay on your current version, receive the security fix, and upgrade on your own schedule. That is a materially different remediation story from any tool that can only point at the problem.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Choosing Between Upgrading, Patching, and Accepting Risk</h2>
+                <p>A finding is not a strategy. Walk customers through the decision explicitly:</p>
+                <ul>
+                    <li><strong>Upgrade first</strong> when a fixed version exists &mdash; use impact analysis to de-risk it, and let the automated PR carry the change</li>
+                    <li><strong>Patch</strong> when the fix does not exist yet or the upgrade is blocked &mdash; Java and Python today, delivered through Artifactory or Nexus</li>
+                    <li><strong>Replace</strong> when the package is abandoned and Endor Scores show no signs of recovery &mdash; a dependency you cannot patch, upgrade, or trust is a dependency to remove</li>
+                    <li><strong>Accept</strong> only with evidence and a deadline &mdash; unreachable findings may be accepted, but the acceptance should be recorded as an exception with an expiry date, not lost in a spreadsheet</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>&#9888;&#65039; Important for Partners: Set Honest Expectations</h4>
+                    <p>Endor Patches cover <strong>Java and Python today</strong> &mdash; say so plainly, and pair it with what those customers gain: backported fixes with transparency, delivered through their own artifact repositories. Do not promise patch availability for every CVE or every language; let upgrade impact analysis and automated PRs carry the remediation story for the rest.</p>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Knowledge Check</h2>
+                <div class="quiz-container">
+                    <div class="quiz-question" data-c="YQ==">
+                        <p><strong>Question 1:</strong> A critical, reachable CVE affects a Java library your customer uses, and the maintainers have not released a fix. What can Endor Labs provide?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q1" value="a"> An Endor Patch &mdash; the security fix backported to the version they already use</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="b"> A guarantee that the CVE is not exploitable</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="c"> A new upstream release from the maintainers</label>
+                            <label class="quiz-option"><input type="radio" name="q1" value="d"> Nothing, until the maintainers publish a fix</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yg==">
+                        <p><strong>Question 2:</strong> What does upgrade impact analysis show your team?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q2" value="a"> How many CVEs exist in the new version</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="b"> What an upgrade touches in your codebase, before you take it</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="c"> The license of the upgraded package</label>
+                            <label class="quiz-option"><input type="radio" name="q2" value="d"> A list of your least active repositories</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <div class="quiz-question" data-c="Yw==">
+                        <p><strong>Question 3:</strong> How are Endor Patches delivered into your build infrastructure?</p>
+                        <div class="quiz-options">
+                            <label class="quiz-option"><input type="radio" name="q3" value="a"> As email attachments sent to the security team</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="b"> As GitHub issues assigned to your developers</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="c"> Through artifact repository integrations with JFrog Artifactory and Sonatype Nexus</label>
+                            <label class="quiz-option"><input type="radio" name="q3" value="d"> They are not &mdash; teams must copy patch files manually</label>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+
+                    <button class="btn btn-primary quiz-submit">Check Answers</button>
+                    <div class="quiz-results"></div>
+                </div>
+            </section>
+
+            <section class="module-section">
+                <h2>Resources &amp; Related Labs</h2>
+                <div class="module-resources">
+                    <a class="module-resource" href="../../labs.html"><span class="resource-icon">&#128187;</span><span>Hands-on Labs<span class="resource-meta">Practice environment</span></span></a>
+                    <a class="module-resource" href="../../resources.html"><span class="resource-icon">&#128196;</span><span>Resource Library<span class="resource-meta">Guides &amp; templates</span></span></a>
+                    <a class="module-resource" href="../../certifications.html"><span class="resource-icon">&#127942;</span><span>Certifications<span class="resource-meta">Validate your skills</span></span></a>
+                    <a class="module-resource" href="../../labs/github-actions-integration.html"><span class="resource-icon">&#128253;</span><span>GitHub Actions Integration<span class="resource-meta">Practice PR scans and automated fixes</span></span></a>
+                </div>
+            </section>
+
+            <div class="module-footer">
+                <button class="mark-complete-btn" data-xp="250">Mark as Complete</button>
+                <div class="module-nav-buttons">
+                    <a href="04-prioritization.html" class="btn btn-secondary">&#8592; Previous: Prioritization &amp; Endor Scores</a>
+                    <a href="06-sbom-reporting.html" class="btn btn-primary">Next: SBOM, VEX &amp; Reporting &#8594;</a>
+                </div>
+        </main>
+    </div>
+
+    <script src="../../js/layout.js"></script>
+    <script src="../../js/store.js"></script>
+    <script src="../../js/auth.js"></script>
+    <script src="../../js/search.js"></script>
+    <script src="../../js/chat.js"></script>
+    <script src="../../js/homepage.js"></script>
+    <script src="../../js/leaderboard.js"></script>
+    <script src="../../js/cert-recommendations.js"></script>
+    <script src="../../js/badges.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/tracks.js"></script>
+    <script src="../../js/module.js"></script>
+</body>
+</html>

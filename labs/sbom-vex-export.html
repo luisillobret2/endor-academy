@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="../img/endor-logo.svg">
+    <link rel="icon" type="image/png" href="../img/endor-logo.png">
+    <link rel="apple-touch-icon" href="../img/endor-logo.png">
+    <meta name="theme-color" content="#047857">
+    <meta name="description" content="Interactive challenge lab: Generate CycloneDX and SPDX SBOMs, attach VEX statements with reachability context, and package everything for a compliance audit.">
+    <title>Lab: SBOM &amp; VEX Export - Endor Academy</title>
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+    <header id="site-header" class="site-header"></header>
+
+    <div class="lab-layout">
+        <!-- Breadcrumb -->
+        <div class="lab-breadcrumb">
+            <a href="../labs.html">Labs</a> &rsaquo;
+            <span>SBOM &amp; VEX Export</span>
+        </div>
+
+        <!-- Header -->
+        <div class="lab-header">
+            <div class="lab-title-row">
+                <h1>SBOM &amp; <span class="accent">VEX Export</span></h1>
+                <span class="lab-type-badge challenge">Challenge</span>
+            </div>
+            <div class="lab-meta">
+                <span>&#128339; 30 min</span>
+                <span>&#127942; 100 XP</span>
+                <span>&#128260; Compliance</span>
+                <span>&#128218; 5 steps</span>
+            </div>
+        </div>
+
+        <!-- Objectives -->
+        <div class="lab-objectives">
+            <h4>&#127919; Lab Objectives</h4>
+            <ul>
+                <li>Generate a CycloneDX SBOM from your latest scan results</li>
+                <li>Generate the SPDX SBOM the auditor also asked for</li>
+                <li>Attach VEX statements backed by reachability analysis</li>
+                <li>Verify the exports meet the audit requirements</li>
+                <li>Package and deliver the evidence for the compliance audit</li>
+            </ul>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="lab-progress-bar">
+            <div class="lab-progress-bar-fill" id="lab-progress"></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="lab-step" data-step="1">
+            <div class="lab-step-number">1</div>
+            <h3>Generate the CycloneDX SBOM</h3>
+            <p><strong>Challenge scenario:</strong> the auditor needs an SBOM and a VEX document for <code>checkout-service</code> v1.4.2 by end of day — and only findings your code can actually reach may be claimed exploitable. You have the reachability data; now export it.</p>
+            <p>Generate the CycloneDX SBOM from the latest scan results:</p>
+            <div class="lab-code-block"><span class="comment"># CycloneDX SBOM from the latest scan</span>
+endorctl sbom --format cyclonedx --output sbom.cdx.json</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl sbom --format cyclonedx --output sbom.cdx.json
+<span class="term-info">Generating SBOM from latest scan results...</span>
+<span class="term-info">Project: checkout-service 1.4.2</span>
+<span class="term-info">Format: CycloneDX 1.5</span>
+<span class="term-info">Components: 183 (47 direct, 136 transitive)</span>
+<span class="term-warn">Vulnerabilities documented: 27</span>
+<span class="term-success">SBOM written to sbom.cdx.json (41.8 KB)</span>
+
+<span class="term-prompt">$</span> jq '.components | length' sbom.cdx.json
+<span class="term-success">183</span></div>
+            <div class="lab-callout tip">
+                <strong>Tip</strong>
+                The SBOM reflects the scan results, so it carries everything the scanner knows: every dependency, every version, every vulnerability. Export flags and formats evolve — the current syntax lives at docs.endorlabs.com.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Generated the CycloneDX SBOM</li>
+                <li><span class="check-icon">&#10003;</span> Verified the component count (183) matches the scan</li>
+            </ul>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="lab-step" data-step="2">
+            <div class="lab-step-number">2</div>
+            <h3>Generate the SPDX SBOM</h3>
+            <p>The auditor wants both formats. CycloneDX is the security-rich format (it carries vulnerability data and VEX); SPDX is the licensing and compliance standard many procurement processes expect. Endor Labs supports both, plus VEX import and export.</p>
+            <div class="lab-code-block"><span class="comment"># SPDX SBOM from the same scan results</span>
+endorctl sbom --format spdx --output sbom.spdx.json</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl sbom --format spdx --output sbom.spdx.json
+<span class="term-info">Generating SBOM from latest scan results...</span>
+<span class="term-info">Format: SPDX 2.3 (JSON)</span>
+<span class="term-info">Components: 183</span>
+<span class="term-info">License information included for 179 components</span>
+<span class="term-success">SBOM written to sbom.spdx.json (58.6 KB)</span></div>
+            <div class="lab-callout tip">
+                <strong>Why two formats</strong>
+                Security teams tend to live in CycloneDX; procurement and legal tend to live in SPDX. Generating both from the same scan means they can never disagree with each other.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Generated the SPDX SBOM</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed both documents describe the same 183 components</li>
+            </ul>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="lab-step" data-step="3">
+            <div class="lab-step-number">3</div>
+            <h3>Attach VEX with Reachability Context</h3>
+            <p>Here is the challenge's twist: a raw SBOM documents 27 vulnerabilities, but the auditor wants to know which are <em>exploitable</em>. A VEX (Vulnerability Exploitability eXchange) document answers that per vulnerability — and Endor Labs generates it from reachability analysis, so every statement is backed by a call path.</p>
+            <div class="lab-code-block"><span class="comment"># VEX statements generated from reachability analysis</span>
+endorctl sbom --format cyclonedx --vex --output checkout-service-1.4.2-vex.cdx.json</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> endorctl sbom --format cyclonedx --vex --output checkout-service-1.4.2-vex.cdx.json
+<span class="term-info">Generating VEX statements from reachability analysis...</span>
+  <span class="term-error">exploitable:    3   (reachable call paths)</span>
+  <span class="term-success">not_affected:  23   (no reachable call path)</span>
+  <span class="term-warn">in_triage:      1   (unknown reachability — jackson-databind)</span>
+<span class="term-success">VEX document written to checkout-service-1.4.2-vex.cdx.json</span></div>
+            <p>Each statement carries a status and a machine-readable justification:</p>
+            <div class="lab-code-block"><span class="comment"># From checkout-service-1.4.2-vex.cdx.json</span>
+{
+  "bom-ref": "pkg:maven/org.apache.logging.log4j/log4j-core@2.14.1",
+  "vulnerability": "CVE-2021-44228",
+  "status": "exploitable",
+  "justification": "Reachable call path: POST /api/orders -&gt;
+    OrderController.createOrder() -&gt; Logger.error() -&gt; JndiLookup.lookup()"
+}
+{
+  "bom-ref": "pkg:maven/org.springframework/spring-webmvc@5.3.16",
+  "vulnerability": "CVE-2022-22965",
+  "status": "not_affected",
+  "justification": "No reachable call path from application code
+    to the vulnerable data-binding code"
+}</div>
+            <div class="lab-callout warning">
+                <strong>Why auditors care</strong>
+                The VEX document is the evidence that turns 27 audit line-items into 3. "Not affected, and here is why" is a defensible, reviewable claim — not an assurance or a shrug.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Generated the VEX document from reachability data</li>
+                <li><span class="check-icon">&#10003;</span> Read the exploitable and not_affected statements and their justifications</li>
+            </ul>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="lab-step" data-step="4">
+            <div class="lab-step-number">4</div>
+            <h3>Verify the Exports (Challenge Checks)</h3>
+            <p>Before anything goes to the auditor, prove it is complete. Three checks:</p>
+            <ol>
+                <li>Every one of the 27 vulnerabilities carries a VEX statement</li>
+                <li>Find the single <code>in_triage</code> item and explain why it is honest</li>
+                <li>The counts match the dashboard's findings view</li>
+            </ol>
+            <div class="lab-terminal"><span class="term-prompt">$</span> jq '.vulnerabilities | length' checkout-service-1.4.2-vex.cdx.json
+<span class="term-success">27</span>
+
+<span class="term-prompt">$</span> jq -r '.vulnerabilities[] | select(.status=="in_triage") | .vulnerability' checkout-service-1.4.2-vex.cdx.json
+<span class="term-warn">CVE-2020-36518</span>
+
+<span class="term-prompt">$</span> jq -r '.vulnerabilities[] | .status' checkout-service-1.4.2-vex.cdx.json | sort | uniq -c
+<span class="term-info"> 23 not_affected</span>
+<span class="term-error">  3 exploitable</span>
+<span class="term-warn">  1 in_triage</span></div>
+            <p>The <code>in_triage</code> item is jackson-databind's CVE-2020-36518, whose reachability is still Unknown pending version confirmation. A VEX document that marks it <code>not_affected</code> would be a lie; <code>in_triage</code> documents the uncertainty honestly — and tells the auditor exactly what you are doing about it.</p>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Confirmed all 27 vulnerabilities have VEX statements</li>
+                <li><span class="check-icon">&#10003;</span> Located the in_triage item and understood why it is not marked not_affected</li>
+                <li><span class="check-icon">&#10003;</span> Matched the 3 / 23 / 1 counts against the dashboard</li>
+            </ul>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="lab-step" data-step="5">
+            <div class="lab-step-number">5</div>
+            <h3>Package It for the Audit</h3>
+            <p>Attach all three artifacts to the v1.4.2 release so the evidence is versioned with the software it describes:</p>
+            <div class="lab-code-block"><span class="comment"># Attach the evidence to the GitHub release</span>
+gh release create v1.4.2 \
+    sbom.cdx.json sbom.spdx.json checkout-service-1.4.2-vex.cdx.json \
+    --title "checkout-service v1.4.2" \
+    --notes "SBOM (CycloneDX + SPDX) and VEX with reachability context"</div>
+            <div class="lab-terminal"><span class="term-prompt">$</span> gh release create v1.4.2 sbom.cdx.json sbom.spdx.json checkout-service-1.4.2-vex.cdx.json --title "checkout-service v1.4.2"
+<span class="term-success">https://github.com/acme-financial/checkout-service/releases/tag/v1.4.2</span>
+<span class="term-info">Artifacts: sbom.cdx.json, sbom.spdx.json, checkout-service-1.4.2-vex.cdx.json</span></div>
+            <p>For continuous evidence, Endor Labs integrations can push SBOMs and VEX automatically to <strong>Vanta</strong>, <strong>Wiz</strong>, or <strong>S3</strong> as each release ships, so audit answers stay current instead of becoming a quarterly scramble. Frameworks like the EU Cyber Resilience Act and US Executive Order 14028 are why auditors ask for SBOMs in the first place — reachability-backed VEX is how you answer them without over-claiming.</p>
+            <div class="lab-callout tip">
+                <strong>Challenge wrap-up</strong>
+                You delivered in under 30 minutes: two SBOM formats from one scan, a VEX document where every "not affected" is backed by a call-path analysis, and one honest in_triage flag. That is a defensible audit posture.
+            </div>
+            <ul class="lab-checklist">
+                <li><span class="check-icon">&#10003;</span> Created the release with all three artifacts attached</li>
+                <li><span class="check-icon">&#10003;</span> Noted where automated SBOM/VEX pushes would go (Vanta, Wiz, or S3)</li>
+                <li><span class="check-icon">&#10003;</span> Confirmed every exploitability claim is backed by reachability data</li>
+            </ul>
+        </div>
+
+        <!-- Knowledge Check -->
+        <div class="lab-quiz" id="lab-quiz">
+            <h4>&#129504; Knowledge Check</h4>
+            <div class="lab-quiz-question">Which two SBOM formats does Endor Labs generate?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">SPDX and SWID</li>
+                <li class="lab-quiz-option" data-correct="true">CycloneDX and SPDX</li>
+                <li class="lab-quiz-option" data-correct="false">CycloneDX and OSV</li>
+                <li class="lab-quiz-option" data-correct="false">SWID and CSV</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">What is the correct VEX status for a vulnerability with no reachable call path from your code?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false"><code>exploitable</code></li>
+                <li class="lab-quiz-option" data-correct="true"><code>not_affected</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>in_triage</code></li>
+                <li class="lab-quiz-option" data-correct="false"><code>fixed</code></li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">What does a VEX document add to a raw SBOM?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">License obligations for each component</li>
+                <li class="lab-quiz-option" data-correct="false">Build timestamps and tool versions</li>
+                <li class="lab-quiz-option" data-correct="true">Per-vulnerability exploitability status with justifications, backed by reachability analysis</li>
+                <li class="lab-quiz-option" data-correct="false">The dependency tree structure</li>
+            </ul>
+            <div class="lab-quiz-question" style="margin-top: 20px;">Why does the VEX document mark CVE-2020-36518 <code>in_triage</code> instead of <code>not_affected</code>?</div>
+            <ul class="lab-quiz-options">
+                <li class="lab-quiz-option" data-correct="false">The CVE has no CVSS score</li>
+                <li class="lab-quiz-option" data-correct="false">It was already fixed by an Endor Patch</li>
+                <li class="lab-quiz-option" data-correct="true">Its reachability is Unknown pending version confirmation — the document records the uncertainty honestly</li>
+                <li class="lab-quiz-option" data-correct="false">The auditor explicitly requested that status</li>
+            </ul>
+        </div>
+
+        <!-- Completion Banner -->
+        <div class="lab-completion-banner" id="lab-complete">
+            <h2>&#127881; Lab Complete!</h2>
+            <p>You've generated CycloneDX and SPDX SBOMs from a single scan, attached a reachability-backed VEX document, verified it with jq, and shipped audit-ready evidence with the release.</p>
+            <div class="lab-completion-xp">+100 XP</div>
+            <div class="lab-actions" style="justify-content: center;">
+                <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+                <a href="package-firewall-setup.html" class="btn btn-primary">Next Lab: Package Firewall Configuration</a>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="lab-actions" id="lab-actions">
+            <button class="btn btn-primary" id="lab-complete-btn" disabled>Complete Lab</button>
+            <a href="../labs.html" class="btn btn-secondary">Back to Labs</a>
+        </div>
+    </div>
+
+    <footer id="site-footer" class="site-footer"></footer>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/store.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/badges.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+    (function() {
+        var totalSteps = 5;
+        var stepChecklists = {};
+
+        // Track checklist completion per step
+        document.querySelectorAll('.lab-step').forEach(function(stepEl) {
+            var stepNum = stepEl.getAttribute('data-step');
+            var items = stepEl.querySelectorAll('.lab-checklist li');
+            stepChecklists[stepNum] = { total: items.length, checked: 0 };
+
+            items.forEach(function(item) {
+                item.addEventListener('click', function() {
+                    if (item.classList.contains('checked')) {
+                        item.classList.remove('checked');
+                        stepChecklists[stepNum].checked--;
+                    } else {
+                        item.classList.add('checked');
+                        stepChecklists[stepNum].checked++;
+                    }
+                    updateProgress();
+                });
+            });
+        });
+
+        function updateProgress() {
+            var totalItems = 0;
+            var checkedItems = 0;
+            var allStepsComplete = true;
+
+            for (var i = 1; i <= totalSteps; i++) {
+                if (!stepChecklists[i]) continue;
+                totalItems += stepChecklists[i].total;
+                checkedItems += stepChecklists[i].checked;
+                if (stepChecklists[i].checked < stepChecklists[i].total) {
+                    allStepsComplete = false;
+                }
+            }
+
+            var pct = totalItems > 0 ? (checkedItems / totalItems) * 100 : 0;
+            document.getElementById('lab-progress').style.width = pct + '%';
+
+            // Mark steps as completed
+            for (var j = 1; j <= totalSteps; j++) {
+                var stepEl = document.querySelector('.lab-step[data-step="' + j + '"]');
+                if (stepEl && stepChecklists[j] && stepChecklists[j].checked >= stepChecklists[j].total) {
+                    stepEl.classList.add('completed');
+                } else if (stepEl) {
+                    stepEl.classList.remove('completed');
+                }
+            }
+
+            // Enable complete button
+            var btn = document.getElementById('lab-complete-btn');
+            if (allStepsComplete) {
+                btn.disabled = false;
+                btn.classList.add('btn-primary');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        // Complete lab button
+        document.getElementById('lab-complete-btn').addEventListener('click', function() {
+            if (this.disabled) return;
+
+            // Mark lab complete in store
+            if (typeof EndorStore !== 'undefined') {
+                EndorStore.completeLab('sbom-vex-export', 100);
+            }
+
+            // Show completion banner
+            document.getElementById('lab-complete').classList.add('visible');
+            document.getElementById('lab-actions').style.display = 'none';
+
+            // Scroll to banner
+            document.getElementById('lab-complete').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // Quiz handling
+        document.querySelectorAll('.lab-quiz-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                var siblings = this.parentNode.querySelectorAll('.lab-quiz-option');
+                siblings.forEach(function(s) { s.classList.remove('correct', 'incorrect'); });
+                if (this.getAttribute('data-correct') === 'true') {
+                    this.classList.add('correct');
+                } else {
+                    this.classList.add('incorrect');
+                    // Show the correct one
+                    siblings.forEach(function(s) {
+                        if (s.getAttribute('data-correct') === 'true') s.classList.add('correct');
+                    });
+                }
+            });
+        });
+    })();
+    </script>
+</body>
+</html>
